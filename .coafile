@@ -1,0 +1,21 @@
+[all]
+files = *.py, plugins/**.py
+max_line_length = 80
+use_spaces = True
+
+[all.whitespace]
+use_spaces = True
+bears = SpaceConsistencyBear
+default_actions = *: ApplyPatchAction
+
+[all.python]
+language = Python
+bears = QuotesBear
+default_actions = *: ApplyPatchAction
+
+[all.autopep8]
+bears = PEP8Bear, PycodestyleBear
+default_actions = PEP8Bear: ApplyPatchAction
+
+[all.linelength]
+bears = LineLengthBear
