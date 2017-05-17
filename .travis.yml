@@ -1,0 +1,19 @@
+language: python
+python:
+ - 3.6
+
+addons:
+  apt:
+    packages:
+      - libssl-dev
+      - python3-dev
+
+before_script:
+  - pip install coala-bears[alldeps]==0.11.rc2 --pre -U
+  - pip install -r requirements.txt
+
+script: 
+  - coala --non-interactive -V
+
+notifications:
+  email: false
