@@ -9,7 +9,7 @@ addons:
       - python3-dev
 
 before_script:
-  - pip install coala-bears[alldeps]==0.11.rc2 --pre -U
+  - pip install coala-bears
   - pip install -r requirements.txt
 
 script: 
