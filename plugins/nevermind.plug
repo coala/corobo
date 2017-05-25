@@ -1,0 +1,11 @@
+[Core]
+name = nevermind
+module = nevermind
+
+[Documentation]
+description = Doesn't mind
+
+[Python]
+version = 3
+
+[Errbot]
