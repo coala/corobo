@@ -1,0 +1,11 @@
+[Core]
+module = lmgtfy
+name = lmgtfy
+
+[Documentation]
+description = For all those people who find it more convenient to bother you with their question rather than search it for themselves.
+
+[Python]
+version = 3
+
+[Errbot]
