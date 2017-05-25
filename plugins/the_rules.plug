@@ -1,0 +1,12 @@
+[Core]
+name = the_rules
+module = the_rules
+
+[Documentation]
+description = List the bot rules
+
+[Python]
+version = 3
+
+[Errbot]
+
