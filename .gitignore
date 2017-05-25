@@ -1,6 +1,7 @@
 # Data directory of errbot
 data/
 
+*.orig
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
