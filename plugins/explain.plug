@@ -1,0 +1,11 @@
+[Core]
+name = explain
+module = explain
+
+[Documentation]
+description = Explain various terms
+
+[Python]
+version = 3
+
+[Errbot]
