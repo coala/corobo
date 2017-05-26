@@ -1,0 +1,11 @@
+[Core]
+module = ghetto
+name = ghetto
+
+[Documentation]
+description = Real talk yo
+
+[Python]
+version = 3
+
+[Errbot]
