@@ -2,6 +2,10 @@ language: python
 python:
  - 3.6
 
+sudo: required
+services:
+  - docker
+
 cache: pip
 
 addons:
@@ -19,6 +23,8 @@ before_script:
 script: 
   - coala --non-interactive -V
   - python -m pytest --cov tests/
+  - docker build -t "corobo" .
+  - docker images
 
 notifications:
   email: false
