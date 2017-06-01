@@ -1,0 +1,9 @@
+# Reviewers Checklist
+
+- [ ] Appropriate logging is done.
+- [ ] Appropriate error responses.
+- [ ] Handle every possible exception.
+- [ ] Make sure there is a docstring in the command functions. Hint: Lookout for
+  `botcmd` and `re_botcmd` decorators.
+- [ ] See that 100% coverage is there.
+- [ ] See to it that mocking is not done where it is not necessary.
