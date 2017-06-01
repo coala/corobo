@@ -1,5 +1,8 @@
 # corobo
 
+[![Travis branch](https://img.shields.io/travis/coala/corobo/master.svg)](https://travis-ci.org/coala/corobo)
+[![Codecov branch](https://img.shields.io/codecov/c/github/coala/corobo/master.svg)](https://codecov.io/gh/coala/corobo)
+
 ## Setup
 
 1. Install the dependencies
