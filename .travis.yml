@@ -24,6 +24,7 @@ script:
   - python -m pytest --cov tests --cov-fail-under=100
   - docker build -t "corobo" .
   - docker images
+  - codecov
 
 notifications:
   email: false
