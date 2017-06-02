@@ -11,6 +11,7 @@ default_actions = *: ApplyPatchAction
 [all.python]
 language = Python
 bears = QuotesBear
+preferred_quotation = '
 default_actions = *: ApplyPatchAction
 
 [all.autopep8]
