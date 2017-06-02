@@ -1,0 +1,11 @@
+[Core]
+name = wolfram alpha
+module = wolfram_alpha
+
+[Documentation]
+description = Query the Computational Knowledge Engine
+
+[Python]
+version = 3
+
+[Errbot]

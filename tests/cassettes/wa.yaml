@@ -1,0 +1,47 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection: [close]
+      Host: [api.wolframalpha.com]
+      User-Agent: [Python-urllib/3.5]
+    method: GET
+    uri: https://api.wolframalpha.com/v2/query?input=2%5E6
+  response:
+    body: {string: "<?xml version='1.0' encoding='UTF-8'?>\n<queryresult success='true'\n\
+        \    error='false'\n    numpods='4'\n    datatypes=''\n    timedout=''\n \
+        \   timedoutpods=''\n    timing='0.88'\n    parsetiming='0.1'\n    parsetimedout='false'\n\
+        \    recalculate='https://www4f.wolframalpha.com/api/v2/recalc.jsp?id=MSPa35622iih4d41a4c8b5a00002c3caie1h99c8ai45377374321049932288'\n\
+        \    id='MSPa35722iih4d41a4c8b5a00000gg47ffddadb1356'\n    host='https://www4f.wolframalpha.com'\n\
+        \    server='55'\n    related='https://www4f.wolframalpha.com/api/v2/relatedQueries.jsp?id=MSPa35822iih4d41a4c8b5a000063fabf06518211di5377374321049932288'\n\
+        \    version='2.6'>\n <pod title='Input'\n     scanner='Identity'\n     id='Input'\n\
+        \     position='100'\n     error='false'\n     numsubpods='1'>\n  <subpod\
+        \ title=''>\n   <img src='https://www4f.wolframalpha.com/Calculate/MSP/MSP35922iih4d41a4c8b5a00004gc3hbe4heag1g75?MSPStoreType=image/gif&amp;s=55'\n\
+        \       alt='2^6'\n       title='2^6'\n       width='15'\n       height='18'\
+        \ />\n   <plaintext>2^6</plaintext>\n  </subpod>\n </pod>\n <pod title='Result'\n\
+        \     scanner='Simplification'\n     id='Result'\n     position='200'\n  \
+        \   error='false'\n     numsubpods='1'\n     primary='true'>\n  <subpod title=''>\n\
+        \   <img src='https://www4f.wolframalpha.com/Calculate/MSP/MSP36022iih4d41a4c8b5a00002a26f1f082ebi430?MSPStoreType=image/gif&amp;s=55'\n\
+        \       alt='64'\n       title='64'\n       width='16'\n       height='18'\
+        \ />\n   <plaintext>64</plaintext>\n  </subpod>\n  <states count='1'>\n  \
+        \ <state name='Step-by-step solution'\n       input='Result__Step-by-step\
+        \ solution' />\n  </states>\n </pod>\n <pod title='Number name'\n     scanner='Integer'\n\
+        \     id='NumberName'\n     position='300'\n     error='false'\n     numsubpods='1'>\n\
+        \  <subpod title=''>\n   <img src='https://www4f.wolframalpha.com/Calculate/MSP/MSP36122iih4d41a4c8b5a00005d677f53eh1ff20f?MSPStoreType=image/gif&amp;s=55'\n\
+        \       alt='sixty-four'\n       title='sixty-four'\n       width='64'\n \
+        \      height='18' />\n   <plaintext>sixty-four</plaintext>\n  </subpod>\n\
+        \ </pod>\n <pod title='Number line'\n     scanner='NumberLine'\n     id='NumberLine'\n\
+        \     position='400'\n     error='false'\n     numsubpods='1'>\n  <subpod\
+        \ title=''>\n   <img src='https://www4f.wolframalpha.com/Calculate/MSP/MSP36222iih4d41a4c8b5a000020g1fe7c1b3hf559?MSPStoreType=image/gif&amp;s=55'\n\
+        \       alt=''\n       title=''\n       width='300'\n       height='56' />\n\
+        \   <plaintext></plaintext>\n  </subpod>\n </pod>\n</queryresult>"}
+    headers:
+      Connection: [close]
+      Content-Length: ['2415']
+      Content-Type: [text/xml;charset=utf-8]
+      Date: ['Fri, 02 Jun 2017 08:37:59 GMT']
+      Server: [Apache-Coyote/1.1]
+      Set-Cookie: [WR_SID=49.34.4.157.1496392678787242; path=/; max-age=315360000;
+          domain=.wolframalpha.com]
+    status: {code: 200, message: OK}
+version: 1
