@@ -21,7 +21,7 @@ before_script:
 
 script:
   - coala --non-interactive -V
-  - python -m pytest --cov tests --cov-fail-under=100
+  - python -m pytest tests/ --cov plugins/ --cov-fail-under=100
   - docker build -t "corobo" .
   - docker images
   - codecov
