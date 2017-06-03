@@ -1,0 +1,11 @@
+[Core]
+name = LabHub
+module = labhub
+
+[Documentation]
+description = GitHub and GitLab utilities
+
+[Python]
+version = 3
+
+[Errbot]
