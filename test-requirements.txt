@@ -3,3 +3,4 @@ coverage
 pytest-cov
 requests_mock
 codecov
+vcrpy

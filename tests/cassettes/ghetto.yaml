@@ -1,0 +1,43 @@
+interactions:
+- request:
+    body: translatetext=hi%2C+whats+up%3F
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['31']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [python-requests/2.17.3]
+    method: POST
+    uri: http://www.gizoogle.net/textilizer.php
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA6VVTY/bNhC9F8h/mPKSSy16vd0i67UdpN70A0jTReIgzSmgpbE4jUQqJP356zuk
+        ZK/Xa58KAYTImfeGM3wcjn68/3s6+/LwFnSoK3j49Ou7P6cgelJ+vp5KeT+7h3/+mP31Dq6yPsyc
+        Mp4CWaMqKd++FyB0CM1QyvV6na2vM+tKOfsgN5HrKoK73144QmZFKMTkxQ+jFHFTV8aPz/Bc3d7e
+        tnARnYaVMuVYoBFw+GOSSIOqiHQ1BgWRp4ffl7Qai6k1AU3ozbYNCsjb2VgE3AQZee8g18p5DGPy
+        tvfq1c1t70qAbFkDhQonv9PO2rLCkWznyZQCGVXjWBToc0dNTOwowm/2Jaiqgu3LOM5JhVyjh7W2
+        sFbGKFiQKcBr2hkK+4hMXJH5BtrhYix82FaY5d4LcFh1c68R2T9wPl0ayaHGghS75A5jeSJdS9Ui
+        tXUhXwagPG6yBVOtSpSbXrvWhpQLtYrzjIeutHJf27kttu1SQSuggsPbJh3ifh4D+rSiOj7OETdZ
+        oxuuTKW8T5joJiYfUblcj6SawBEgZkQV7dCdR80O9og8BrK6drTbccXOAj/jnMWHSb+t3wlBbd0F
+        6Ju55dI9yuAJjBptzQUgPUQbvGmaExBXGf15zAfMbV0j162Aj/rcRg2uL2Dfs+W0LHgp0KzH9C6c
+        AlSxQhfIX6rF3tzBJJ/9pB2fSMM3KsefxcH0qBFbJmWNqC7Bu3wsStpl/zalkJPHNd+QMeh8VtJC
+        QBI+n5ByJZkh9Pkb3DQb6N/9L1AXnhXTht+n8zyRgTibY1Lw17nddFdlYV3dNYXvS3RbASqPbeG5
+        rLl9aMsUjfUhVSM6KIfq6GKLjir1zUoFbBe7vNZUBD2EX/r9ZnMHGqnUYTi4iTNORdNP3Ga8Xzav
+        uW113E93P1+GYFP/HM1dSp5MwzpvN+CX85qeb0HASlVLXnm8RnBPPin10MeOSiVjSeIFv1zb6zMi
+        Kciz8KhGx0Y9mHzyCEFznGDhsBfY2qWDtXWFBzJsKflN8EFxxxqkp2UwmVaUf4OnVzy9JhONLkk4
+        MlZ8jgaiEdTJVWeO42y6FjhKTwf//AdV9CzCOgcAAA==
+    headers:
+      Connection: [Keep-Alive]
+      Content-Encoding: [gzip]
+      Content-Length: ['829']
+      Content-Type: [text/html]
+      Date: ['Sat, 03 Jun 2017 12:42:54 GMT']
+      Keep-Alive: ['timeout=5, max=100']
+      Server: [Apache]
+      Vary: ['User-Agent,Accept-Encoding']
+      X-Powered-By: [PHP/5.2.17]
+      X-XSS-Protection: [1; mode=block]
+    status: {code: 200, message: OK}
+version: 1
