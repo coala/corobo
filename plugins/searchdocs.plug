@@ -1,0 +1,12 @@
+[Core]
+name = SearchDocs
+module = searchdocs
+
+[Documentation]
+description = Search API and user docs
+
+[Python]
+version = 3
+
+[Errbot]
+
