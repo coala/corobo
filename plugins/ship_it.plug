@@ -1,0 +1,11 @@
+[Core]
+name = ship_it
+module = ship_it
+
+[Documentation]
+description = Show motivational ship it squirrel images.
+
+[Python]
+version = 3
+
+[Errbot]
