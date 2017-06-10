@@ -20,6 +20,7 @@ before_script:
   - pip install -r test-requirements.txt
 
 script:
+  - sed -i.bak '/bears = GitCommitBear/d' .coafile
   - coala --non-interactive -V
   - python -m pytest
   - docker build -t "corobo" .
