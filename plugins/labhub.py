@@ -136,3 +136,29 @@ class LabHub(BotPlugin):
             return ('Can\'t create an issue for a repository that does not '
                     'exist. Please ensure that the repository is available '
                     'and owned by coala.')
+
+    @re_botcmd(pattern=r'^unassign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
+               flags=re.IGNORECASE)
+    def unassign_cmd(self, msg, match):
+        """Unassign from an issue."""  # Ignore QuotesBear
+        org = match.group(2)
+        repo_name = match.group(3)
+        issue_number = match.group(4)
+
+        user = msg.frm.nick
+
+        try:
+            assert org == self.GH_ORG_NAME or org == self.GL_ORG_NAME
+        except AssertionError:
+            return 'Repository not owned by our org.'
+
+        try:
+            iss = self.REPOS[repo_name].get_issue(int(issue_number))
+        except KeyError:
+            return 'Repository doesn\'t exist.'
+        else:
+            if user in iss.assignees:
+                iss.unassign(user)
+                return '@{}, you are unassigned now :+1:'.format(user)
+            else:
+                return 'You are not an assignee on the issue.'

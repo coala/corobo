@@ -11,6 +11,8 @@ from errbot.backends.test import TestBot
 import plugins.labhub
 from plugins.labhub import LabHub
 
+from tests.helper import plugin_testbot
+
 class TestLabHub(unittest.TestCase):
 
     def setUp(self):
@@ -21,6 +23,7 @@ class TestLabHub(unittest.TestCase):
         self.mock_team = create_autospec(github3.orgs.Team)
         self.mock_team.name = PropertyMock()
         self.mock_team.name = 'mocked team'
+        self.mock_repo = create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
 
         plugins.labhub.github3.login.return_value = self.mock_gh
         self.mock_gh.organization.return_value = self.mock_org
@@ -45,7 +48,7 @@ class TestLabHub(unittest.TestCase):
         plugins.labhub.os.environ['GH_TOKEN'] = 'patched?'
         testbot.assertCommand('!invite meet to developers',
                                    '@meet, you are a part of developers')
-        self.assertEqual(self.labhub.TEAMS, teams)
+        self.assertEqual(labhub.TEAMS, teams)
         testbot.assertCommand('!invite meet to something',
                                    'select from one of the')
 
@@ -69,16 +72,12 @@ class TestLabHub(unittest.TestCase):
         self.mock_team.invite.assert_called_with(None)
 
     def test_create_issue_cmd(self):
-        testbot = TestBot(loglevel=logging.ERROR)
-        testbot.start()
-        labhub = testbot.bot.plugin_manager.instanciateElement(plugins.labhub.LabHub)
-
+        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         labhub.activate()
         plugins.labhub.GitHub.assert_called_once_with(None)
         plugins.labhub.GitLab.assert_called_once_with(None)
 
-        mock_repo = create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
-        labhub.REPOS = {'repository': mock_repo}
+        labhub.REPOS = {'repository': self.mock_repo}
 
         testbot.assertCommand('!new issue repository this is the title\nbo\ndy',
                               'Here you go')
@@ -88,3 +87,31 @@ class TestLabHub(unittest.TestCase):
         )
 
         testbot.assertCommand('!new issue coala title', 'repository that does not exist')
+
+    def test_unassign_cmd(self):
+        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
+
+        labhub.activate()
+        labhub.REPOS = {'name': self.mock_repo}
+
+        mock_iss = create_autospec(IGitt.GitHub.GitHubIssue)
+        self.mock_repo.get_issue.return_value = mock_iss
+        mock_iss.assignees = PropertyMock()
+        mock_iss.assignees = (None, )
+        mock_iss.unassign = MagicMock()
+
+        testbot.assertCommand('!unassign https://github.com/coala/name/issues/23',
+                              'you are unassigned now', timeout=10000)
+        self.mock_repo.get_issue.assert_called_with(23)
+        mock_iss.unassign.assert_called_once_with(None)
+
+        mock_iss.assignees = ('meetmangukiya', )
+        testbot.assertCommand('!unassign https://github.com/coala/name/issues/23',
+                           'not an assignee on the issue')
+
+        testbot.assertCommand('!unassign https://github.com/coala/s/issues/52',
+                              'Repository doesn\'t exist.')
+
+
+        testbot.assertCommand('!unassign https://gitlab.com/ala/am/issues/532',
+                               'Repository not owned by our org.')
