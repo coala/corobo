@@ -27,6 +27,9 @@ class TestLabHub(unittest.TestCase):
         self.mock_org.iter_teams.return_value = [self.mock_team]
         plugins.labhub.github3.organization.return_value = self.mock_org
 
+        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
+        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
+
     def test_invite_cmd(self):
         teams = {
             'coala maintainers': self.mock_team,
@@ -64,3 +67,24 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand('hello, world', 'newcomer')
         testbot.assertCommand('helloworld', 'newcomer')
         self.mock_team.invite.assert_called_with(None)
+
+    def test_create_issue_cmd(self):
+        testbot = TestBot(loglevel=logging.ERROR)
+        testbot.start()
+        labhub = testbot.bot.plugin_manager.instanciateElement(plugins.labhub.LabHub)
+
+        labhub.activate()
+        plugins.labhub.GitHub.assert_called_once_with(None)
+        plugins.labhub.GitLab.assert_called_once_with(None)
+
+        mock_repo = create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
+        labhub.REPOS = {'repository': mock_repo}
+
+        testbot.assertCommand('!new issue repository this is the title\nbo\ndy',
+                              'Here you go')
+
+        labhub.REPOS['repository'].create_issue.assert_called_once_with(
+            'this is the title', 'bo\ndy'
+        )
+
+        testbot.assertCommand('!new issue coala title', 'repository that does not exist')

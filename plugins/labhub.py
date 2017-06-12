@@ -3,6 +3,8 @@ import os
 import re
 
 import github3
+from IGitt.GitHub.GitHub import GitHub
+from IGitt.GitLab.GitLab import GitLab
 from errbot import BotPlugin, re_botcmd
 
 from plugins import constants
@@ -35,6 +37,8 @@ class LabHub(BotPlugin):
     }
 
     GH_ORG_NAME = constants.GH_ORG_NAME
+    GL_ORG_NAME = constants.GL_ORG_NAME
+
     def __init__(self, bot, name=None):
         super().__init__(bot, name)
 
@@ -50,6 +54,23 @@ class LabHub(BotPlugin):
                 teams[team.name] = team
 
         self._teams = teams
+
+        self.IGH = GitHub(os.environ.get('GH_TOKEN'))
+        self.IGL = GitLab(os.environ.get('GL_TOKEN'))
+
+        try:
+            self.gh_repos = {repo.full_name.split('/')[1]: repo for repo in
+                             filter(lambda x: (x.full_name.split('/')[0] ==
+                                               self.GH_ORG_NAME),
+                                    self.IGH.write_repositories)}
+            self.gl_repos = {repo.full_name.split('/')[1]: repo for repo in
+                             filter(lambda x: (x.full_name.split('/')[0] ==
+                                               self.GL_ORG_NAME),
+                                    self.IGL.write_repositories)}
+        except RuntimeError:
+            self.log.error('Either of GH_TOKEN or GL_TOKEN is not set')
+        else:
+            self.REPOS = {**self.gh_repos, **self.gl_repos}
 
     @property
     def TEAMS(self):
@@ -99,3 +120,19 @@ class LabHub(BotPlugin):
                 self.send(msg.frm,
                           self.INVITE_SUCCESS['newcomers'].format(user))
                 self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
+
+    @re_botcmd(pattern=r'(?:new|file) issue ([\w-]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
+               flags=re.IGNORECASE)
+    def create_issut_cmd(self, msg, match):
+        """Create issues on GitHub and GitLab repositories."""  # Ignore QuotesBear, LineLengthBear, PyCodeStyleBear
+        repo_name = match.group(1)
+        iss_title = match.group(2)
+        iss_description = match.group(3) if match.group(3) is not None else ''
+        if repo_name in self.REPOS:
+            repo = self.REPOS[repo_name]
+            iss = repo.create_issue(iss_title, iss_description)
+            return 'Here you go: {}'.format(iss.url)
+        else:
+            return ('Can\'t create an issue for a repository that does not '
+                    'exist. Please ensure that the repository is available '
+                    'and owned by coala.')

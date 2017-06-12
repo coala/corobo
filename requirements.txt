@@ -1,3 +1,4 @@
 errbot
 wolframalpha
 github3.py
+IGitt==0.3.0.dev20170615131838
