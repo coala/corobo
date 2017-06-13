@@ -25,6 +25,13 @@ script:
   - python -m pytest
   - docker build -t "corobo" .
   - docker images
+  - >
+    docker run --user root corobo /bin/sh -c "
+        set -e -x
+        pip install -r test-requirements.txt;
+        find -name \"**.pyc\" -delete;
+        python -m pytest
+    "
   - codecov
 
 notifications:
