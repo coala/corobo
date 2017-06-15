@@ -5,6 +5,8 @@ from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock
 
 import github3
 import IGitt
+from IGitt.GitHub.GitHubMergeRequest import GitHubMergeRequest
+from IGitt.GitHub.GitHubIssue import GitHubIssue
 
 from errbot.backends.test import TestBot
 
@@ -29,9 +31,6 @@ class TestLabHub(unittest.TestCase):
         self.mock_gh.organization.return_value = self.mock_org
         self.mock_org.iter_teams.return_value = [self.mock_team]
         plugins.labhub.github3.organization.return_value = self.mock_org
-
-        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
-        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
 
     def test_invite_cmd(self):
         teams = {
@@ -72,6 +71,9 @@ class TestLabHub(unittest.TestCase):
         self.mock_team.invite.assert_called_with(None)
 
     def test_create_issue_cmd(self):
+        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
+        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
+
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         labhub.activate()
         plugins.labhub.GitHub.assert_called_once_with(None)
@@ -89,6 +91,8 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand('!new issue coala title', 'repository that does not exist')
 
     def test_unassign_cmd(self):
+        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
+        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
 
         labhub.activate()
@@ -115,3 +119,28 @@ class TestLabHub(unittest.TestCase):
 
         testbot.assertCommand('!unassign https://gitlab.com/ala/am/issues/532',
                                'Repository not owned by our org.')
+
+    def test_mark_cmd(self):
+        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
+        labhub.activate()
+
+        labhub.REPOS = {'a': self.mock_repo}
+        mock_mr = create_autospec(GitHubMergeRequest)
+        self.mock_repo.get_mr.return_value = mock_mr
+        mock_mr.labels = PropertyMock()
+        cmd = '!mark {} https://github.com/{}/{}/pull/{}'
+
+        # Non-eistent repo
+        testbot.assertCommand(cmd.format('wip', 'a', 'b', '23'),
+                              'Repository doesn\'t exist.')
+        testbot.assertCommand('!mark wip https://gitlab.com/a/b/merge_requests/2',
+                              'Repository doesn\'t exist.')
+
+        # mark wip
+        mock_mr.labels = ['process/pending review']
+        testbot.assertCommand(cmd.format('wip', 'coala', 'a', '23'),
+                              'marked work in progress')
+        # mark pending
+        mock_mr.labels = ['process/wip']
+        testbot.assertCommand(cmd.format('pending', 'coala', 'a', '23'),
+                              'marked pending review')

@@ -162,3 +162,45 @@ class LabHub(BotPlugin):
                 return '@{}, you are unassigned now :+1:'.format(user)
             else:
                 return 'You are not an assignee on the issue.'
+
+    @re_botcmd(pattern=r'mark\s+(wip|pending)\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/(pull|merge_requests)/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
+               flags=re.IGNORECASE)
+    def mark_cmd(self, msg, match):
+        """Mark a given PR/MR with status labels."""  # Ignore QuotesBear
+        state, host, org, repo_name, xr, number = match.groups()
+
+        if host.lower() == 'github':
+            assert xr.lower() == 'pull'
+        elif host.lower() == 'gitlab':
+            assert xr.lower() == 'merge_requests'
+
+        try:
+            mr = self.REPOS[repo_name].get_mr(number)
+        except KeyError:
+            return 'Repository doesn\'t exist.'
+        else:
+            current_labels = mr.labels
+            if state == 'wip':
+                pending_labels = ['process/pending_review',
+                                  'process/pending review']
+                for label in filter(lambda x: x in current_labels,
+                                    pending_labels):
+                    current_labels.remove(label)
+                current_labels.append('process/wip')
+                mr.labels = current_labels
+                return ('The pull request {mr_link} is marked *work in progress'
+                        '*. Use `cobot mark pending` or push to your branch if '
+                        'feedback from the community is needed again.'.format(
+                            mr_link=mr.url)
+                        )
+            else:
+                wip_labels = ['process/wip']
+                for label in filter(lambda x: x in current_labels,
+                                    wip_labels):
+                    current_labels.remove(label)
+                current_labels.append('process/pending review')
+                mr.labels = current_labels
+                return ('The pull request {mr_link} is marked *pending review*,'
+                        'so you will get feedback from the community. Use '
+                        '`cobot mark wip` if there are known issues that should'
+                        ' be corrected by the author.'.format(mr_link=mr.url))
