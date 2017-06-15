@@ -204,3 +204,76 @@ class LabHub(BotPlugin):
                         'so you will get feedback from the community. Use '
                         '`cobot mark wip` if there are known issues that should'
                         ' be corrected by the author.'.format(mr_link=mr.url))
+
+    @re_botcmd(pattern=r'^assign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
+               flags=re.IGNORECASE)
+    def assign_cmd(self, msg, match):
+        """Assign to GitLab and GitHub issues."""  # Ignore QuotesBear
+        org = match.group(2)
+        repo_name = match.group(3)
+        iss_number = match.group(4)
+
+        user = msg.frm.nick
+
+        try:
+            assert org == self.GH_ORG_NAME or org == self.GL_ORG_NAME
+        except AssertionError:
+            yield 'Repository not owned by our org.'
+            return
+
+        checks = []
+
+        def register_check(function):
+            checks.append(function)
+            return function
+
+        @register_check
+        def newcomer_difficulty_level(user, iss):
+            """
+            True if:
+            1. A newcomer is asking for assignment to low or newcomer issue.
+            2. The user is not a newcomer.
+            False if
+            1. A newcomer asks for assignment to an issue that has no difficulty
+               label.
+            2. A newcomer asks for assignment to an issue with difficulty higher
+               than low.
+            """
+            if self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user):
+                diff_labels = filter(lambda x: 'difficulty' in x, iss.labels)
+                if list(filter(lambda x: ('low' in x) or ('newcomer' in x),
+                               diff_labels)):
+                    return True
+                else:
+                    return False
+            elif self.GH3_ORG.is_member(user):
+                return True
+
+        def eligible(user, iss):
+            for chk in checks:
+                if not chk(user, iss):
+                    return False
+            return True
+
+        eligility_conditions = [
+            '- A newcomer cannot be assigned to an issue with a difficulty '
+            'level higher then newcomer or low difficulty.',
+        ]
+
+        try:
+            iss = self.REPOS[repo_name].get_issue(int(iss_number))
+        except KeyError:
+            yield 'Repository doesn\'t exist.'
+        else:
+            if not iss.assignees:
+                if eligible(user, iss):
+                    iss.assign(user)
+                    yield ('Congratulations! You\'ve been assigned to the '
+                           'issue. :tada:')
+                else:
+                    yield 'You are not eligible to be assigned to this issue.'
+                    yield '\n'.join(eligility_conditions)
+            else:
+                yield ('The issue is already assigned to someone. Please '
+                       'check if the assignee is still working on the issue, '
+                       'if not, you should ask for reassignment.')

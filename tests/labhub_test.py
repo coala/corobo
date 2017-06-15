@@ -120,6 +120,61 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand('!unassign https://gitlab.com/ala/am/issues/532',
                                'Repository not owned by our org.')
 
+    def test_assign_cmd(self):
+        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
+        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
+        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
+        labhub.activate()
+
+        mock_issue = create_autospec(GitHubIssue)
+        self.mock_repo.get_issue.return_value = mock_issue
+
+        labhub.REPOS = {'a': self.mock_repo}
+        labhub.TEAMS = {'coala newcomers': self.mock_team}
+
+        cmd = '!assign https://github.com/{}/{}/issues/{}'
+
+        # no assignee, not newcomer
+        mock_issue.assignees = tuple()
+        self.mock_team.is_member.return_value = False
+
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'You\'ve been assigned to the issue')
+
+        # no assignee, newcomer, difficulty/low
+        mock_issue.labels = PropertyMock()
+        mock_issue.labels = ('difficulty/low', )
+        mock_issue.assignees = tuple()
+        self.mock_team.is_member.return_value = True
+
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'You\'ve been assigned to the issue')
+
+        # no assignee, newcomer, no labels
+        mock_issue.labels = tuple()
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'not eligible to be assigned to this issue')
+        testbot.pop_message()
+
+        # no assignee, newcomer, difficulty medium
+        mock_issue.labels = ('difficulty/medium', )
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'not eligible to be assigned to this issue')
+        testbot.pop_message()
+
+        # has assignee
+        mock_issue.assignees = ('somebody', )
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'already assigned to someone')
+
+        # non-existent repository
+        testbot.assertCommand(cmd.format('coala', 'c', '23'),
+                              'Repository doesn\'t exist.')
+
+        # unknown org
+        testbot.assertCommand(cmd.format('coa', 'a', '23'),
+                              'Repository not owned by our org.')
+
     def test_mark_cmd(self):
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         labhub.activate()
