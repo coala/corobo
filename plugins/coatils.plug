@@ -1,0 +1,9 @@
+[Core]
+module = coatils
+name = coatils
+
+[Documentation]
+description = Various coala related utilities, exposing the REST API, etc.
+
+[Python]
+version = 3
