@@ -1,0 +1,9 @@
+[Core]
+name = coala_lowercase_c
+module = coala_lowercase_c
+
+[Documentation]
+description = coala is always written with a lower case c.
+
+[Python]
+version = 3
