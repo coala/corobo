@@ -13,6 +13,8 @@ BOT_EXTRA_PLUGIN_DIR = os.path.join(COBOT_ROOT, 'plugins')
 BOT_LOG_FILE = os.path.join(COBOT_ROOT, 'errbot.log')
 BOT_LOG_LEVEL = logging.DEBUG
 
+BOT_PREFIX = os.environ.get('COBOT_PREFIX', 'corobo ')
+
 BOT_ADMINS = ('meetmangukiya', )
 
 BOT_IDENTITY = {
