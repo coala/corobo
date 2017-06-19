@@ -44,7 +44,7 @@ class LabHub(BotPlugin):
 
         teams = dict()
         try:
-            gh = github3.login(os.environ.get('GH_TOKEN'))
+            gh = github3.login(token=os.environ.get('GH_TOKEN'))
             assert gh is not None
         except AssertionError:
             self.log.error('Cannot create github object, please check GH_TOKEN')
