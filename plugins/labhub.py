@@ -68,7 +68,7 @@ class LabHub(BotPlugin):
                                                self.GL_ORG_NAME),
                                     self.IGL.write_repositories)}
         except RuntimeError:
-            self.log.error('Either of GH_TOKEN or GL_TOKEN is not set')
+            self.log.exception('Either of GH_TOKEN or GL_TOKEN is not set')
         else:
             self.REPOS = {**self.gh_repos, **self.gl_repos}
 
