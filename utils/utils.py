@@ -16,7 +16,7 @@ class Utils(BotPlugin):
         """Sync the repository from github."""  # Ignore QuotesBear
         repo = git.Repo(os.environ.get('COBOT_ROOT'))
         try:
-            repo.pull('--rebase')
+            repo.remote('origin').pull('--rebase')
             yield 'Sync\'d successfully! :tada:'
         except git.exc.GitCommandError:
             yield 'Can\'t update automatically :('
