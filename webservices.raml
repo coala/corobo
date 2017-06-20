@@ -1,0 +1,88 @@
+#%RAML 1.0
+
+title: coala webservices
+version: v1
+protocols: [ HTTP, HTTPS ]
+baseUri: http://webservices.coala.io
+mediaType: application/json
+
+types:
+  Bear:
+    type: object
+    properties:
+      ASCIINEMA_URL: string
+      AUTHORS: string[]
+      AUTHORS_EMAILS: string[]
+      BEAR_DEPS: string[]
+      CAN_DETECT: string[]
+      CAN_FIX: string[]
+      INCLUDE_LOCAL_FILES: string[]
+      LANGUAGES: string[]
+      LICENSE: string
+      MAINTAINERS: string[]
+      MAINTAINERS_EMAILS: string[]
+      PLATFORMS: string[]
+      REQUIREMENTS: Requirement[]
+      can_detect: string[]
+      data_dir: string
+      maintainers: string[]
+      maintainers_emails: string[]
+      metadata: BearMetaData
+      name: string
+  Requirement:
+    type: object
+    properties:
+      package: string
+      type: string
+      version: string
+  BearInfo:
+    type: object
+    properties:
+      name: string
+      desc: string
+      languages: string[]
+  BearMetaData:
+    type: object
+    properties:
+      desc: string
+      non_optional_params: string[]
+      optional_params: string[]
+  User:
+    type: object
+    properties:
+      reviews: number
+      contributions: number
+      bio: string
+      login: string
+      name: string
+      issues: number
+
+/list:
+  /bears:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: BearInfo[]  # NOTE: not merged https://gitlab.com/coala/landing/merge_requests/39
+
+/search:
+  /bears:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: Bear
+      queryParameters:
+        bear:
+          type: string
+          required: true
+
+/contrib/:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: User[]
