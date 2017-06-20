@@ -1,0 +1,9 @@
+[Core]
+name = utils
+module = utils
+
+[Documentation]
+description = Some random utilities
+
+[Python]
+version = 3

@@ -4,7 +4,7 @@ ENV COBOT_ROOT=/opt/errbot
 
 ADD requirements.txt $COBOT_ROOT/requirements.txt
 
-RUN apk add --no-cache libffi openssl \
+RUN apk add --no-cache libffi openssl git \
     && apk add --no-cache --virtual .build-deps \
            gcc \
            libc-dev \
