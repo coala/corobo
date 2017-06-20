@@ -20,3 +20,5 @@ BOT_ADMINS = ('meetmangukiya', )
 BOT_IDENTITY = {
     'token': os.environ['COBOT_TOKEN']
 }
+
+DIVERT_TO_PRIVATE = ('help', )
