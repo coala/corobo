@@ -94,7 +94,7 @@ class LabHub(BotPlugin):
 
         self.log.info('{} invited {} to {}'.format(inviter, invitee, team))
 
-        if self.TEAMS[self.GH_ORG_NAME + ' maintainers'].is_member(invitee):
+        if self.TEAMS[self.GH_ORG_NAME + ' maintainers'].is_member(inviter):
             valid_teams = ['newcomers', 'developers', 'maintainers']
             if team.lower() not in valid_teams:
                 return 'Please select from one of the ' + ', '.join(valid_teams)
