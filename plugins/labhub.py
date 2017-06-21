@@ -58,19 +58,27 @@ class LabHub(BotPlugin):
         self.IGH = GitHub(os.environ.get('GH_TOKEN'))
         self.IGL = GitLab(os.environ.get('GL_TOKEN'))
 
+        self.REPOS = dict()
+
         try:
             self.gh_repos = {repo.full_name.split('/')[1]: repo for repo in
                              filter(lambda x: (x.full_name.split('/')[0] ==
                                                self.GH_ORG_NAME),
                                     self.IGH.write_repositories)}
+        except RuntimeError:
+            self.log.exception('Something went wrong in fetching github repos.')
+        else:
+            self.REPOS.update(self.gh_repos)
+
+        try:
             self.gl_repos = {repo.full_name.split('/')[1]: repo for repo in
                              filter(lambda x: (x.full_name.split('/')[0] ==
                                                self.GL_ORG_NAME),
                                     self.IGL.write_repositories)}
-        except RuntimeError:
-            self.log.exception('Either of GH_TOKEN or GL_TOKEN is not set')
+        except RuntimeError:  # pragma: no cover, for logging
+            self.log.exception('Something went wrong in fetching gitlab repos.')
         else:
-            self.REPOS = {**self.gh_repos, **self.gl_repos}
+            self.REPOS.update(self.gl_repos)
 
     @property
     def TEAMS(self):
