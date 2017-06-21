@@ -14,6 +14,9 @@ bears = QuotesBear
 preferred_quotation = '
 default_actions = *: ApplyPatchAction
 
+bears += KeywordBear
+keywords = pdb
+
 [all.autopep8]
 bears = PEP8Bear, PycodestyleBear
 default_actions = PEP8Bear: ApplyPatchAction
