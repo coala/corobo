@@ -179,7 +179,7 @@ class LabHub(BotPlugin):
         except KeyError:
             return 'Repository doesn\'t exist.'
         else:
-            current_labels = mr.labels
+            current_labels = list(mr.labels)
             if state == 'wip':
                 pending_labels = ['process/pending_review',
                                   'process/pending review']
