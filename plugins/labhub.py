@@ -228,18 +228,25 @@ class LabHub(BotPlugin):
             return function
 
         @register_check
-        def newcomer_difficulty_level(user, iss):
+        def difficulty_level(user, iss):
             """
             True if:
             1. A newcomer is asking for assignment to low or newcomer issue.
-            2. The user is not a newcomer.
+            2. The user belongs to developers or maintainers team as well as
+               newcomers team.
             False if
             1. A newcomer asks for assignment to an issue that has no difficulty
                label.
             2. A newcomer asks for assignment to an issue with difficulty higher
                than low.
             """
-            if self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user):
+            if (self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user) and
+                not (self.TEAMS[self.GH_ORG_NAME + ' developers'].is_member(
+                        user
+                    ) or
+                    self.TEAMS[self.GH_ORG_NAME + ' maintainers'].is_member(
+                        user
+                    ))):
                 diff_labels = filter(lambda x: 'difficulty' in x, iss.labels)
                 if list(filter(lambda x: ('low' in x) or ('newcomer' in x),
                                diff_labels)):

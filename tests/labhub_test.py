@@ -130,10 +130,17 @@ class TestLabHub(unittest.TestCase):
         self.mock_repo.get_issue.return_value = mock_issue
 
         labhub.REPOS = {'a': self.mock_repo}
-        labhub.TEAMS = {'coala newcomers': self.mock_team}
+
+        mock_dev_team = create_autospec(github3.orgs.Team)
+        mock_maint_team = create_autospec(github3.orgs.Team)
+        mock_dev_team.is_member.return_value = False
+        mock_maint_team.is_member.return_value = False
+
+        labhub.TEAMS = {'coala newcomers': self.mock_team,
+                        'coala developers': mock_dev_team,
+                        'coala maintainers': mock_maint_team}
 
         cmd = '!assign https://github.com/{}/{}/issues/{}'
-
         # no assignee, not newcomer
         mock_issue.assignees = tuple()
         self.mock_team.is_member.return_value = False
@@ -151,7 +158,9 @@ class TestLabHub(unittest.TestCase):
                               'You\'ve been assigned to the issue')
 
         # no assignee, newcomer, no labels
+        self.mock_team.is_member.return_value = True
         mock_issue.labels = tuple()
+        mock_issue.assignees = tuple()
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'not eligible to be assigned to this issue')
         testbot.pop_message()
@@ -161,6 +170,12 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'not eligible to be assigned to this issue')
         testbot.pop_message()
+
+        # newcomer, developer, difficulty/medium
+        mock_dev_team.is_member.return_value = True
+        mock_maint_team.is_member.return_value = False
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'assigned')
 
         # has assignee
         mock_issue.assignees = ('somebody', )
