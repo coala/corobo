@@ -97,3 +97,30 @@ class Coatils(BotPlugin):
             yield ('coala has {} bears across {} languages'
                    ''.format(Coatils.total_bears(),
                              len(Coatils.all_langs())))
+
+    @re_botcmd(pattern=r'ls\s+bears\s+((?:[\w\+]+(?:\s+)?)+)')
+    def ls(self, msg, match):
+        """
+        List bears of given languages:
+        Example: `ls bears python python3`
+        """
+        langs = list(map(lambda x: x.lower(), match.group(1).split()))
+        all_langs = Coatils.all_langs()
+
+        bears = client.list.bears.get().json()
+        bears = [{**{'name': bear}, **content}
+                 for bear, content in bears.items()]
+
+        for lang in langs:
+            selected_bears = [
+                ' | ' + bear['name'] for bear in filter(lambda x: lang in list(
+                    map(lambda y: y.lower(), x['languages'])),
+                    bears
+                )
+            ]
+
+            if selected_bears:
+                yield 'Bears for {} are: '.format(lang)
+                yield ''.join(selected_bears) + ' |'
+            else:
+                yield 'No bears found for {}'.format(lang)

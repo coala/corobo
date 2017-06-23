@@ -48,6 +48,14 @@ class TestCoatils(unittest.TestCase):
         self.testbot.assertCommand('!bear stats abc',
                                    'No bear exists for abc')
 
+    @vcr.use_cassette('tests/cassettes/coatils_bear_stats_lang.yaml')
+    def test_ls_bears(self):
+        self.testbot.assertCommand('!ls bears r',
+                                   'Bears for r are')
+        self.assertIn('RLintBear', self.testbot.pop_message())
+        self.testbot.assertCommand('!ls bears brainfuck',
+                                   'No bears found for brainfuck')
+
     @vcr.use_cassette('tests/cassettes/coatils_stats.yaml')
     def test_stats(self):
         self.testbot.assertCommand('!stats',
