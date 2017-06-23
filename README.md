@@ -13,3 +13,13 @@
    repo and gitter token for cobot.
 
 3. Run errbot: `cd COBOT_ROOT &&  errbot`
+
+## Environment Variables
+
+1. `COBOT_ROOT` - absolute path of the project root.
+2. `COBOT_PREFIX` - prefix to use for issuing bot commands.
+3. `GH_TOKEN` - GitHub personal access token to create issues, invite people to
+   org, assign and unassign issues, etc.
+4. `GL_TOKEN` - GitLab personal access token to create, assign, unassign
+   issues, etc.
+5. `WA_TOKEN` - wolframalpha APP_ID to access wolfram API.
