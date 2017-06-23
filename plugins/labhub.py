@@ -3,8 +3,8 @@ import os
 import re
 
 import github3
-from IGitt.GitHub.GitHub import GitHub
-from IGitt.GitLab.GitLab import GitLab
+from IGitt.GitHub.GitHub import GitHub, GitHubToken
+from IGitt.GitLab.GitLab import GitLab, GitLabPrivateToken
 from errbot import BotPlugin, re_botcmd
 
 from plugins import constants
@@ -55,8 +55,8 @@ class LabHub(BotPlugin):
 
         self._teams = teams
 
-        self.IGH = GitHub(os.environ.get('GH_TOKEN'))
-        self.IGL = GitLab(os.environ.get('GL_TOKEN'))
+        self.IGH = GitHub(GitHubToken(os.environ.get('GH_TOKEN')))
+        self.IGL = GitLab(GitLabPrivateToken(os.environ.get('GL_TOKEN')))
 
         self.REPOS = dict()
 

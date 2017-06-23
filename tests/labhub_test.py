@@ -73,11 +73,14 @@ class TestLabHub(unittest.TestCase):
     def test_create_issue_cmd(self):
         plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
         plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
+        plugins.labhub.GitHubToken = create_autospec(IGitt.GitHub.GitHubToken)
+        plugins.labhub.GitLabPrivateToken = create_autospec(IGitt.GitLab.GitLabPrivateToken)
 
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         labhub.activate()
-        plugins.labhub.GitHub.assert_called_once_with(None)
-        plugins.labhub.GitLab.assert_called_once_with(None)
+        plugins.labhub.GitHubToken.assert_called_with(None)
+        plugins.labhub.GitLabPrivateToken.assert_called_with(None)
+
 
         labhub.REPOS = {'repository': self.mock_repo}
 
