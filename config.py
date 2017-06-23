@@ -22,3 +22,5 @@ BOT_IDENTITY = {
 }
 
 DIVERT_TO_PRIVATE = ('help', )
+
+AUTOINSTALL_DEPS = True
