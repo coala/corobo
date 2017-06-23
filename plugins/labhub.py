@@ -134,9 +134,20 @@ class LabHub(BotPlugin):
         repo_name = match.group(1)
         iss_title = match.group(2)
         iss_description = match.group(3) if match.group(3) is not None else ''
+
+        try:  # This is gitter backend specific
+            link = ('\nOpened via [gitter](https://gitter.im/{}?at={}) '
+                    'by {}'.format(
+                        msg.frm.room.uri,
+                        msg.extras['id'],
+                        msg.frm.nick
+                    ))
+        except AttributeError:
+            link = ''
+
         if repo_name in self.REPOS:
             repo = self.REPOS[repo_name]
-            iss = repo.create_issue(iss_title, iss_description)
+            iss = repo.create_issue(iss_title, iss_description + link)
             return 'Here you go: {}'.format(iss.url)
         else:
             return ('Can\'t create an issue for a repository that does not '
