@@ -27,6 +27,6 @@ class Ship_it(BotPlugin):
         """
         Show motivational ship it squirrel images.
         """
-        return ':shipit: ![ship it!]({})'.format(
+        return '![ship it!]({})'.format(
             self.IMAGES[random.randint(0, len(self.IMAGES) - 1)]
         )
