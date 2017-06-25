@@ -72,7 +72,17 @@ class Explain(BotPlugin):
                   'message.* Search it. *Think.*\n\nKeep this in mind: *You*'
                   'are sitting in front of the problem, not us. You will have '
                   'a much easier time solving it. That\'s why you should try '
-                  'doing it first.'
+                  'doing it first.',
+        'promotion': 'To become part of the coala developers team, there '
+                     'are a few steps you need to complete. The newcomer '
+                     'process is as follows:\nYou will start as a newcomer, '
+                     'which is kind of a trial. If you complete the following '
+                     'tasks, you will become a developer at coala:\n\n- run '
+                     'coala on a project of yours\n- merge a difficulty/'
+                     'newcomer Pull Request\n- review at least a difficulty/'
+                     'newcomer Pull Request\n- merge a difficulty/low Pull '
+                     'Request\n- review at least a difficulty/low or higher '
+                     'Pull Request'
     }
 
     ERROR_MSG = (
