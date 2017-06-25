@@ -14,26 +14,24 @@ class LabHub(BotPlugin):
     """GitHub and GitLab utilities"""  # Ignore QuotesBear
 
     INVITE_SUCCESS = {
-        'newcomers': """
- Welcome @{}! :tada:\n\nTo get started, please follow our
- [newcomers guide](https://coala.io/newcomer). Most issues will be explained
- there and in linked pages - it will save you a lot of time, just read it.
- *Really.*\n\n*Do not take an issue if you don't understand it on your own.*
- Especially if you are new you have to be aware that getting started with an
- open source community is not trivial: you will have to work hard and most
- likely become a better coder than you are now just as we all did.\n\n
- Don't get us wrong: we are *very* glad to have you with us on this journey
- into open source! We will also be there for you at all times to help you
- with actual problems. :)
-""",
-        'developers': """
- Wow @{}, you are a part of developers team now! :tada: Welcome to our
- community!
-""",
-        'maintainers': """
- @{} you seem to be awesome! You are now a maintainer! :tada: Please go
- through https://github.com/coala/coala/wiki/Membership
-"""
+        'newcomers': 'Welcome @{}! :tada:\n\nTo get started, please follow '
+                     'our [newcomers guide](https://coala.io/newcomer). Most '
+                     'issues will be explained there and in linked pages - it '
+                     'will save you a lot of time, just read it. *Really.*\n\n'
+                     '*Do not take an issue if you don\'t understand it on '
+                     'your own.*Especially if you are new you have to be aware '
+                     'that getting started with an open source community is '
+                     'not trivial: you will have to work hard and most likely '
+                     'become a better coder than you are now just as we all '
+                     'did.\n\nDon\'t get us wrong: we are *very* glad to have '
+                     'you with us on this journey into open source! We will '
+                     'also be there for you at all times to help you with '
+                     'actual problems. :)',
+        'developers': ' Wow @{}, you are a part of developers team now! :tada: '
+                      'Welcome to ourcommunity!',
+        'maintainers': ' @{} you seem to be awesome! You are now a maintainer! '
+                       ':tada: Please go through '
+                       'https://github.com/coala/coala/wiki/Membership'
     }
 
     GH_ORG_NAME = constants.GH_ORG_NAME
