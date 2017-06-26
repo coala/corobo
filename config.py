@@ -7,6 +7,8 @@ BACKEND = 'Gitter'
 
 BOT_EXTRA_BACKEND_DIR = os.path.join(COBOT_ROOT, 'err-backend-gitter')
 
+HIDE_RESTRICTED_COMMANDS = True
+
 BOT_DATA_DIR = os.path.join(COBOT_ROOT, 'data')
 BOT_EXTRA_PLUGIN_DIR = COBOT_ROOT
 
