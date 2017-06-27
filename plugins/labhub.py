@@ -272,7 +272,7 @@ class LabHub(BotPlugin):
 
         eligility_conditions = [
             '- A newcomer cannot be assigned to an issue with a difficulty '
-            'level higher then newcomer or low difficulty.',
+            'level higher than newcomer or low difficulty.',
         ]
 
         try:
