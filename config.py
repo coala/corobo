@@ -23,4 +23,19 @@ BOT_IDENTITY = {
 
 DIVERT_TO_PRIVATE = ('help', )
 
+CHATROOM_PRESENCE = (
+    'coala/coala',
+    'coala/coala/offtopic',
+    'coala/cobot-test',
+    'coala/corobo',
+    'coala/devops',
+    'coala/community',
+    'coala/coala/gsoc',
+    'coala/coala/maintainers',
+    'coala/coala-bears',
+    'coala/bearship',
+    'coala/gci',
+    'coala/cobot'
+)
+
 AUTOINSTALL_DEPS = True
