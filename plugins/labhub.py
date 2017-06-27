@@ -269,6 +269,9 @@ class LabHub(BotPlugin):
             return True
 
         eligility_conditions = [
+            '- You must be a member of coala org to be assigned an issue '
+            'If you are not a member yet, just type Hello World and '
+            'corobo will invite you.',
             '- A newcomer cannot be assigned to an issue with a difficulty '
             'level higher than newcomer or low difficulty.',
         ]
