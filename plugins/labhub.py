@@ -137,7 +137,7 @@ class LabHub(BotPlugin):
 
         try:  # This is gitter backend specific
             link = ('\nOpened via [gitter](https://gitter.im/{}?at={}) '
-                    'by {}'.format(
+                    'by @{}'.format(
                         msg.frm.room.uri,
                         msg.extras['id'],
                         msg.frm.nick
