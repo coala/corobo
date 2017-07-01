@@ -8,6 +8,8 @@
 # this command:
 # $ ssh solar.coala.io "bash -s" < /path/to/script
 
+set -e -x
+
 WORK_DIR=/opt/solar/corobo
 
 fail() {
