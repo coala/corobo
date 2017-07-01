@@ -1,4 +1,7 @@
+from collections import OrderedDict
+import json
 import os
+import textwrap
 
 import requests
 from ramlient import Client
@@ -124,3 +127,115 @@ class Coatils(BotPlugin):
                 yield ''.join(selected_bears) + ' |'
             else:
                 yield 'No bears found for {}'.format(lang)
+
+    @staticmethod
+    def construct_settings(settings):
+        settings = settings.strip().split()
+
+        def is_setting(x): return '=' in x  # Ignore PycodestyleBear (E731)
+        setting_dict = OrderedDict()
+        for candidate in settings:
+            if not is_setting(candidate):  # bear
+                setting_dict[candidate.strip()] = dict()
+            else:
+                key, value = candidate.strip().split('=')
+                setting_dict[list(setting_dict.keys())[-1]][key] = value
+        return setting_dict
+
+    @staticmethod
+    def position(stl, stc, enl, enc):
+        if stc is None and enc is None:
+            if stl != enl:
+                return 'Between lines {} and {}'.format(stl, enl)
+            else:
+                return 'At line {}'.format(stl)
+        if stc is None and enc is not None:
+            return 'Between line {} and position {}:{}'.format(stl, enl, enc)
+        if stc is not None and enc is None:
+            return 'Between position {}:{} and line {}'.format(stl, stc, enl)
+        if stl == enl:
+            if stc == enc:
+                return "At {}:{}".format(stl, stc)
+            else:
+                return "At line {}, between col {} and {}".format(stl, stc, enc)
+        else:
+            return "Between positions {}:{} and {}:{}".format(stl, stc,
+                                                              enl, enc)
+
+    # Ignore PycodestyleBear, LineLengthBear
+    @re_botcmd(pattern=r'^run\s+(\w+)((?:\s+\w+(?:\s+\w+=\w+)*)+)\n+```\n([\s\S]+)\n```$')
+    def run(self, msg, match):
+        """
+        Run coala over the given code.
+
+        Example: `run Bear1 setting1=something setting2=something Bear2\ncode`
+        """
+        lang = match.group(1)
+        bear_settings = type(self).construct_settings(match.group(2))
+        code = match.group(3)
+
+        yield 'coala analysis in progress...'
+
+        data = {
+            "sections": {
+                "corobo": {
+                    "files": "**.gyp",
+                    "bears": dict(bear_settings),
+                }
+            },
+            "mode": "coala",
+            "language": lang,
+            "file_data": code,
+        }
+
+        # Ignore InvalidLinkBear, this only accepts post requests
+        rq = requests.post('https://api.gitmate.io/coala_online/', json=data)
+        try:
+            results = rq.json()['response']['results']['corobo']
+        except json.JSONDecodeError:
+            went_wrong = '\n - '.join([
+                'Is the bear name correct? Note that bear names are '
+                'case sensitive.'
+                'Are all required settings provided? If a required setting is '
+                'not provided, analysis will fail.'
+            ])
+            yield 'Something went wrong, things to check for:\n' + went_wrong
+            self.log.exception('Something went wrong, please try again')
+        else:
+            if not results:
+                yield 'Your code is flawless :tada:'
+                return
+            result_message = 'Here is what I think is wrong: \n'
+            for result in results:
+                affected_area = []
+                for afc in result['affected_code']:
+                    affected_area.append((afc['start']['line'],
+                                          afc['start']['column'],
+                                          afc['end']['line'],
+                                          afc['end']['column']))
+
+                afm = '\n'.join([Coatils.position(stl, stc, enl, enc)
+                                 for (stl, stc, enl, enc) in affected_area])
+
+                message = result['message']
+                origin = result['origin']
+                diffs = []
+                if result['diffs']:
+                    for _, diff in result['diffs'].items():
+                        diffs.append(diff)
+
+                diff_message = ''
+                if diffs:
+                    diff_message += ('These patches can help solve the '
+                                     'issue: \n')
+                    for diff in diffs:
+                        diff = ''.join(diff.splitlines(True)[2:])
+                        diff_message += '```diff\n{}\n```\n'.format(
+                            textwrap.indent(diff, '   ')
+                        )
+
+                result_message += '- {} - {} :\n{}{diff}'.format(
+                    origin, afm, message, diff=diff_message
+                )
+
+                yield result_message

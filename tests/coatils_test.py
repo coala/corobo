@@ -14,6 +14,9 @@ class TestCoatils(unittest.TestCase):
                                loglevel=logging.ERROR)
         self.testbot.start()
 
+    def tearDown(self):
+        self.testbot.stop()
+
     @vcr.use_cassette('tests/cassettes/coatils_total_bears.yaml')
     def test_total_bears(self):
         self.assertEqual(Coatils.total_bears(),
@@ -60,3 +63,48 @@ class TestCoatils(unittest.TestCase):
     def test_stats(self):
         self.testbot.assertCommand('!stats',
                                    'coala has 102 bears across 63 languages')
+
+    @vcr.use_cassette('tests/cassettes/coatils_run_coala.yaml')
+    def test_run_coala(self):
+        # no results
+        self.testbot.push_message('!run python SpaceConsistencyBear use_spaces=yes\n```\nimport this\n\n```')
+        self.assertEqual(self.testbot.pop_message(),
+                         'coala analysis in progress...')
+        self.assertEqual(self.testbot.pop_message(),
+                         'Your code is flawless :tada:')
+        # results and diffs
+        self.testbot.push_message('!run python PyUnusedCodeBear remove_unused_imports=yes\n```\nimport os\na=1\n```')
+        self.assertEqual(self.testbot.pop_message(),
+                         'coala analysis in progress...')
+        msg = self.testbot.pop_message()
+        self.assertIn('Here is what I think is wrong:', msg)
+        self.assertIn('This file contains unused source code',
+                      msg)
+        # error
+        self.testbot.push_message('!run a b\n```\nc\n```')
+        self.assertEqual(self.testbot.pop_message(),
+                         'coala analysis in progress...')
+        self.assertIn('Something went wrong, things to check for',
+                      self.testbot.pop_message())
+
+    def test_construct_settings(self):
+        self.assertEqual(Coatils.construct_settings('bear1 a=1 b=2 bear2 bear3'),
+                         {'bear1': {'a': '1', 'b': '2'},
+                          'bear2': {},
+                          'bear3': {}})
+
+    def test_position(self):
+        self.assertEqual(Coatils.position(1, 1, 1, 1),
+                         'At 1:1')
+        self.assertEqual(Coatils.position(1, 1, 1, 5),
+                         'At line 1, between col 1 and 5')
+        self.assertEqual(Coatils.position(1, 5, 3, 10),
+                         'Between positions 1:5 and 3:10')
+        self.assertEqual(Coatils.position(1, None, 3, None),
+                         'Between lines 1 and 3')
+        self.assertEqual(Coatils.position(3, None, 3, None),
+                         'At line 3')
+        self.assertEqual(Coatils.position(1, None, 3, 6),
+                         'Between line 1 and position 3:6')
+        self.assertEqual(Coatils.position(1, 4, 5, None),
+                         'Between position 1:4 and line 5')
