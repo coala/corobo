@@ -17,7 +17,7 @@ BOT_LOG_LEVEL = logging.DEBUG
 
 BOT_PREFIX = os.environ.get('COBOT_PREFIX', 'corobo ')
 
-BOT_ADMINS = os.environ.get(tuple('BOT_ADMINS'.split()), ('meetmangukiya', ))
+BOT_ADMINS = os.environ.get('BOT_ADMINS', '').split() or ('meetmangukiya', )
 
 BOT_IDENTITY = {
     'token': os.environ['COBOT_TOKEN']
@@ -25,20 +25,21 @@ BOT_IDENTITY = {
 
 DIVERT_TO_PRIVATE = ('help', )
 
-CHATROOM_PRESENCE = os.environ.get(
-    tuple(os.environ.get('ROOMS').split()),
-    ('coala/coala',
-     'coala/coala/offtopic',
-     'coala/cobot-test',
-     'coala/corobo',
-     'coala/devops',
-     'coala/community',
-     'coala/coala/gsoc',
-     'coala/coala/maintainers',
-     'coala/coala-bears',
-     'coala/bearship',
-     'coala/gci',
-     'coala/cobot')
+ROOMS_TO_JOIN = (
+    'coala/coala',
+    'coala/coala/offtopic',
+    'coala/cobot-test',
+    'coala/corobo',
+    'coala/devops',
+    'coala/community',
+    'coala/coala/gsoc',
+    'coala/coala/maintainers',
+    'coala/coala-bears',
+    'coala/bearship',
+    'coala/gci',
+    'coala/cobot'
 )
+
+CHATROOM_PRESENCE = os.environ.get('ROOMS', '').split() or ROOMS_TO_JOIN
 
 AUTOINSTALL_DEPS = True
