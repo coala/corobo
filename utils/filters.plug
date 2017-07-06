@@ -1,0 +1,9 @@
+[Core]
+name = filters
+module = filters
+
+[Documentation]
+description = Filter and manipulate incoming commands
+
+[Python]
+version = 3
