@@ -88,7 +88,7 @@ class TestLabHub(unittest.TestCase):
                               'Here you go')
 
         labhub.REPOS['repository'].create_issue.assert_called_once_with(
-            'this is the title', 'bo\ndy'
+            'this is the title', 'bo\ndy\nOpened by None '
         )
 
         testbot.assertCommand('!new issue coala title', 'repository that does not exist')
