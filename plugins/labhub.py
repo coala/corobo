@@ -142,7 +142,7 @@ class LabHub(BotPlugin):
                         msg.extras['id'],
                         msg.frm.nick
                     ))
-        except AttributeError:
+        except (AttributeError, KeyError):
             link = ''
 
         if repo_name in self.REPOS:
