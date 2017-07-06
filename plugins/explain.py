@@ -90,7 +90,9 @@ class Explain(BotPlugin):
         '\n- '.join(MSGS.keys())
     )
 
-    @re_botcmd(pattern=r'explain\s+(\w+)', flags=re.IGNORECASE)
+    # Ignore LineLengthBear, PycodestyleBear
+    @re_botcmd(pattern=r'explain\s+(\w+)(?:\s+to\s+@?([\w-]+))?', flags=re.IGNORECASE)
     def explain(self, msg, match):
         """Explain various terms."""  # Ignore QuotesBear
-        return self.MSGS.get(match.group(1).lower(), self.ERROR_MSG)
+        return ('@{} :\n'.format(match.group(2) if match.group(2) else '') +
+                self.MSGS.get(match.group(1).lower(), self.ERROR_MSG))
