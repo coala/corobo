@@ -18,8 +18,14 @@
 
 1. `COBOT_ROOT` - absolute path of the project root.
 2. `COBOT_PREFIX` - prefix to use for issuing bot commands.
-3. `GH_TOKEN` - GitHub personal access token to create issues, invite people to
+3. `BOT_ADMINS` - Admins of the errbot instance.
+4. `ROOMS` - Space separated list of rooms to join on startup. e.g.
+   `ROOMS="coala/coala coala/coala/corobo"`
+5. `BACKEND` - Backend to use, default is Gitter.
+6. `GH_TOKEN` - GitHub personal access token to create issues, invite people to
    org, assign and unassign issues, etc.
-4. `GL_TOKEN` - GitLab personal access token to create, assign, unassign
+7. `GL_TOKEN` - GitLab personal access token to create, assign, unassign
    issues, etc.
-5. `WA_TOKEN` - wolframalpha APP_ID to access wolfram API.
+8. `GH_ORG_NAME` - Name of github organization
+9. `GL_ORG_NAME` - Name of gitlab organization
+10. `WA_TOKEN` - wolframalpha APP_ID to access wolfram API.
