@@ -11,6 +11,7 @@ RUN apk add --no-cache libffi openssl git \
            libffi-dev \
            openssl-dev \
     && pip install -r $COBOT_ROOT/requirements.txt \
+    && pip install slackclient python-telegram-bot
     && apk del .build-deps
 
 ADD . $COBOT_ROOT
