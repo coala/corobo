@@ -59,7 +59,7 @@ class LabHub(BotPlugin):
         self.REPOS = dict()
 
         try:
-            self.gh_repos = {repo.full_name.split('/')[1]: repo for repo in
+            self.gh_repos = {repo.full_name.split('/')[-1]: repo for repo in
                              filter(lambda x: (x.full_name.split('/')[0] ==
                                                self.GH_ORG_NAME),
                                     self.IGH.write_repositories)}
@@ -69,7 +69,7 @@ class LabHub(BotPlugin):
             self.REPOS.update(self.gh_repos)
 
         try:
-            self.gl_repos = {repo.full_name.split('/')[1]: repo for repo in
+            self.gl_repos = {repo.full_name.split('/')[-1]: repo for repo in
                              filter(lambda x: (x.full_name.split('/')[0] ==
                                                self.GL_ORG_NAME),
                                     self.IGL.write_repositories)}
@@ -153,7 +153,7 @@ class LabHub(BotPlugin):
         else:
             return ('Can\'t create an issue for a repository that does not '
                     'exist. Please ensure that the repository is available '
-                    'and owned by coala.')
+                    'and owned by the org.')
 
     @re_botcmd(pattern=r'^unassign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                flags=re.IGNORECASE)
@@ -223,12 +223,12 @@ class LabHub(BotPlugin):
                         '`cobot mark wip` if there are known issues that should'
                         ' be corrected by the author.'.format(mr_link=mr.url))
 
-    @re_botcmd(pattern=r'^assign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
+    @re_botcmd(pattern=r'^assign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+/)+issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                flags=re.IGNORECASE)
     def assign_cmd(self, msg, match):
         """Assign to GitLab and GitHub issues."""  # Ignore QuotesBear
         org = match.group(2)
-        repo_name = match.group(3)
+        repo_name = match.group(3)[:-1]
         iss_number = match.group(4)
 
         user = msg.frm.nick
@@ -281,9 +281,9 @@ class LabHub(BotPlugin):
             return True
 
         eligility_conditions = [
-            '- You must be a member of coala org to be assigned an issue '
+            '- You must be a member of {} org to be assigned an issue '
             'If you are not a member yet, just type Hello World and '
-            'corobo will invite you.',
+            'corobo will invite you.'.format(self.GH_ORG_NAME),
             '- A newcomer cannot be assigned to an issue with a difficulty '
             'level higher than newcomer or low difficulty.',
         ]
