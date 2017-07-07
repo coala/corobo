@@ -47,8 +47,8 @@ class Explain(BotPlugin):
                           'interested in contributing to coala long term, we '
                           'can fix up the message for you - just tell us :).',
         'rebase': 'It looks like your PR is out of date and needs a rebase.'
-                  '\n\n[This page](https://coala.io/git) may help you to get '
-                  'started on this. We also have [a quick video tutorial on '
+                  '\n\n[This page](https://coala.io/rebase) may help you to get'
+                  ' started on this. We also have [a quick video tutorial on '
                   'how to rebase](https://asciinema.org/a/78683). That should '
                   'help you understand the basics of how it works and what you'
                   'should be doing.\n\nIf you\'re just looking to fix an issue '
