@@ -134,7 +134,7 @@ class LabHub(BotPlugin):
         repo_name = match.group(1)
         iss_title = match.group(2)
         iss_description = match.group(3) if match.group(3) is not None else ''
-        extra_msg = '\nOpened by {} '.format(msg.frm.nick)
+        extra_msg = '\nOpened by @{} '.format(msg.frm.nick)
 
         try:  # This is gitter backend specific
             extra_msg += ('at [gitter/{uri}](https://gitter.im/{uri}?at={idd})'
