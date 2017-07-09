@@ -10,7 +10,9 @@ text = errbot.rendering.text()
 
 def test_explain(testbot):
     testbot.assertCommand("!explain REView",
-                          text.convert(Explain.MSGS['review']))
+                          text.convert(Explain.MSGS['review']).format(
+                            bot_prefix=testbot.bot_config.BOT_PREFIX
+                          ))
     testbot.assertCommand("!explain gOOgle",
                           text.convert(Explain.MSGS['google']))
     testbot.assertCommand("!explain not_found",

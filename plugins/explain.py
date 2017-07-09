@@ -24,8 +24,8 @@ class Explain(BotPlugin):
                   '`unack <sha>(commit needs work) needs work` comments on the '
                   'pull request, be sure to remove other spacing like tabs. If '
                   'you\'re done with a pull request, you can use '
-                  '`cobot mark wip <pull URL>` to mark it *work in progress* '
-                  'finally.',
+                  '`{bot_prefix} mark wip <pull URL>` to mark it *work in '
+                  'progress* finally.',
         'closes': 'We use bug prediction in coala which relies on the `Fixes` '
                   'keyword in commit messages. To get good results from that '
                   'we need to use `Closes` for normal issues instead of `Fixes`'

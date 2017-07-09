@@ -207,9 +207,11 @@ class LabHub(BotPlugin):
                 current_labels.append('process/wip')
                 mr.labels = current_labels
                 return ('The pull request {mr_link} is marked *work in progress'
-                        '*. Use `cobot mark pending` or push to your branch if '
-                        'feedback from the community is needed again.'.format(
-                            mr_link=mr.url)
+                        '*. Use `{bot_prefix} mark pending` or push to your '
+                        'branch if feedback from the community is needed '
+                        'again.'.format(
+                            mr_link=mr.url,
+                            bot_prefix=self.bot_config.BOT_PREFIX)
                         )
             else:
                 wip_labels = ['process/wip']
@@ -220,8 +222,11 @@ class LabHub(BotPlugin):
                 mr.labels = current_labels
                 return ('The pull request {mr_link} is marked *pending review*,'
                         'so you will get feedback from the community. Use '
-                        '`cobot mark wip` if there are known issues that should'
-                        ' be corrected by the author.'.format(mr_link=mr.url))
+                        '`{bot_prefix} mark wip` if there are known issues that'
+                        ' should be corrected by the author.'.format(
+                            mr_link=mr.url,
+                            bot_prefix=self.bot_config.BOT_PREFIX)
+                        )
 
     @re_botcmd(pattern=r'^assign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+/)+issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                flags=re.IGNORECASE)
