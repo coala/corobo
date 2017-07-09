@@ -86,7 +86,8 @@ class LabHub(BotPlugin):
     def TEAMS(self, new):
         self._teams = new
 
-    @re_botcmd(pattern=r'(?:(?:invite)|(?:inv))\s+(\w+)\s*(?:to)\s+(\w+)')
+    # Ignore LineLengthBear, PycodestyleBear
+    @re_botcmd(pattern=r'(?:(?:invite)|(?:inv))\s+@?([\w-]+)(?:\s*(?:to)\s+(\w+))?')
     def invite_cmd(self, msg, match):
         """
         Invite given user to given team. By default it invites to
