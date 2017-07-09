@@ -94,5 +94,9 @@ class Explain(BotPlugin):
     @re_botcmd(pattern=r'explain\s+(\w+)(?:\s+to\s+@?([\w-]+))?', flags=re.IGNORECASE)
     def explain(self, msg, match):
         """Explain various terms."""  # Ignore QuotesBear
-        return ('@{} :\n'.format(match.group(2) if match.group(2) else '') +
-                self.MSGS.get(match.group(1).lower(), self.ERROR_MSG))
+        return ('{}'.format('@{}: \n'.format(match.group(2))
+                            if match.group(2) else '') +
+                self.MSGS.get(
+                    match.group(1).lower(),
+                    self.ERROR_MSG
+                ).format(bot_prefix=self.bot_config.BOT_PREFIX))
