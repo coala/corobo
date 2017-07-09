@@ -96,8 +96,7 @@ class LabHub(BotPlugin):
         invitee = match.group(1)
         inviter = msg.frm.nick
 
-        team = (self.GH_ORG_NAME + ' newcomers' if match.group(2) is None
-                else match.group(2))
+        team = 'newcomers' if match.group(2) is None else match.group(2)
 
         self.log.info('{} invited {} to {}'.format(inviter, invitee, team))
 
