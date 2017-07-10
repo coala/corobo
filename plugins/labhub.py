@@ -250,34 +250,37 @@ class LabHub(BotPlugin):
             checks.append(function)
             return function
 
-        @register_check
-        def difficulty_level(user, iss):
-            """
-            True if:
-            1. A newcomer is asking for assignment to low or newcomer issue.
-            2. The user belongs to developers or maintainers team as well as
-               newcomers team.
-            False if
-            1. A newcomer asks for assignment to an issue that has no difficulty
-               label.
-            2. A newcomer asks for assignment to an issue with difficulty higher
-               than low.
-            """
-            if (self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user) and
-                not (self.TEAMS[self.GH_ORG_NAME + ' developers'].is_member(
-                        user
-                    ) or
-                    self.TEAMS[self.GH_ORG_NAME + ' maintainers'].is_member(
-                        user
-                    ))):
-                diff_labels = filter(lambda x: 'difficulty' in x, iss.labels)
-                if list(filter(lambda x: ('low' in x) or ('newcomer' in x),
-                               diff_labels)):
+        if self.GH_ORG_NAME == 'coala' and self.GL_ORG_NAME == 'coala':
+            @register_check
+            def difficulty_level(user, iss):
+                """
+                True if:
+                1. A newcomer is asking for assignment to low or newcomer issue.
+                2. The user belongs to developers or maintainers team as well as
+                   newcomers team.
+                False if
+                1. A newcomer asks for assignment to an issue that has no
+                   difficulty label.
+                2. A newcomer asks for assignment to an issue with difficulty
+                   higher than low.
+                """
+                if (self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user)
+                    and not (self.TEAMS[self.GH_ORG_NAME +
+                                        ' developers'].is_member(
+                            user
+                        ) or
+                        self.TEAMS[self.GH_ORG_NAME + ' maintainers'].is_member(
+                            user
+                        ))):
+                    diff_labels = filter(
+                        lambda x: 'difficulty' in x, iss.labels)
+                    if list(filter(lambda x: ('low' in x) or ('newcomer' in x),
+                                   diff_labels)):
+                        return True
+                    else:
+                        return False
+                elif self.GH3_ORG.is_member(user):
                     return True
-                else:
-                    return False
-            elif self.GH3_ORG.is_member(user):
-                return True
 
         def eligible(user, iss):
             for chk in checks:

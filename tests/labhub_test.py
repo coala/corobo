@@ -174,6 +174,12 @@ class TestLabHub(unittest.TestCase):
                               'not eligible to be assigned to this issue')
         testbot.pop_message()
 
+        # no assignee, newcomer, difficulty medium
+        labhub.GH_ORG_NAME = 'not-coala'
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'assigned')
+        labhub.GH_ORG_NAME = 'coala'
+
         # newcomer, developer, difficulty/medium
         mock_dev_team.is_member.return_value = True
         mock_maint_team.is_member.return_value = False
