@@ -1,5 +1,6 @@
 import logging
 import unittest
+import queue
 
 from errbot.backends.test import TestBot
 import vcr
@@ -73,13 +74,18 @@ class TestCoatils(unittest.TestCase):
         self.assertEqual(self.testbot.pop_message(),
                          'Your code is flawless :tada:')
         # results and diffs
-        self.testbot.push_message('!run python PyUnusedCodeBear remove_unused_imports=yes\n```\nimport os\na=1\n```')
+        self.testbot.push_message('!run python PyUnusedCodeBear remove_unused_imports=yes '
+                                  'PycodestyleBear\n```\nimport os\nimport this\na=1\n```')
         self.assertEqual(self.testbot.pop_message(),
                          'coala analysis in progress...')
         msg = self.testbot.pop_message()
         self.assertIn('Here is what I think is wrong:', msg)
         self.assertIn('This file contains unused source code',
                       msg)
+
+        # ensuring that only one result is yielded
+        with self.assertRaises(queue.Empty):
+            next_msg = self.testbot.pop_message()
         # error
         self.testbot.push_message('!run a b\n```\nc\n```')
         self.assertEqual(self.testbot.pop_message(),

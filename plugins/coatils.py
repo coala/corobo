@@ -172,7 +172,8 @@ class Coatils(BotPlugin):
         """
         lang = match.group(1)
         bear_settings = type(self).construct_settings(match.group(2))
-        code = match.group(3)
+        code = match.group(3) + ('\n' if not match.group(3).endswith('\n')
+                                 else '')
 
         yield 'coala analysis in progress...'
 
@@ -230,12 +231,12 @@ class Coatils(BotPlugin):
                                      'issue: \n')
                     for diff in diffs:
                         diff = ''.join(diff.splitlines(True)[2:])
-                        diff_message += '```diff\n{}\n```\n'.format(
+                        diff_message += '```diff\n{}```\n'.format(
                             textwrap.indent(diff, '   ')
                         )
 
-                result_message += '- {} - {} :\n{}{diff}'.format(
+                result_message += '- {} - {} :\n{}{diff}\n'.format(
                     origin, afm, message, diff=diff_message
                 )
 
-                yield result_message
+            yield result_message
