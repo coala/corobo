@@ -20,6 +20,8 @@
 8. `GH_ORG_NAME` - Name of github organization - Mandatory for LabHub GitHub
 9. `GL_ORG_NAME` - Name of gitlab organization - Mandatory for LabHub GitLab
 10. `WA_TOKEN` - wolframalpha APP_ID to access wolfram API.
+11. `IGNORE_USERNAMES` - space separated list of usernames to ignore messages
+    from.
 
 ## Setup without docker
 

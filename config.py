@@ -23,6 +23,9 @@ BOT_IDENTITY = {
     'token': os.environ['COBOT_TOKEN']
 }
 
+IGNORE_USERNAMES = os.environ.get("IGNORE_USERNAMES",
+                                  'co-robo coala-bot').split()
+
 DIVERT_TO_PRIVATE = ('help', )
 
 ROOMS_TO_JOIN = (
