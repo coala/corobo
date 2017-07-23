@@ -1,0 +1,11 @@
+[Core]
+module = answer
+name = answer
+
+[Documentation]
+description = Answer questions, intelligently ;)
+
+[Python]
+version = 3
+
+[Errbot]
