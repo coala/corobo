@@ -1,0 +1,11 @@
+[Core]
+name = pitchfork
+module = pitchfork
+
+[Documentation]
+description = To pitchfork users down to ...
+
+[Python]
+version = 3
+
+[Errbot]
