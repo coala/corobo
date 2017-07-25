@@ -78,6 +78,8 @@ class LabHub(BotPlugin):
         else:
             self.REPOS.update(self.gl_repos)
 
+        self.invited_users = set()
+
     @property
     def TEAMS(self):
         return self._teams
@@ -121,11 +123,13 @@ class LabHub(BotPlugin):
         """Invite the user whose message includes the holy 'hello world'"""
         if re.search(r'hello\s*,?\s*world', msg.body, flags=re.IGNORECASE):
             user = msg.frm.nick
-            if not self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user):
+            if (not self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user)
+                    and user not in self.invited_users):
                 # send the invite
                 self.send(msg.frm,
                           self.INVITE_SUCCESS['newcomers'].format(user))
                 self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
+                self.invited_users.add(user)
 
     @re_botcmd(pattern=r'(?:new|file) issue ([\w-]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                flags=re.IGNORECASE)

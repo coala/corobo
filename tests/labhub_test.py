@@ -1,5 +1,6 @@
 import logging
 import os
+import queue
 import unittest
 from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock
 
@@ -67,7 +68,10 @@ class TestLabHub(unittest.TestCase):
         labhub.TEAMS = teams
         self.mock_team.is_member.return_value = False
         testbot.assertCommand('hello, world', 'newcomer')
-        testbot.assertCommand('helloworld', 'newcomer')
+        # Since the user won't be invited again, it'll timeout waiting for a
+        # response.
+        with self.assertRaises(queue.Empty):
+            testbot.assertCommand('helloworld', 'newcomer')
         self.mock_team.invite.assert_called_with(None)
 
     def test_create_issue_cmd(self):
