@@ -1,17 +1,22 @@
 import json
+import os
 
 from flask import Flask, jsonify, request
 from gensim.summarization import summarize
 
-from .final import graph, get_answer
+from .final import get_answer, construct_graph
+from .extraction import parse_docs
 
 app = Flask(__name__)
+
+DATA = parse_docs()
+GRAPH = construct_graph(DATA)
 
 
 @app.route('/answer')
 def serve_answer():
-    global graph
-    return jsonify(list(get_answer(request.args.get('question'), graph)))
+    global GRAPH
+    return jsonify(list(get_answer(request.args.get('question'), GRAPH)))
 
 
 @app.route('/summarize')

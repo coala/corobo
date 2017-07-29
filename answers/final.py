@@ -7,9 +7,8 @@ import networkx
 import nltk
 import spacy
 
-from .extraction import DATA, parse_docs
+from .extraction import parse_docs
 
-parse_docs()
 
 nlp = spacy.load('en_core_web_md')
 
@@ -89,12 +88,12 @@ def get_answer(question, graph, final=False):
         yield (doc, i)
 
 
-def construct_graph():
+def construct_graph(data):
     """
     Construct graph from documentation.
     """
     graph = networkx.Graph()
-    for name, doc in DATA.items():
+    for name, doc in data.items():
         meta = {
             'section_name': name,
             'code': doc['code'],
@@ -104,9 +103,9 @@ def construct_graph():
     return graph
 
 
-graph = construct_graph()
-
 if __name__ == '__main__':
+    data = parse_docs()
+    graph = construct_graph(data)
     try:
         def mod(y): return map(lambda x: (x[0][:100], x[1]), y)
         while True:

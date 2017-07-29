@@ -10,11 +10,6 @@ import docutils.parsers.rst
 
 from .utils import get_abs_path
 
-# This is the variable in which all of the documentation will be parsed and
-# stored.
-# Documentation of section x-y-z is stored in DATA['x-y-z']
-DATA = {}
-
 
 class IgnoredDirective(docutils.parsers.rst.Directive):
 
@@ -36,15 +31,16 @@ class Extractor(docutils.nodes.SparseNodeVisitor):
     Node visitor to extract information from nodes.
     """
 
-    def __init__(self, document, name=''):
+    def __init__(self, document, data, name=''):
         super().__init__(document)
         self.name = name
+        self.data = data
 
     def visit_section(self, node):
         non_section_childs = list(filter(
             lambda x: type(x) != docutils.nodes.section, node.children
         ))
-        handle_non_section_nodes(node, non_section_childs, self.name)
+        handle_non_section_nodes(node, non_section_childs, self.name, self.data)
 
 
 def parse_rst(path):
@@ -63,7 +59,8 @@ def parse_rst(path):
     return document
 
 
-def handle_non_section_nodes(section_node, non_section_child_nodes, doc_name):
+def handle_non_section_nodes(section_node, non_section_child_nodes, doc_name,
+                             data):
     """
     All the nodes that are not section nodes are parsed here.
     """
@@ -76,8 +73,7 @@ def handle_non_section_nodes(section_node, non_section_child_nodes, doc_name):
     code = '\n'.join(map(lambda x: x.astext(), code_nodes))
     text = '\n'.join(map(lambda x: x.astext(), non_code_nodes))
 
-    global DATA
-    DATA[section_node.get('ids')[0]] = {
+    data[section_node.get('ids')[0]] = {
         "code": code,
         "text": (text + '\n' + doc_name[:-4] + '.html#' +
                  section_node.get('ids')[0]),
@@ -87,9 +83,11 @@ def handle_non_section_nodes(section_node, non_section_child_nodes, doc_name):
 
 def parse_docs():
     """
-    Parse all documentation files and store information in DATA
+    Parse all documentation files and store information in data.
     """
+    data = {}
     for files in os.listdir(get_abs_path('coala/docs/Developers')):
         rst = parse_rst(get_abs_path('coala/docs/Developers/' + files))
-        extractor = Extractor(rst, files)
+        extractor = Extractor(rst, data, files)
         rst.walk(extractor)
+    return data
