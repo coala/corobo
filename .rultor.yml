@@ -4,4 +4,8 @@ docker:
 
 merge:
   fast-forward: only
+  merge:
+    - bash .ci/check_maintainership.sh
 
+decrypt:
+  rultor_github_secrets.sh: "repo/.ci/rultor_github_secrets.sh.asc"
