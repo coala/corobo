@@ -14,8 +14,10 @@ class LabHub(BotPlugin):
     """GitHub and GitLab utilities"""  # Ignore QuotesBear
 
     INVITE_SUCCESS = {
-        'newcomers': 'Welcome @{}! :tada:\n\nTo get started, please follow '
-                     'our [newcomers guide](https://coala.io/newcomer). Most '
+        'newcomers': 'Welcome @{}! :tada:\n\nWe\'ve just sent you an invite'
+                     ' via email. Please accept it before proceeding forward.'
+                     '\nTo get started, please follow our [newcomers guide]'
+                     '(https://coala.io/newcomer). Most '
                      'issues will be explained there and in linked pages - it '
                      'will save you a lot of time, just read it. *Really.*\n\n'
                      '*Do not take an issue if you don\'t understand it on '
