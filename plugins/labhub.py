@@ -30,7 +30,9 @@ class LabHub(BotPlugin):
                      'also be there for you at all times to help you with '
                      'actual problems. :)',
         'developers': ' Wow @{}, you are a part of developers team now! :tada: '
-                      'Welcome to ourcommunity!',
+                      'Welcome to ourcommunity! You were a newcomer before, '
+                      'and we\'d like to know what could\'ve been better, '
+                      'please fill http://coala.io/newform',
         'maintainers': ' @{} you seem to be awesome! You are now a maintainer! '
                        ':tada: Please go through '
                        'https://github.com/coala/coala/wiki/Membership'
