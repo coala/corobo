@@ -23,6 +23,11 @@
 11. `IGNORE_USERNAMES` - space separated list of usernames to ignore messages
     from.
 
+## Environment Variables for answers microservice
+
+1. `ANSWER_END` - Endpoint of `answers` microservice(in `answers/` directory). It is exposed at port
+   `8000`.
+
 ## Setup without docker
 
 1. Install the dependencies
