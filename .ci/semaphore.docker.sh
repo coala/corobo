@@ -1,6 +1,7 @@
 set -e -x
 
 docker build -t meetmangukiya/corobo .
+docker build -t meetmangukiya/corobo-answers answers/
 
 docker images
 
@@ -12,5 +13,5 @@ docker run --user root meetmangukiya/corobo /bin/sh -c "
 "
 
 if [[ $BRANCH_NAME == "master" ]]
-then echo "pushing..." && docker push meetmangukiya/corobo
+then echo "pushing..." && docker push meetmangukiya/corobo && docker push meetmangukiya/corobo-answers
 fi
