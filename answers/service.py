@@ -4,8 +4,8 @@ import os
 from flask import Flask, jsonify, request
 from gensim.summarization import summarize
 
-from .final import get_answer, construct_graph
-from .extraction import parse_docs
+from final import get_answer, construct_graph
+from extraction import parse_docs
 
 app = Flask(__name__)
 

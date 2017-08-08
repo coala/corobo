@@ -7,7 +7,7 @@ import networkx
 import nltk
 import spacy
 
-from .extraction import parse_docs
+from extraction import parse_docs
 
 
 nlp = spacy.load('en_core_web_md')

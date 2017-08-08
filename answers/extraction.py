@@ -8,7 +8,7 @@ import docutils
 import docutils.nodes
 import docutils.parsers.rst
 
-from .utils import get_abs_path
+from utils import get_abs_path
 
 
 class IgnoredDirective(docutils.parsers.rst.Directive):
