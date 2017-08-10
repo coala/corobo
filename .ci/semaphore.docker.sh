@@ -1,6 +1,7 @@
 set -e -x
 
 docker build -t meetmangukiya/corobo .
+docker pull meetmangukiya/corobo-answers:latest
 docker build -t meetmangukiya/corobo-answers answers/
 
 docker images
