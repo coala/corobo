@@ -8,6 +8,15 @@ import requests
 
 class Answer(BotPlugin):
 
+    @staticmethod
+    def construct_link(text):
+        if 'coala/docs/' in text:
+            text = text.split('coala/docs/')[-1]
+            return 'https://api.coala.io/en/latest/' + text
+        elif 'documentation/' in text:
+            text = text.split('documentation/')[-1]
+            return 'https://docs.coala.io/en/latest/' + text
+
     @botcmd
     def answer(self, msg, arg):
         try:
@@ -21,8 +30,8 @@ class Answer(BotPlugin):
             yield requests.post(urljoin(os.environ['ANSWER_END'],  'summarize'),
                                 json={'text': answers[0][0]}).json()['res']
             # Ignore InvalidLinkBear
-            doc_link = 'https://api.coala.io/en/latest/Developers/' + \
-                answers[0][0].splitlines()[-1]
-            yield 'You can read more here: {}'.format(doc_link)
+            yield 'You can read more here: {}'.format(
+                type(self).construct_link(answers[0][0].splitlines()[-1])
+            )
         else:
             yield 'Dunno'

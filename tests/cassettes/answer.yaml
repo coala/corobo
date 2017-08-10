@@ -18,18 +18,18 @@ interactions:
       Content-Length: ['91']
       Content-Security-Policy: [default-src 'none']
       Content-Type: [application/json; charset=utf-8]
-      Date: ['Sun, 13 Aug 2017 16:37:03 GMT']
+      Date: ['Sun, 13 Aug 2017 17:44:58 GMT']
       Server: [GitHub.com]
       Status: [401 Unauthorized]
       Strict-Transport-Security: [max-age=31536000; includeSubdomains; preload]
       X-Content-Type-Options: [nosniff]
       X-Frame-Options: [deny]
       X-GitHub-Media-Type: [github.v3; format=json]
-      X-GitHub-Request-Id: ['858E:E9B7:489031:6206AC:5990802E']
+      X-GitHub-Request-Id: ['85DA:E9B4:1B2AEC:24DB19:5990901A']
       X-RateLimit-Limit: ['60']
       X-RateLimit-Remaining: ['58']
-      X-RateLimit-Reset: ['1502645757']
-      X-Runtime-rack: ['0.007237']
+      X-RateLimit-Reset: ['1502649368']
+      X-Runtime-rack: ['0.009098']
       X-XSS-Protection: [1; mode=block]
     status: {code: 401, message: Unauthorized}
 - request:
@@ -47,7 +47,7 @@ interactions:
       Cache-Control: ['max-age=0, private, must-revalidate']
       Content-Length: ['2']
       Content-Type: [application/json]
-      Date: ['Sun, 13 Aug 2017 16:37:04 GMT']
+      Date: ['Sun, 13 Aug 2017 17:44:59 GMT']
       Etag: [W/"d751713988987e9331980363e24189ce"]
       Link: ['<https://gitlab.com/api/v4/projects?User-Agent=IGitt&archived=false&membership=true&order_by=created_at&owned=false&page=1&per_page=100&simple=false&sort=desc&starred=false&statistics=false&with_issues_enabled=false&with_merge_requests_enabled=false>;
           rel="first", <https://gitlab.com/api/v4/projects?User-Agent=IGitt&archived=false&membership=true&order_by=created_at&owned=false&page=0&per_page=100&simple=false&sort=desc&starred=false&statistics=false&with_issues_enabled=false&with_merge_requests_enabled=false>;
@@ -60,8 +60,8 @@ interactions:
       X-Page: ['1']
       X-Per-Page: ['100']
       X-Prev-Page: ['']
-      X-Request-Id: [6e320ed0-e904-4455-8eab-a80b701fffca]
-      X-Runtime: ['0.020333']
+      X-Request-Id: [37b15b40-7d5b-479c-b9e9-df9ff04ddc86]
+      X-Runtime: ['0.023423']
       X-Total: ['0']
       X-Total-Pages: ['0']
     status: {code: 200, message: OK}
@@ -82,7 +82,7 @@ interactions:
       Connection: [close]
       Content-Length: ['3']
       Content-Type: [application/json]
-      Date: ['Sun, 13 Aug 2017 16:37:04 GMT']
+      Date: ['Sun, 13 Aug 2017 17:45:00 GMT']
       Server: [gunicorn/19.7.1]
     status: {code: 200, message: OK}
 - request:
@@ -156,81 +156,80 @@ interactions:
         \ and\\n3.5 on linux.\\n\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
         \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
         \ python\\n\\n    # Reason why this function is untestable.\\n    def untestable_func():\
-        \ # pragma: no cover\\n        # Untestable code.\\n        pass\\nWriting_Tests.html#actually-writing-a-test\"\
-        , \n    1.0\n  ], \n  [\n    \"Welcome to the Newcomers' Guide!\\nDO NOT WORK\
-        \ ON ANY ISSUE WITHOUT ASSIGNMENT! If you do, someone else might\\nwork on\
-        \ it as well, and we might have no choice but to reject one of your Pull\\\
-        nRequests. We hate it if someone's time is wasted. For your own sake, please\\\
-        nfollow this guide. We put a lot of work into this for you!\\nEveryone in\
-        \ the coala community is expected to follow our\\nCode of Conduct.\\nTo become\
-        \ part of the coala developers team, there are a few steps you need\\nto complete.\
-        \ The newcomer process is as follows:\\nYou will start as a newcomer, which\
-        \ is kind of a trial. If you complete the\\nfollowing tasks, you will become\
-        \ a developer at coala:\\nrun coala on a project of yours\\n\\nmerge a difficulty/newcomer\
-        \ Pull Request\\n\\nreview at least a difficulty/newcomer Pull Request\\n\\\
-        nmerge a difficulty/low Pull Request\\n\\nreview at least a difficulty/low\
-        \ or higher Pull Request\\nOnce you've run coala on a project, please fill\
-        \ out our\\nusability survey. And once you've got your first Pull\\nRequest\
-        \ merged successfully, fill out our\\nsurvey form. By doing so, you can help\
-        \ us make your\\nexperience better!\\nOnce you have achieved all these, just\
-        \ ask to be promoted on the chat\\n(see step 1 below) and provide links to\
-        \ your reviews and merged Pull Requests.\\nThen you'll be able to call yourself\
-        \ a coala developer!\\nDon't just fix a newcomer issue! Supervising newcomers\
-        \ is really a lot\\nof work. We're all volunteers and we can't keep this up\
-        \ if you don't help\\nus in other areas as well!\\nOf course, the order of\
-        \ the steps above is not important, although we\\nrecommend that you start\
-        \ with a newcomer issue, end with a low issue,\\nand review other PRs in the\
-        \ meantime!\\nThis is a step-based guide that will help you make your first\
-        \ contribution\\nto coala, while getting you familiar with the workflow!\\\
-        nFor more information about Pull Requests, keep reading!\\nYou do not need\
-        \ to read the coala codebase to get started - this guide\\nis intended to\
-        \ help you do that without reading tons of meaningless code.\\nNobody is good\
-        \ at that.\\n\\nMost importantly, this guide is not intended to \\\"check\
-        \ if you are fit\\\" to\\ncontribute, but is rather a crash course to make\
-        \ you fit to contribute. We\\nare a bit picky when it comes to code quality,\
-        \ but it's actually not at all\\nhard to get to this level if you bear with\
-        \ us through this guide.\\nNewcomers_Guide.html#welcome-to-the-newcomers-guide\"\
-        , \n    0.6511627906976745\n  ], \n  [\n    \"Step 1. Meet the Community and\
-        \ Get an Invitation to the Organization\\nTo get started, the first step is\
-        \ to meet the community. We use gitter to\\ncommunicate, and there the helpful\
-        \ community will guide you.\\nGitter is an instant messaging service used\
-        \ by developers and users of GitHub.\\nGitter uses chatrooms, where developers\
-        \ can join in and can talk about a\\nparticular topic.\\ncoala has 2 types\
-        \ of chatrooms - repository chatrooms and discussion topics.\\nRepository\
-        \ chatrooms are related to a specific repository and\\ndiscussion chatrooms\
-        \ are related to general discussion topics like\\nconferences, workshops,\
-        \ etc.\\ncoala\\nThis is the main chatroom and repository chatroom of coala/coala.\\\
-        n\\ngsoc\\nThis is where you discuss about Google Summer of Code.\\n\\ncoala-bears\\\
-        nRepo chatroom for coala/coala-bears.\\n\\nworkshop\\nDiscussions related\
-        \ to workshops go here.\\n\\nconferences\\nEverything related to conferences.\\\
-        n\\nofftopic\\nAnything fun! Our gaming sessions start here.\\nThe list of\
-        \ all available chatrooms are available here - channel list\\nBut before joining\
-        \ the community, here are few things that you should\\nkeep in mind.\\nOnly\
-        \ log into Gitter using your GitHub account and not your Twitter account\\\
-        nsince the Gitter bot corobo identifies each user from their GitHub\\nusername\
-        \ which makes it possible to automate certain tasks such as asking\\nthe bot\
-        \ to assign an issue to your profile.\\n\\nDon't @-mention or private message\
-        \ people, unless its utterly important.\\n@ mentions generate notifications\
-        \ on the various gitter clients the user\\nmay be signed into, you might even\
-        \ wake someone on the other side of the\\nworld up. Also it discourages other\
-        \ people to answer the question,\\nso you might wait longer for an answer.\\\
-        n\\nDon't use /all if you are a newcomer or do not have a critical reason.\\\
-        n\\nDon't repeatedly @-mention people in an ongoing conversation.\\n\\nYou\
-        \ should ask someone before mentioning them.\\nNow you are ready to join coala\
-        \ community at coala gitter.\\nThe newcomers should ping us \\\"Hello World\\\
-        \" to let us know they are here\\nbecause we care!\\nWhen you say \\\"Hello\
-        \ World\\\" in chat corobo (our gitter bot) will invite you\\nto be part of\
-        \ the Newcomer team. The invitation will be sent by mail and you\\nwill have\
-        \ to accept it to join. If you don't find the invitation, accept it\\nhere.\\\
-        nCongratulations! Now that you are part of our organization, you can start\\\
-        nworking on issues. If you are familiar with git, you can skip the next section\\\
-        nand pick an issue.\\nNewcomers_Guide.html#step-1-meet-the-community-and-get-an-invitation-to-the-organization\"\
-        , \n    0.6511627906976745\n  ]\n]\n"}
+        \ # pragma: no cover\\n        # Untestable code.\\n        pass\\n/app/coala/docs/Developers/Writing_Tests.html#actually-writing-a-test\"\
+        , \n    1.0\n  ], \n  [\n    \"Step 1. Meet the Community and Get an Invitation\
+        \ to the Organization\\nTo get started, the first step is to meet the community.\
+        \ We use gitter to\\ncommunicate, and there the helpful community will guide\
+        \ you.\\nGitter is an instant messaging service used by developers and users\
+        \ of GitHub.\\nGitter uses chatrooms, where developers can join in and can\
+        \ talk about a\\nparticular topic.\\ncoala has 2 types of chatrooms - repository\
+        \ chatrooms and discussion topics.\\nRepository chatrooms are related to a\
+        \ specific repository and\\ndiscussion chatrooms are related to general discussion\
+        \ topics like\\nconferences, workshops, etc.\\ncoala\\nThis is the main chatroom\
+        \ and repository chatroom of coala/coala.\\n\\ngsoc\\nThis is where you discuss\
+        \ about Google Summer of Code.\\n\\ncoala-bears\\nRepo chatroom for coala/coala-bears.\\\
+        n\\nworkshop\\nDiscussions related to workshops go here.\\n\\nconferences\\\
+        nEverything related to conferences.\\n\\nofftopic\\nAnything fun! Our gaming\
+        \ sessions start here.\\nThe list of all available chatrooms are available\
+        \ here - channel list\\nBut before joining the community, here are few things\
+        \ that you should\\nkeep in mind.\\nOnly log into Gitter using your GitHub\
+        \ account and not your Twitter account\\nsince the Gitter bot corobo identifies\
+        \ each user from their GitHub\\nusername which makes it possible to automate\
+        \ certain tasks such as asking\\nthe bot to assign an issue to your profile.\\\
+        n\\nDon't @-mention or private message people, unless its utterly important.\\\
+        n@ mentions generate notifications on the various gitter clients the user\\\
+        nmay be signed into, you might even wake someone on the other side of the\\\
+        nworld up. Also it discourages other people to answer the question,\\nso you\
+        \ might wait longer for an answer.\\n\\nDon't use /all if you are a newcomer\
+        \ or do not have a critical reason.\\n\\nDon't repeatedly @-mention people\
+        \ in an ongoing conversation.\\n\\nYou should ask someone before mentioning\
+        \ them.\\nNow you are ready to join coala community at coala gitter.\\nThe\
+        \ newcomers should ping us \\\"Hello World\\\" to let us know they are here\\\
+        nbecause we care!\\nWhen you say \\\"Hello World\\\" in chat corobo (our gitter\
+        \ bot) will invite you\\nto be part of the Newcomer team. The invitation will\
+        \ be sent by mail and you\\nwill have to accept it to join. If you don't find\
+        \ the invitation, accept it\\nhere.\\nCongratulations! Now that you are part\
+        \ of our organization, you can start\\nworking on issues. If you are familiar\
+        \ with git, you can skip the next section\\nand pick an issue.\\n/app/coala/docs/Developers/Newcomers_Guide.html#step-1-meet-the-community-and-get-an-invitation-to-the-organization\"\
+        , \n    0.7272727272727273\n  ], \n  [\n    \"Welcome to the Newcomers' Guide!\\\
+        nDO NOT WORK ON ANY ISSUE WITHOUT ASSIGNMENT! If you do, someone else might\\\
+        nwork on it as well, and we might have no choice but to reject one of your\
+        \ Pull\\nRequests. We hate it if someone's time is wasted. For your own sake,\
+        \ please\\nfollow this guide. We put a lot of work into this for you!\\nEveryone\
+        \ in the coala community is expected to follow our\\nCode of Conduct.\\nTo\
+        \ become part of the coala developers team, there are a few steps you need\\\
+        nto complete. The newcomer process is as follows:\\nYou will start as a newcomer,\
+        \ which is kind of a trial. If you complete the\\nfollowing tasks, you will\
+        \ become a developer at coala:\\nrun coala on a project of yours\\n\\nmerge\
+        \ a difficulty/newcomer Pull Request\\n\\nreview at least a difficulty/newcomer\
+        \ Pull Request\\n\\nmerge a difficulty/low Pull Request\\n\\nreview at least\
+        \ a difficulty/low or higher Pull Request\\nOnce you've run coala on a project,\
+        \ please fill out our\\nusability survey. And once you've got your first Pull\\\
+        nRequest merged successfully, fill out our\\nsurvey form. By doing so, you\
+        \ can help us make your\\nexperience better!\\nOnce you have achieved all\
+        \ these, just ask to be promoted on the chat\\n(see step 1 below) and provide\
+        \ links to your reviews and merged Pull Requests.\\nThen you'll be able to\
+        \ call yourself a coala developer!\\nDon't just fix a newcomer issue! Supervising\
+        \ newcomers is really a lot\\nof work. We're all volunteers and we can't keep\
+        \ this up if you don't help\\nus in other areas as well!\\nOf course, the\
+        \ order of the steps above is not important, although we\\nrecommend that\
+        \ you start with a newcomer issue, end with a low issue,\\nand review other\
+        \ PRs in the meantime!\\nThis is a step-based guide that will help you make\
+        \ your first contribution\\nto coala, while getting you familiar with the\
+        \ workflow!\\nFor more information about Pull Requests, keep reading!\\nYou\
+        \ do not need to read the coala codebase to get started - this guide\\nis\
+        \ intended to help you do that without reading tons of meaningless code.\\\
+        nNobody is good at that.\\n\\nMost importantly, this guide is not intended\
+        \ to \\\"check if you are fit\\\" to\\ncontribute, but is rather a crash course\
+        \ to make you fit to contribute. We\\nare a bit picky when it comes to code\
+        \ quality, but it's actually not at all\\nhard to get to this level if you\
+        \ bear with us through this guide.\\n/app/coala/docs/Developers/Newcomers_Guide.html#welcome-to-the-newcomers-guide\"\
+        , \n    0.7045454545454546\n  ]\n]\n"}
     headers:
       Connection: [close]
-      Content-Length: ['9677']
+      Content-Length: ['9758']
       Content-Type: [application/json]
-      Date: ['Sun, 13 Aug 2017 16:37:05 GMT']
+      Date: ['Sun, 13 Aug 2017 17:45:00 GMT']
       Server: [gunicorn/19.7.1]
     status: {code: 200, message: OK}
 - request:
@@ -289,12 +288,12 @@ interactions:
       is measured using python 3.4 and\n3.5 on linux.\n\n/app/coala/docs/Developers/Writing_Tests.rst:148:
       (WARNING/2) Cannot analyze code. Pygments package not found.\n\n.. code:: python\n\n    #
       Reason why this function is untestable.\n    def untestable_func(): # pragma:
-      no cover\n        # Untestable code.\n        pass\nWriting_Tests.html#actually-writing-a-test"}'
+      no cover\n        # Untestable code.\n        pass\n/app/coala/docs/Developers/Writing_Tests.html#actually-writing-a-test"}'
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['4604']
+      Content-Length: ['4631']
       Content-Type: [application/json]
       User-Agent: [python-requests/2.18.3]
     method: POST
@@ -306,22 +305,134 @@ interactions:
         noverall functionality of your component by invoking each test case.\\nThe\
         \ basic declaration for a test suite class is as follows:\\nYou should derive\
         \ your test suite from unittest.TestCase to have\\nmember function without\
-        \ parameters, starting with test_.\\ndef not_testing(self):\\nBut how do you\
-        \ actually test if your component is correct?\\nand pass the result to the\
-        \ overall test-suite-invoking-instance, that\\n# The sys import and setup\
-        \ is not needed here because this example doesn't\\ndef test_case1(self):\\\
-        ndef test_case1(self):\\nTests in coala are evaluated against their coverage,\
-        \ means how many\\nCode coverage is measured using python 3.4 and\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
+        \ parameters, starting with test_.\\nBut how do you actually test if your\
+        \ component is correct?\\nand pass the result to the overall test-suite-invoking-instance,\
+        \ that\\n# The sys import and setup is not needed here because this example\
+        \ doesn't\\ndef test_case1(self):\\ndef test_case1(self):\\nTests in coala\
+        \ are evaluated against their coverage, means how many\\nCode coverage is\
+        \ measured using python 3.4 and\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
         \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
         \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
         \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
         \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
-        \ (WARNING/2) Cannot analyze code.\"\n}\n"}
+        \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.html#actually-writing-a-test\"\
+        \n}\n"}
     headers:
       Connection: [close]
-      Content-Length: ['1283']
+      Content-Length: ['1330']
       Content-Type: [application/json]
-      Date: ['Sun, 13 Aug 2017 16:37:05 GMT']
+      Date: ['Sun, 13 Aug 2017 17:45:00 GMT']
+      Server: [gunicorn/19.7.1]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.3]
+    method: GET
+    uri: http://0.0.0.0:8000/answer?question=shell+autocompletion
+  response:
+    body: {string: "[\n  [\n    \"Shell-Autocompletion Support\\nIf you are a bash/zsh\
+        \ user , checkout the\\nguide\\nto set up autocompletion for coala arguments\
+        \ and bear names.\\n/app/documentation/Users/Install.html#shell-autocompletion-support\"\
+        , \n    1.0\n  ], \n  [\n    \"Shell Autocompletion\\nIf you're using bash\
+        \ or zsh you can set them up to have tab completion\\nfor coala arguments\
+        \ and bear names.\\nInstall argcomplete:\\nAfter this you have to either activate\
+        \ it\\nglobally\\nor modify your configuration.\\nIf you're using bash, add\
+        \ the following to your .bashrc:\\nIf you're using zsh, add the following\
+        \ to your .zshrc:\\n/app/documentation/Users/Shell_Autocompletion.html#shell-autocompletion\"\
+        , \n    1.0\n  ], \n  [\n    \"Actually Writing a Test\\nSo how do you implement\
+        \ a test in coala? First up, tests are placed into\\nthe coala-bears/tests\
+        \ (if you want to write a test for a bear) or\\ncoala/tests (if you test a\
+        \ component written for the coalib)\\ndirectory. They are also written in\
+        \ Python (version 3) and get\\nautomatically executed by running:\\nThere's\
+        \ only one constraint:\\nThe name of the test file has to end with Test.py\
+        \ (for example\\nMyCustomTest.py, but not MyCustomTestSuite.py).\\nIf pytest\
+        \ seems to give errors, try running python3 -m pytest\\ninstead.\\n\\nOften\
+        \ you don't want to run all available tests. To run your\\nspecific one, type\
+        \ (in the coala root folder):\\n\\n/app/coala/docs/Developers/Writing_Tests.rst:47:\
+        \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
+        \ shell\\n\\n    $ pytest -k <your-test>\\n\\n\\nYou can even give partial\
+        \ names or queries like \\\"not MyCustomTest\\\"\\nto not run a specific test.\
+        \ More information is shown with\\npytest -h\\nComing to the test file structure.\
+        \ Every test script starts with your\\nimports. According to the coala code\
+        \ style (and pep8 style) we first do\\nsystem imports (like re or subprocessing),\
+        \ followed by first party\\nimports (like coalib.result.Result).\\nThen the\
+        \ actual test suite class follows, that contains the tests. Each\\ntest suite\
+        \ is made up of test cases, where the test suite checks the\\noverall functionality\
+        \ of your component by invoking each test case.\\nThe basic declaration for\
+        \ a test suite class is as follows:\\n/app/coala/docs/Developers/Writing_Tests.rst:66:\
+        \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
+        \ python\\n\\n    class YourComponentTest(unittest.TestCase):\\n        #\
+        \ Your test cases.\\n        pass\\n\\nYou should derive your test suite from\
+        \ unittest.TestCase to have\\naccess to the setUp() and tearDown() functions\
+        \ (covered in\\nsection below: ``setUp()`` and ``tearDown()``) and also to\
+        \ the\\nassertion functions.\\nNow to the test cases: To implement a test\
+        \ case, just declare a class\\nmember function without parameters, starting\
+        \ with test_. Easy, isn't\\nit?\\n/app/coala/docs/Developers/Writing_Tests.rst:81:\
+        \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
+        \ python\\n\\n    class YourComponentTest(unittest.TestCase):\\n        #\
+        \ Tests somethin'.\\n        def test_case1(self):\\n            pass\\n\\\
+        n        # Doesn't test, this is just a member function, since the function\
+        \ name\\n        # does not start with 'test_'.\\n        def not_testing(self):\\\
+        n            pass\\n\\nBut how do you actually test if your component is correct?\
+        \ For that\\npurpose you have asserts. Asserts check whether a condition is\
+        \ fulfilled\\nand pass the result to the overall test-suite-invoking-instance,\
+        \ that\\nmanages all tests in coala. The result is processed and you get a\\\
+        nmessage if something went wrong in your test.\\nSo an example test that succeeds\
+        \ would be:\\n/app/coala/docs/Developers/Writing_Tests.rst:106: (WARNING/2)\
+        \ Cannot analyze code. Pygments package not found.\\n\\n.. code:: python\\\
+        n\\n    # The sys import and setup is not needed here because this example\
+        \ doesn't\\n    # use coala components.\\n    import unittest\\n\\n\\n   \
+        \ class YourComponentTest(unittest.TestCase):\\n        # Tests somethin'.\\\
+        n        def test_case1(self):\\n            # Does '1' equal '1'? Interestingly\
+        \ it does... mysterious...\\n            self.assertEqual(1, 1)\\n       \
+        \     # Hm yeah, True is True.\\n            self.assertTrue(True)\\n\\nTests\
+        \ in coala are evaluated against their coverage, means how many\\nstatements\
+        \ will be executed from your component when invoking your\\ntest cases. A\
+        \ branch coverage of 100% is needed for any commit in\\norder to be pushed\
+        \ to master - please ask us on gitter if you need\\nhelp raising your coverage!\\\
+        n\\nThe branch coverage can be measured locally with the\\npytest --cov command.\\\
+        n\\nAs our coverage is measured across builds against several python\\nversions\
+        \ (we need version specific branches here and there) you will\\nnot get the\
+        \ full coverage locally! Simply make a pull request to get\\nthe coverage\
+        \ measured automatically.\\n\\nIf some code is untestable, you need to mark\
+        \ your component code\\nwith # pragma: no cover. Important: Provide a reason\
+        \ why your\\ncode is untestable. Code coverage is measured using python 3.4\
+        \ and\\n3.5 on linux.\\n\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
+        \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
+        \ python\\n\\n    # Reason why this function is untestable.\\n    def untestable_func():\
+        \ # pragma: no cover\\n        # Untestable code.\\n        pass\\n/app/coala/docs/Developers/Writing_Tests.html#actually-writing-a-test\"\
+        , \n    0.5\n  ]\n]\n"}
+    headers:
+      Connection: [close]
+      Content-Length: ['5332']
+      Content-Type: [application/json]
+      Date: ['Sun, 13 Aug 2017 17:45:00 GMT']
+      Server: [gunicorn/19.7.1]
+    status: {code: 200, message: OK}
+- request:
+    body: '{"text": "Shell-Autocompletion Support\nIf you are a bash/zsh user , checkout
+      the\nguide\nto set up autocompletion for coala arguments and bear names.\n/app/documentation/Users/Install.html#shell-autocompletion-support"}'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['220']
+      Content-Type: [application/json]
+      User-Agent: [python-requests/2.18.3]
+    method: POST
+    uri: http://0.0.0.0:8000/summarize
+  response:
+    body: {string: "{\n  \"res\": \"/app/documentation/Users/Install.html#shell-autocompletion-support\"\
+        \n}\n"}
+    headers:
+      Connection: [close]
+      Content-Length: ['82']
+      Content-Type: [application/json]
+      Date: ['Sun, 13 Aug 2017 17:45:00 GMT']
       Server: [gunicorn/19.7.1]
     status: {code: 200, message: OK}
 version: 1

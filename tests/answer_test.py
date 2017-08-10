@@ -21,3 +21,6 @@ class TestAnswer(unittest.TestCase):
         testbot.push_message('!answer getting started with coala')
         testbot.pop_message()
         self.assertIn('You can read more here', testbot.pop_message())
+        testbot.push_message('!answer shell autocompletion')
+        testbot.pop_message()
+        self.assertIn('You can read more here', testbot.pop_message())

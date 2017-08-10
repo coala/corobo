@@ -86,8 +86,12 @@ def parse_docs():
     Parse all documentation files and store information in data.
     """
     data = {}
-    for files in os.listdir(get_abs_path('coala/docs/Developers')):
-        rst = parse_rst(get_abs_path('coala/docs/Developers/' + files))
-        extractor = Extractor(rst, data, files)
-        rst.walk(extractor)
+    doc_folders = map(lambda x: get_abs_path(x),
+                      ['coala/docs/Developers', 'documentation/Users',
+                       'documentation/Help'])
+    for folder in doc_folders:
+        for files in os.listdir(folder):
+            rst = parse_rst(os.path.join(get_abs_path(folder), files))
+            extractor = Extractor(rst, data, folder + '/' + files)
+            rst.walk(extractor)
     return data
