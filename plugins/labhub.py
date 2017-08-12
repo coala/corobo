@@ -93,7 +93,8 @@ class LabHub(BotPlugin):
         self._teams = new
 
     # Ignore LineLengthBear, PycodestyleBear
-    @re_botcmd(pattern=r'(?:(?:invite)|(?:inv))\s+@?([\w-]+)(?:\s*(?:to)\s+(\w+))?')
+    @re_botcmd(pattern=r'(?:(?:invite)|(?:inv))\s+@?([\w-]+)(?:\s*(?:to)\s+(\w+))?',
+               re_cmd_name_help='invite [to team]')
     def invite_cmd(self, msg, match):
         """
         Invite given user to given team. By default it invites to
@@ -136,6 +137,7 @@ class LabHub(BotPlugin):
                 self.invited_users.add(user)
 
     @re_botcmd(pattern=r'(?:new|file) issue ([\w-]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
+               re_cmd_name_help='new issue repo-name title\n[description]',
                flags=re.IGNORECASE)
     def create_issut_cmd(self, msg, match):
         """Create issues on GitHub and GitLab repositories."""  # Ignore QuotesBear, LineLengthBear, PyCodeStyleBear
@@ -164,6 +166,7 @@ class LabHub(BotPlugin):
                     'and owned by the org.')
 
     @re_botcmd(pattern=r'^unassign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
+               re_cmd_name_help='unassign <complete-issue-URL>',
                flags=re.IGNORECASE)
     def unassign_cmd(self, msg, match):
         """Unassign from an issue."""  # Ignore QuotesBear
@@ -190,6 +193,7 @@ class LabHub(BotPlugin):
                 return 'You are not an assignee on the issue.'
 
     @re_botcmd(pattern=r'mark\s+(wip|pending)\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/(pull|merge_requests)/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
+               re_cmd_name_help='mark (wip|pending) <complete-PR-URL>',
                flags=re.IGNORECASE)
     def mark_cmd(self, msg, match):
         """Mark a given PR/MR with status labels."""  # Ignore QuotesBear
@@ -237,6 +241,7 @@ class LabHub(BotPlugin):
                         )
 
     @re_botcmd(pattern=r'^assign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+/)+issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
+               re_cmd_name_help='assign <complete-issue-URL>',
                flags=re.IGNORECASE)
     def assign_cmd(self, msg, match):
         """Assign to GitLab and GitHub issues."""  # Ignore QuotesBear

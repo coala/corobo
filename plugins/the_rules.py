@@ -19,7 +19,9 @@ class The_rules(BotPlugin):
         'does not conflict with the First or Second Law.'
     ]
 
-    @re_botcmd(pattern=r'the\s+rules', flags=re.IGNORECASE)
+    @re_botcmd(pattern=r'the\s+rules',
+               re_cmd_name_help='the rules',
+               flags=re.IGNORECASE)
     def the_rules(self, msg, args):
         """
         Show the bot rules.

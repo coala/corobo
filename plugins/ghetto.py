@@ -10,7 +10,9 @@ class Ghetto(BotPlugin):
     Real talk yo
     """
 
-    @re_botcmd(pattern=r'ghetto\s+(.+)', flags=re.IGNORECASE)
+    @re_botcmd(pattern=r'ghetto\s+(.+)',
+               re_cmd_name_help='ghetto <sentence>',
+               flags=re.IGNORECASE)
     def ghetto(self, msg, match):
         """
         Real talk yo

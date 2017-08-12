@@ -19,7 +19,8 @@ class Lmgtfy(BotPlugin):
         'help you even faster!'
     )
 
-    @re_botcmd(pattern=r'lmgtfy\s+(.+)')
+    @re_botcmd(pattern=r'lmgtfy\s+(.+)',
+               re_cmd_name_help='lmgtfy <search-string>')
     def lmgtfy(self, msg, match):
         """I'm lazy, please google for me."""  # Ignore QuotesBear
         link = 'https://www.lmgtfy.com/?q=' + match.group(1)

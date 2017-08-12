@@ -22,7 +22,9 @@ class Ship_it(BotPlugin):
     ]
     # stop ignoring LineLengthBear PyCodeStyleBear
 
-    @re_botcmd(pattern=r'ship\s*it', flags=re.IGNORECASE)
+    @re_botcmd(pattern=r'ship\s*it',
+               re_cmd_name_help='ship it',
+               flags=re.IGNORECASE)
     def ship_it(self, msg, match):
         """
         Show motivational ship it squirrel images.

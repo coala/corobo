@@ -35,7 +35,8 @@ class Coatils(BotPlugin):
 
         return set(all_langs)
 
-    @re_botcmd(pattern=r'(?:(contrib|bear|lang)\s+)?stats(.+)?(?:(?:\s+)|$)')
+    @re_botcmd(pattern=r'(?:(contrib|bear|lang)\s+)?stats(.+)?(?:(?:\s+)|$)',
+               re_cmd_name_help='(contrib|bear|lang) stats [username|language]')
     def contrib_stats(self, msg, match):
         """
         Allowed commands:
@@ -101,7 +102,8 @@ class Coatils(BotPlugin):
                    ''.format(Coatils.total_bears(),
                              len(Coatils.all_langs())))
 
-    @re_botcmd(pattern=r'ls\s+bears\s+((?:[\w\+]+(?:\s+)?)+)')
+    @re_botcmd(pattern=r'ls\s+bears\s+((?:[\w\+]+(?:\s+)?)+)',
+               re_cmd_name_help='ls bears [langs]+')
     def ls(self, msg, match):
         """
         List bears of given languages:
@@ -163,7 +165,9 @@ class Coatils(BotPlugin):
                                                               enl, enc)
 
     # Ignore PycodestyleBear, LineLengthBear
-    @re_botcmd(pattern=r'^run\s+(\w+)((?:\s+\w+(?:\s+\w+=\w+)*)+)\n+```\n([\s\S]+)\n```$')
+    @re_botcmd(pattern=r'^run\s+(\w+)((?:\s+\w+(?:\s+\w+=\w+)*)+)\n+```\n([\s\S]+)\n```$',
+               re_cmd_name_help='run <Bear [[setting=value]+]>+\n'
+                                '```\n<code>+\n```')
     def run(self, msg, match):
         """
         Run coala over the given code.
