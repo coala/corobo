@@ -5,7 +5,7 @@ interactions:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [python-requests/2.18.1]
+      User-Agent: [python-requests/2.18.3]
     method: GET
     uri: https://api.github.com/user/repos?User-Agent=IGitt
   response:
@@ -18,18 +18,18 @@ interactions:
       Content-Length: ['91']
       Content-Security-Policy: [default-src 'none']
       Content-Type: [application/json; charset=utf-8]
-      Date: ['Sun, 23 Jul 2017 17:22:56 GMT']
+      Date: ['Sun, 13 Aug 2017 16:37:03 GMT']
       Server: [GitHub.com]
       Status: [401 Unauthorized]
       Strict-Transport-Security: [max-age=31536000; includeSubdomains; preload]
       X-Content-Type-Options: [nosniff]
       X-Frame-Options: [deny]
       X-GitHub-Media-Type: [github.v3; format=json]
-      X-GitHub-Request-Id: ['C63C:52E3:1CF4D23:39CA02D:5974DB6F']
+      X-GitHub-Request-Id: ['858E:E9B7:489031:6206AC:5990802E']
       X-RateLimit-Limit: ['60']
       X-RateLimit-Remaining: ['58']
-      X-RateLimit-Reset: ['1500834130']
-      X-Runtime-rack: ['0.008344']
+      X-RateLimit-Reset: ['1502645757']
+      X-Runtime-rack: ['0.007237']
       X-XSS-Protection: [1; mode=block]
     status: {code: 401, message: Unauthorized}
 - request:
@@ -38,16 +38,16 @@ interactions:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [python-requests/2.18.1]
+      User-Agent: [python-requests/2.18.3]
     method: GET
-    uri: https://gitlab.com/api/v4/projects?per_page=100&User-Agent=IGitt&membership=True
+    uri: https://gitlab.com/api/v4/projects?per_page=100&membership=True&User-Agent=IGitt
   response:
     body: {string: '[]'}
     headers:
       Cache-Control: ['max-age=0, private, must-revalidate']
       Content-Length: ['2']
       Content-Type: [application/json]
-      Date: ['Sun, 23 Jul 2017 17:23:01 GMT']
+      Date: ['Sun, 13 Aug 2017 16:37:04 GMT']
       Etag: [W/"d751713988987e9331980363e24189ce"]
       Link: ['<https://gitlab.com/api/v4/projects?User-Agent=IGitt&archived=false&membership=true&order_by=created_at&owned=false&page=1&per_page=100&simple=false&sort=desc&starred=false&statistics=false&with_issues_enabled=false&with_merge_requests_enabled=false>;
           rel="first", <https://gitlab.com/api/v4/projects?User-Agent=IGitt&archived=false&membership=true&order_by=created_at&owned=false&page=0&per_page=100&simple=false&sort=desc&starred=false&statistics=false&with_issues_enabled=false&with_merge_requests_enabled=false>;
@@ -60,8 +60,8 @@ interactions:
       X-Page: ['1']
       X-Per-Page: ['100']
       X-Prev-Page: ['']
-      X-Request-Id: [1158510d-06fd-479d-9598-60c8d338ae66]
-      X-Runtime: ['0.053280']
+      X-Request-Id: [6e320ed0-e904-4455-8eab-a80b701fffca]
+      X-Runtime: ['0.020333']
       X-Total: ['0']
       X-Total-Pages: ['0']
     status: {code: 200, message: OK}
@@ -71,18 +71,19 @@ interactions:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [python-requests/2.18.1]
+      User-Agent: [python-requests/2.18.3]
     method: GET
-    uri: http://localhost:5000/answer?question=something
+    uri: http://0.0.0.0:8000/answer?question=something
   response:
     body: {string: '[]
 
         '}
     headers:
+      Connection: [close]
       Content-Length: ['3']
       Content-Type: [application/json]
-      Date: ['Sun, 23 Jul 2017 17:23:01 GMT']
-      Server: [Werkzeug/0.12.2 Python/3.5.2]
+      Date: ['Sun, 13 Aug 2017 16:37:04 GMT']
+      Server: [gunicorn/19.7.1]
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -90,167 +91,237 @@ interactions:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [python-requests/2.18.1]
+      User-Agent: [python-requests/2.18.3]
     method: GET
-    uri: http://localhost:5000/answer?question=getting+started+with+coala
+    uri: http://0.0.0.0:8000/answer?question=getting+started+with+coala
   response:
-    body: {string: "[\n  [\n    \"Writing a Bear in C++\\nThe bear that will be created\
-        \ with this tutorial will check whether there is\\nany coala spelled with\
-        \ a capital C since that is a horrible mistake for\\none to make.\\nCreate\
-        \ a new directory and make it your current working directory.\\n\\nRun coala-bears-create\
-        \ as mentioned above in order to create the wrapper\\nfor our C++ bear. Answer\
-        \ the first question with a path to your created\\ndirectory (since it should\
-        \ be the current one you can choose the default\\nvalue and just hit Enter).\\\
-        n\\nThe most important questions are the ones regarding the executable name\
-        \ and\\nthe bear name. Use coalaCheckBear for the bear name and\\ncoalaCheck_cpp\
-        \ for the executable name.\\n\\nThe rest of the questions are not important\
-        \ (languages, developer name and\\ncontact info, license, etc) to the tutorial\
-        \ and you can go with the\\ndefaults.\\nWhen you are prompted about settings\
-        \ answer no (default). After the\\nscript is finished running there should\
-        \ be 2 files in your current\\ndirectory:\\ncoalaCheckBear.py (the wrapper)\
-        \ and coalaCheckBearTest.py.\\n\\nThis tutorial will not focus on testing\
-        \ so ignore the second file for now.\\nThe wrapper should look similar to\
-        \ the code block presented below. Some code\\nhas been cleaned for convenience\
-        \ of explanation.\\nThe LICENSE specified applies only to the python code.\
-        \ You can license\\nyour executable however you see fit.\\nSince the input\
-        \ will be a JSON string some kind of JSON class is needed.\\nnlohmann's JSON\
-        \ library (\\nhttps://github.com/nlohmann/json) is a\\ngreat choice because\
-        \ it is easy to integrate and is used in this tutorial.\\n\\nCreate coalaCheck.cpp\
-        \ and start by testing the input. The best thing\\nabout nlohmann's JSON library\
-        \ is that you can parse JSON directly\\nfrom stdin like this:\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"6\\\" (ordinal 6)\\\
-        nCreate a Makefile. The JSON library requires C++11 so a sample\\nMakefile\
-        \ would look like this:\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"8\\\" (ordinal 8)\\\
-        nCompile and test the binary by giving it a JSON string. It should print the\\\
-        nJSON string back at stdout.\\n\\nRead about the JSON Spec that the input\
-        \ uses (The JSON Spec).\\nThe filename is found in in[\\\"filename\\\"] and\
-        \ the list of lines is found\\nin in[\\\"file\\\"].\\n\\nCreate a result adding\
-        \ function, also an init function proves quite useful\\nfor initializing the\
-        \ output json.\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"9\\\" (ordinal 9)\\\
-        nThe C++ operators and syntax are not well suited for JSON manipulation\\\
-        nbut nlohmann's JSON lib makes it as easy as possible.\\nIterate over the\
-        \ lines and check for \\\"coala\\\" with an uppercase \\\"C\\\".\\nUse string's\
-        \ find function like so:\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"12\\\" (ordinal\
-        \ 12)\\nAfter building the executable it has to be added to the PATH env\\\
-        nvariable. It is possible to modify the wrapper and give it the full\\npath.\
-        \ Add the current directory to the PATH like so:\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"13\\\" (ordinal\
-        \ 13)\\nThe last step is to test if everything is working properly. This is\
-        \ the\\ntestfile used in this tutorial (\\ntestfile).\\nExecute the Bear by\
-        \ running:\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"14\\\" (ordinal\
-        \ 14)\\nIf you have ran coala over a file more than once without modifying\
-        \ it,\\ncoala will try to cache it. In order to avoid such behavior add\\\
-        n--flush-cache at the end of the command.\\nExternal_Bears.html#writing-a-bear-in-c\"\
-        , \n    1.0\n  ], \n  [\n    \"Step 8. Review Process\\nAfter creating your\
-        \ Pull Request, it is under the review process. This can\\nbe deduced from\
-        \ the process/pending review label. Now all you have to do\\nis wait, or let\
-        \ the other developers know on Gitter that you have published\\nyour changes.\\\
-        nDo not tag the reviewers every time you push a change. They review PRs\\\
-        nconsistently whenever they have time!\\nNow there's two possibilities:\\\
-        nyour Pull Request gets accepted, and your commits will get merged into\\\
-        nthe master branch\\n\\nyour Pull Request doesn't get accepted, and therefore\
-        \ you will\\nneed to to modify it as per the review comments\\nWait until\
-        \ the reviewer has already reviewed your whole Pull Request\\nand has labeled\
-        \ it process/wip. Else, if you push again and his\\ncomments disappear, it\
-        \ can be considered rude.\\nYou might be wondering what those CI things on\
-        \ your Pull Request are.\\nFor more detailed info about them, see this page.\\\
-        nIt's highly unlikely that your Pull Request will be accepted on the first\\\
-        nattempt - but don't worry, that's just how it works. It helps us maintain\\\
-        ncoala clean and stable.\\nNow, if you need to modify your code, you can simply\
-        \ edit it again, add it and\\ncommit it using\\nThis will edit your last commit\
-        \ message. If your commit message was considered\\nfine by our reviewers,\
-        \ you can simply send it again like this. If not, edit it\\nand send it. You\
-        \ have successfully edited your last commit!\\nDon't forget! After editing\
-        \ your commit, you will have to push it again.\\nThis can be done using:\\\
-        nThe meaning of myfork is explained\\nhere.\\nThe Pull Request will automatically\
-        \ update with the newest changes.\\nCongratulations! Your PR just got accepted!\
-        \ You're awesome.\\nNow you should tell us about your experience and\\ngo\
-        \ for a low issue - they are really rewarding!\\nDo not only fix a newcomer\
-        \ issue! It is highly recommended that you\\nfix one newcomer issue to get\
-        \ familiar with the workflow at coala and\\nthen proceed to a difficulty/low\
-        \ issue.\\n\\nHowever those who are familiar with opensource can start with\\\
-        ndifficulty/low issues.\\n\\nWe highly encourage you to start reviewing\\\
-        nother's issues after you complete your newcomer issue, as reviewing helps\\\
-        nyou to learn more about coala and python.\\nIf you need help picking up an\
-        \ issue, you can always ask us and we'll help\\nyou!\\n\\nIf you ever have\
-        \ problems in finding some links maybe you can find\\nthe solution in our\
-        \ :doc:`useful links section <Useful_Links>`.\\n\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/Newcomers_Guide.rst:448:\
-        \ (INFO/1) No role entry for \\\"doc\\\" in module \\\"docutils.parsers.rst.languages.en\\\
-        \".\\nTrying \\\"doc\\\" as canonical role name.\\n\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/Newcomers_Guide.rst:448:\
-        \ (ERROR/3) Unknown interpreted text role \\\"doc\\\".\\n\\nNewcomers_Guide.html#step-8-review-process\"\
-        , \n    0.7818181818181819\n  ], \n  [\n    \"Git-Links\\nGit Tutorial\\n\\\
-        n:doc:`coala's Git Tutorial<Git_Basics>`\\n\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/Useful_Links.rst:15:\
-        \ (INFO/1) No role entry for \\\"doc\\\" in module \\\"docutils.parsers.rst.languages.en\\\
-        \".\\nTrying \\\"doc\\\" as canonical role name.\\n\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/Useful_Links.rst:15:\
-        \ (ERROR/3) Unknown interpreted text role \\\"doc\\\".\\n\\nCommit message\
-        \ guidelines\\n\\n:doc:`coala Commits<Writing_Good_Commits>`\\n\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/Useful_Links.rst:17:\
-        \ (INFO/1) No role entry for \\\"doc\\\" in module \\\"docutils.parsers.rst.languages.en\\\
-        \".\\nTrying \\\"doc\\\" as canonical role name.\\n\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/Useful_Links.rst:17:\
-        \ (ERROR/3) Unknown interpreted text role \\\"doc\\\".\\n\\nHow to rebase\\\
-        n\\nRebase Concept\\n\\nShort Rebase Tutorial\\n\\ncoala Git Repository\\\
-        nUseful_Links.html#git-links\", \n    0.7636363636363637\n  ]\n]\n"}
+    body: {string: "[\n  [\n    \"Actually Writing a Test\\nSo how do you implement\
+        \ a test in coala? First up, tests are placed into\\nthe coala-bears/tests\
+        \ (if you want to write a test for a bear) or\\ncoala/tests (if you test a\
+        \ component written for the coalib)\\ndirectory. They are also written in\
+        \ Python (version 3) and get\\nautomatically executed by running:\\nThere's\
+        \ only one constraint:\\nThe name of the test file has to end with Test.py\
+        \ (for example\\nMyCustomTest.py, but not MyCustomTestSuite.py).\\nIf pytest\
+        \ seems to give errors, try running python3 -m pytest\\ninstead.\\n\\nOften\
+        \ you don't want to run all available tests. To run your\\nspecific one, type\
+        \ (in the coala root folder):\\n\\n/app/coala/docs/Developers/Writing_Tests.rst:47:\
+        \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
+        \ shell\\n\\n    $ pytest -k <your-test>\\n\\n\\nYou can even give partial\
+        \ names or queries like \\\"not MyCustomTest\\\"\\nto not run a specific test.\
+        \ More information is shown with\\npytest -h\\nComing to the test file structure.\
+        \ Every test script starts with your\\nimports. According to the coala code\
+        \ style (and pep8 style) we first do\\nsystem imports (like re or subprocessing),\
+        \ followed by first party\\nimports (like coalib.result.Result).\\nThen the\
+        \ actual test suite class follows, that contains the tests. Each\\ntest suite\
+        \ is made up of test cases, where the test suite checks the\\noverall functionality\
+        \ of your component by invoking each test case.\\nThe basic declaration for\
+        \ a test suite class is as follows:\\n/app/coala/docs/Developers/Writing_Tests.rst:66:\
+        \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
+        \ python\\n\\n    class YourComponentTest(unittest.TestCase):\\n        #\
+        \ Your test cases.\\n        pass\\n\\nYou should derive your test suite from\
+        \ unittest.TestCase to have\\naccess to the setUp() and tearDown() functions\
+        \ (covered in\\nsection below: ``setUp()`` and ``tearDown()``) and also to\
+        \ the\\nassertion functions.\\nNow to the test cases: To implement a test\
+        \ case, just declare a class\\nmember function without parameters, starting\
+        \ with test_. Easy, isn't\\nit?\\n/app/coala/docs/Developers/Writing_Tests.rst:81:\
+        \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
+        \ python\\n\\n    class YourComponentTest(unittest.TestCase):\\n        #\
+        \ Tests somethin'.\\n        def test_case1(self):\\n            pass\\n\\\
+        n        # Doesn't test, this is just a member function, since the function\
+        \ name\\n        # does not start with 'test_'.\\n        def not_testing(self):\\\
+        n            pass\\n\\nBut how do you actually test if your component is correct?\
+        \ For that\\npurpose you have asserts. Asserts check whether a condition is\
+        \ fulfilled\\nand pass the result to the overall test-suite-invoking-instance,\
+        \ that\\nmanages all tests in coala. The result is processed and you get a\\\
+        nmessage if something went wrong in your test.\\nSo an example test that succeeds\
+        \ would be:\\n/app/coala/docs/Developers/Writing_Tests.rst:106: (WARNING/2)\
+        \ Cannot analyze code. Pygments package not found.\\n\\n.. code:: python\\\
+        n\\n    # The sys import and setup is not needed here because this example\
+        \ doesn't\\n    # use coala components.\\n    import unittest\\n\\n\\n   \
+        \ class YourComponentTest(unittest.TestCase):\\n        # Tests somethin'.\\\
+        n        def test_case1(self):\\n            # Does '1' equal '1'? Interestingly\
+        \ it does... mysterious...\\n            self.assertEqual(1, 1)\\n       \
+        \     # Hm yeah, True is True.\\n            self.assertTrue(True)\\n\\nTests\
+        \ in coala are evaluated against their coverage, means how many\\nstatements\
+        \ will be executed from your component when invoking your\\ntest cases. A\
+        \ branch coverage of 100% is needed for any commit in\\norder to be pushed\
+        \ to master - please ask us on gitter if you need\\nhelp raising your coverage!\\\
+        n\\nThe branch coverage can be measured locally with the\\npytest --cov command.\\\
+        n\\nAs our coverage is measured across builds against several python\\nversions\
+        \ (we need version specific branches here and there) you will\\nnot get the\
+        \ full coverage locally! Simply make a pull request to get\\nthe coverage\
+        \ measured automatically.\\n\\nIf some code is untestable, you need to mark\
+        \ your component code\\nwith # pragma: no cover. Important: Provide a reason\
+        \ why your\\ncode is untestable. Code coverage is measured using python 3.4\
+        \ and\\n3.5 on linux.\\n\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
+        \ (WARNING/2) Cannot analyze code. Pygments package not found.\\n\\n.. code::\
+        \ python\\n\\n    # Reason why this function is untestable.\\n    def untestable_func():\
+        \ # pragma: no cover\\n        # Untestable code.\\n        pass\\nWriting_Tests.html#actually-writing-a-test\"\
+        , \n    1.0\n  ], \n  [\n    \"Welcome to the Newcomers' Guide!\\nDO NOT WORK\
+        \ ON ANY ISSUE WITHOUT ASSIGNMENT! If you do, someone else might\\nwork on\
+        \ it as well, and we might have no choice but to reject one of your Pull\\\
+        nRequests. We hate it if someone's time is wasted. For your own sake, please\\\
+        nfollow this guide. We put a lot of work into this for you!\\nEveryone in\
+        \ the coala community is expected to follow our\\nCode of Conduct.\\nTo become\
+        \ part of the coala developers team, there are a few steps you need\\nto complete.\
+        \ The newcomer process is as follows:\\nYou will start as a newcomer, which\
+        \ is kind of a trial. If you complete the\\nfollowing tasks, you will become\
+        \ a developer at coala:\\nrun coala on a project of yours\\n\\nmerge a difficulty/newcomer\
+        \ Pull Request\\n\\nreview at least a difficulty/newcomer Pull Request\\n\\\
+        nmerge a difficulty/low Pull Request\\n\\nreview at least a difficulty/low\
+        \ or higher Pull Request\\nOnce you've run coala on a project, please fill\
+        \ out our\\nusability survey. And once you've got your first Pull\\nRequest\
+        \ merged successfully, fill out our\\nsurvey form. By doing so, you can help\
+        \ us make your\\nexperience better!\\nOnce you have achieved all these, just\
+        \ ask to be promoted on the chat\\n(see step 1 below) and provide links to\
+        \ your reviews and merged Pull Requests.\\nThen you'll be able to call yourself\
+        \ a coala developer!\\nDon't just fix a newcomer issue! Supervising newcomers\
+        \ is really a lot\\nof work. We're all volunteers and we can't keep this up\
+        \ if you don't help\\nus in other areas as well!\\nOf course, the order of\
+        \ the steps above is not important, although we\\nrecommend that you start\
+        \ with a newcomer issue, end with a low issue,\\nand review other PRs in the\
+        \ meantime!\\nThis is a step-based guide that will help you make your first\
+        \ contribution\\nto coala, while getting you familiar with the workflow!\\\
+        nFor more information about Pull Requests, keep reading!\\nYou do not need\
+        \ to read the coala codebase to get started - this guide\\nis intended to\
+        \ help you do that without reading tons of meaningless code.\\nNobody is good\
+        \ at that.\\n\\nMost importantly, this guide is not intended to \\\"check\
+        \ if you are fit\\\" to\\ncontribute, but is rather a crash course to make\
+        \ you fit to contribute. We\\nare a bit picky when it comes to code quality,\
+        \ but it's actually not at all\\nhard to get to this level if you bear with\
+        \ us through this guide.\\nNewcomers_Guide.html#welcome-to-the-newcomers-guide\"\
+        , \n    0.6511627906976745\n  ], \n  [\n    \"Step 1. Meet the Community and\
+        \ Get an Invitation to the Organization\\nTo get started, the first step is\
+        \ to meet the community. We use gitter to\\ncommunicate, and there the helpful\
+        \ community will guide you.\\nGitter is an instant messaging service used\
+        \ by developers and users of GitHub.\\nGitter uses chatrooms, where developers\
+        \ can join in and can talk about a\\nparticular topic.\\ncoala has 2 types\
+        \ of chatrooms - repository chatrooms and discussion topics.\\nRepository\
+        \ chatrooms are related to a specific repository and\\ndiscussion chatrooms\
+        \ are related to general discussion topics like\\nconferences, workshops,\
+        \ etc.\\ncoala\\nThis is the main chatroom and repository chatroom of coala/coala.\\\
+        n\\ngsoc\\nThis is where you discuss about Google Summer of Code.\\n\\ncoala-bears\\\
+        nRepo chatroom for coala/coala-bears.\\n\\nworkshop\\nDiscussions related\
+        \ to workshops go here.\\n\\nconferences\\nEverything related to conferences.\\\
+        n\\nofftopic\\nAnything fun! Our gaming sessions start here.\\nThe list of\
+        \ all available chatrooms are available here - channel list\\nBut before joining\
+        \ the community, here are few things that you should\\nkeep in mind.\\nOnly\
+        \ log into Gitter using your GitHub account and not your Twitter account\\\
+        nsince the Gitter bot corobo identifies each user from their GitHub\\nusername\
+        \ which makes it possible to automate certain tasks such as asking\\nthe bot\
+        \ to assign an issue to your profile.\\n\\nDon't @-mention or private message\
+        \ people, unless its utterly important.\\n@ mentions generate notifications\
+        \ on the various gitter clients the user\\nmay be signed into, you might even\
+        \ wake someone on the other side of the\\nworld up. Also it discourages other\
+        \ people to answer the question,\\nso you might wait longer for an answer.\\\
+        n\\nDon't use /all if you are a newcomer or do not have a critical reason.\\\
+        n\\nDon't repeatedly @-mention people in an ongoing conversation.\\n\\nYou\
+        \ should ask someone before mentioning them.\\nNow you are ready to join coala\
+        \ community at coala gitter.\\nThe newcomers should ping us \\\"Hello World\\\
+        \" to let us know they are here\\nbecause we care!\\nWhen you say \\\"Hello\
+        \ World\\\" in chat corobo (our gitter bot) will invite you\\nto be part of\
+        \ the Newcomer team. The invitation will be sent by mail and you\\nwill have\
+        \ to accept it to join. If you don't find the invitation, accept it\\nhere.\\\
+        nCongratulations! Now that you are part of our organization, you can start\\\
+        nworking on issues. If you are familiar with git, you can skip the next section\\\
+        nand pick an issue.\\nNewcomers_Guide.html#step-1-meet-the-community-and-get-an-invitation-to-the-organization\"\
+        , \n    0.6511627906976745\n  ]\n]\n"}
     headers:
-      Content-Length: ['7824']
+      Connection: [close]
+      Content-Length: ['9677']
       Content-Type: [application/json]
-      Date: ['Sun, 23 Jul 2017 17:23:02 GMT']
-      Server: [Werkzeug/0.12.2 Python/3.5.2]
+      Date: ['Sun, 13 Aug 2017 16:37:05 GMT']
+      Server: [gunicorn/19.7.1]
     status: {code: 200, message: OK}
 - request:
-    body: null
+    body: '{"text": "Actually Writing a Test\nSo how do you implement a test in coala?
+      First up, tests are placed into\nthe coala-bears/tests (if you want to write
+      a test for a bear) or\ncoala/tests (if you test a component written for the
+      coalib)\ndirectory. They are also written in Python (version 3) and get\nautomatically
+      executed by running:\nThere''s only one constraint:\nThe name of the test file
+      has to end with Test.py (for example\nMyCustomTest.py, but not MyCustomTestSuite.py).\nIf
+      pytest seems to give errors, try running python3 -m pytest\ninstead.\n\nOften
+      you don''t want to run all available tests. To run your\nspecific one, type
+      (in the coala root folder):\n\n/app/coala/docs/Developers/Writing_Tests.rst:47:
+      (WARNING/2) Cannot analyze code. Pygments package not found.\n\n.. code:: shell\n\n    $
+      pytest -k <your-test>\n\n\nYou can even give partial names or queries like \"not
+      MyCustomTest\"\nto not run a specific test. More information is shown with\npytest
+      -h\nComing to the test file structure. Every test script starts with your\nimports.
+      According to the coala code style (and pep8 style) we first do\nsystem imports
+      (like re or subprocessing), followed by first party\nimports (like coalib.result.Result).\nThen
+      the actual test suite class follows, that contains the tests. Each\ntest suite
+      is made up of test cases, where the test suite checks the\noverall functionality
+      of your component by invoking each test case.\nThe basic declaration for a test
+      suite class is as follows:\n/app/coala/docs/Developers/Writing_Tests.rst:66:
+      (WARNING/2) Cannot analyze code. Pygments package not found.\n\n.. code:: python\n\n    class
+      YourComponentTest(unittest.TestCase):\n        # Your test cases.\n        pass\n\nYou
+      should derive your test suite from unittest.TestCase to have\naccess to the
+      setUp() and tearDown() functions (covered in\nsection below: ``setUp()`` and
+      ``tearDown()``) and also to the\nassertion functions.\nNow to the test cases:
+      To implement a test case, just declare a class\nmember function without parameters,
+      starting with test_. Easy, isn''t\nit?\n/app/coala/docs/Developers/Writing_Tests.rst:81:
+      (WARNING/2) Cannot analyze code. Pygments package not found.\n\n.. code:: python\n\n    class
+      YourComponentTest(unittest.TestCase):\n        # Tests somethin''.\n        def
+      test_case1(self):\n            pass\n\n        # Doesn''t test, this is just
+      a member function, since the function name\n        # does not start with ''test_''.\n        def
+      not_testing(self):\n            pass\n\nBut how do you actually test if your
+      component is correct? For that\npurpose you have asserts. Asserts check whether
+      a condition is fulfilled\nand pass the result to the overall test-suite-invoking-instance,
+      that\nmanages all tests in coala. The result is processed and you get a\nmessage
+      if something went wrong in your test.\nSo an example test that succeeds would
+      be:\n/app/coala/docs/Developers/Writing_Tests.rst:106: (WARNING/2) Cannot analyze
+      code. Pygments package not found.\n\n.. code:: python\n\n    # The sys import
+      and setup is not needed here because this example doesn''t\n    # use coala
+      components.\n    import unittest\n\n\n    class YourComponentTest(unittest.TestCase):\n        #
+      Tests somethin''.\n        def test_case1(self):\n            # Does ''1'' equal
+      ''1''? Interestingly it does... mysterious...\n            self.assertEqual(1,
+      1)\n            # Hm yeah, True is True.\n            self.assertTrue(True)\n\nTests
+      in coala are evaluated against their coverage, means how many\nstatements will
+      be executed from your component when invoking your\ntest cases. A branch coverage
+      of 100% is needed for any commit in\norder to be pushed to master - please ask
+      us on gitter if you need\nhelp raising your coverage!\n\nThe branch coverage
+      can be measured locally with the\npytest --cov command.\n\nAs our coverage is
+      measured across builds against several python\nversions (we need version specific
+      branches here and there) you will\nnot get the full coverage locally! Simply
+      make a pull request to get\nthe coverage measured automatically.\n\nIf some
+      code is untestable, you need to mark your component code\nwith # pragma: no
+      cover. Important: Provide a reason why your\ncode is untestable. Code coverage
+      is measured using python 3.4 and\n3.5 on linux.\n\n/app/coala/docs/Developers/Writing_Tests.rst:148:
+      (WARNING/2) Cannot analyze code. Pygments package not found.\n\n.. code:: python\n\n    #
+      Reason why this function is untestable.\n    def untestable_func(): # pragma:
+      no cover\n        # Untestable code.\n        pass\nWriting_Tests.html#actually-writing-a-test"}'
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [python-requests/2.18.1]
-    method: GET
-    uri: http://localhost:5000/summarize?text=Writing+a+Bear+in+C%2B%2B%0AThe+bear+that+will+be+created+with+this+tutorial+will+check+whether+there+is%0Aany+coala+spelled+with+a+capital+C+since+that+is+a+horrible+mistake+for%0Aone+to+make.%0ACreate+a+new+directory+and+make+it+your+current+working+directory.%0A%0ARun+coala-bears-create+as+mentioned+above+in+order+to+create+the+wrapper%0Afor+our+C%2B%2B+bear.+Answer+the+first+question+with+a+path+to+your+created%0Adirectory+%28since+it+should+be+the+current+one+you+can+choose+the+default%0Avalue+and+just+hit+Enter%29.%0A%0AThe+most+important+questions+are+the+ones+regarding+the+executable+name+and%0Athe+bear+name.+Use+coalaCheckBear+for+the+bear+name+and%0AcoalaCheck_cpp+for+the+executable+name.%0A%0AThe+rest+of+the+questions+are+not+important+%28languages%2C+developer+name+and%0Acontact+info%2C+license%2C+etc%29+to+the+tutorial+and+you+can+go+with+the%0Adefaults.%0AWhen+you+are+prompted+about+settings+answer+no+%28default%29.+After+the%0Ascript+is+finished+running+there+should+be+2+files+in+your+current%0Adirectory%3A%0AcoalaCheckBear.py+%28the+wrapper%29+and+coalaCheckBearTest.py.%0A%0AThis+tutorial+will+not+focus+on+testing+so+ignore+the+second+file+for+now.%0AThe+wrapper+should+look+similar+to+the+code+block+presented+below.+Some+code%0Ahas+been+cleaned+for+convenience+of+explanation.%0AThe+LICENSE+specified+applies+only+to+the+python+code.+You+can+license%0Ayour+executable+however+you+see+fit.%0ASince+the+input+will+be+a+JSON+string+some+kind+of+JSON+class+is+needed.%0Anlohmann%27s+JSON+library+%28%0Ahttps%3A%2F%2Fgithub.com%2Fnlohmann%2Fjson%29+is+a%0Agreat+choice+because+it+is+easy+to+integrate+and+is+used+in+this+tutorial.%0A%0ACreate+coalaCheck.cpp+and+start+by+testing+the+input.+The+best+thing%0Aabout+nlohmann%27s+JSON+library+is+that+you+can+parse+JSON+directly%0Afrom+stdin+like+this%3A%0A%2Fhome%2Fmeet%2Fmeet%2Fanswers%2Fcorobo%2Fanswers%2Fcoala%2Fdocs%2FDevelopers%2FExternal_Bears.rst%3A2%3A+%28INFO%2F1%29+Enumerated+list+start+value+not+ordinal-1%3A+%226%22+%28ordinal+6%29%0ACreate+a+Makefile.+The+JSON+library+requires+C%2B%2B11+so+a+sample%0AMakefile+would+look+like+this%3A%0A%2Fhome%2Fmeet%2Fmeet%2Fanswers%2Fcorobo%2Fanswers%2Fcoala%2Fdocs%2FDevelopers%2FExternal_Bears.rst%3A2%3A+%28INFO%2F1%29+Enumerated+list+start+value+not+ordinal-1%3A+%228%22+%28ordinal+8%29%0ACompile+and+test+the+binary+by+giving+it+a+JSON+string.+It+should+print+the%0AJSON+string+back+at+stdout.%0A%0ARead+about+the+JSON+Spec+that+the+input+uses+%28The+JSON+Spec%29.%0AThe+filename+is+found+in+in%5B%22filename%22%5D+and+the+list+of+lines+is+found%0Ain+in%5B%22file%22%5D.%0A%0ACreate+a+result+adding+function%2C+also+an+init+function+proves+quite+useful%0Afor+initializing+the+output+json.%0A%2Fhome%2Fmeet%2Fmeet%2Fanswers%2Fcorobo%2Fanswers%2Fcoala%2Fdocs%2FDevelopers%2FExternal_Bears.rst%3A2%3A+%28INFO%2F1%29+Enumerated+list+start+value+not+ordinal-1%3A+%229%22+%28ordinal+9%29%0AThe+C%2B%2B+operators+and+syntax+are+not+well+suited+for+JSON+manipulation%0Abut+nlohmann%27s+JSON+lib+makes+it+as+easy+as+possible.%0AIterate+over+the+lines+and+check+for+%22coala%22+with+an+uppercase+%22C%22.%0AUse+string%27s+find+function+like+so%3A%0A%2Fhome%2Fmeet%2Fmeet%2Fanswers%2Fcorobo%2Fanswers%2Fcoala%2Fdocs%2FDevelopers%2FExternal_Bears.rst%3A2%3A+%28INFO%2F1%29+Enumerated+list+start+value+not+ordinal-1%3A+%2212%22+%28ordinal+12%29%0AAfter+building+the+executable+it+has+to+be+added+to+the+PATH+env%0Avariable.+It+is+possible+to+modify+the+wrapper+and+give+it+the+full%0Apath.+Add+the+current+directory+to+the+PATH+like+so%3A%0A%2Fhome%2Fmeet%2Fmeet%2Fanswers%2Fcorobo%2Fanswers%2Fcoala%2Fdocs%2FDevelopers%2FExternal_Bears.rst%3A2%3A+%28INFO%2F1%29+Enumerated+list+start+value+not+ordinal-1%3A+%2213%22+%28ordinal+13%29%0AThe+last+step+is+to+test+if+everything+is+working+properly.+This+is+the%0Atestfile+used+in+this+tutorial+%28%0Atestfile%29.%0AExecute+the+Bear+by+running%3A%0A%2Fhome%2Fmeet%2Fmeet%2Fanswers%2Fcorobo%2Fanswers%2Fcoala%2Fdocs%2FDevelopers%2FExternal_Bears.rst%3A2%3A+%28INFO%2F1%29+Enumerated+list+start+value+not+ordinal-1%3A+%2214%22+%28ordinal+14%29%0AIf+you+have+ran+coala+over+a+file+more+than+once+without+modifying+it%2C%0Acoala+will+try+to+cache+it.+In+order+to+avoid+such+behavior+add%0A--flush-cache+at+the+end+of+the+command.%0AExternal_Bears.html%23writing-a-bear-in-c
-  response:
-    body: {string: "{\n  \"res\": \"The bear that will be created with this tutorial\
-        \ will check whether there is\\nRun coala-bears-create as mentioned above\
-        \ in order to create the wrapper\\nAnswer the first question with a path to\
-        \ your created\\nThis tutorial will not focus on testing so ignore the second\
-        \ file for now.\\nCreate coalaCheck.cpp and start by testing the input.\\\
-        nCompile and test the binary by giving it a JSON string.\\nAdd the current\
-        \ directory to the PATH like so:\\nExecute the Bear by running:\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"14\\\" (ordinal\
-        \ 14)\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"14\\\" (ordinal\
-        \ 14)\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"14\\\" (ordinal\
-        \ 14)\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"14\\\" (ordinal\
-        \ 14)\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"14\\\" (ordinal\
-        \ 14)\\n/home/meet/meet/answers/corobo/answers/coala/docs/Developers/External_Bears.rst:2:\
-        \ (INFO/1) Enumerated list start value not ordinal-1: \\\"14\\\" (ordinal\
-        \ 14)\"\n}\n"}
-    headers:
-      Content-Length: ['1423']
+      Content-Length: ['4604']
       Content-Type: [application/json]
-      Date: ['Sun, 23 Jul 2017 17:23:02 GMT']
-      Server: [Werkzeug/0.12.2 Python/3.5.2]
-    status: {code: 200, message: OK}
-- request:
-    body: null
-    headers:
-      Accept: ['*/*']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      User-Agent: [python-requests/2.18.1]
-    method: GET
-    uri: http://localhost:5000/answer?question=something
+      User-Agent: [python-requests/2.18.3]
+    method: POST
+    uri: http://0.0.0.0:8000/summarize
   response:
-    body: {string: '[]
-
-        '}
+    body: {string: "{\n  \"res\": \"So how do you implement a test in coala?\\ncoala/tests\
+        \ (if you test a component written for the coalib)\\nto not run a specific\
+        \ test.\\nThen the actual test suite class follows, that contains the tests.\\\
+        noverall functionality of your component by invoking each test case.\\nThe\
+        \ basic declaration for a test suite class is as follows:\\nYou should derive\
+        \ your test suite from unittest.TestCase to have\\nmember function without\
+        \ parameters, starting with test_.\\ndef not_testing(self):\\nBut how do you\
+        \ actually test if your component is correct?\\nand pass the result to the\
+        \ overall test-suite-invoking-instance, that\\n# The sys import and setup\
+        \ is not needed here because this example doesn't\\ndef test_case1(self):\\\
+        ndef test_case1(self):\\nTests in coala are evaluated against their coverage,\
+        \ means how many\\nCode coverage is measured using python 3.4 and\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
+        \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
+        \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
+        \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
+        \ (WARNING/2) Cannot analyze code.\\n/app/coala/docs/Developers/Writing_Tests.rst:148:\
+        \ (WARNING/2) Cannot analyze code.\"\n}\n"}
     headers:
-      Content-Length: ['3']
+      Connection: [close]
+      Content-Length: ['1283']
       Content-Type: [application/json]
-      Date: ['Sun, 23 Jul 2017 17:23:02 GMT']
-      Server: [Werkzeug/0.12.2 Python/3.5.2]
+      Date: ['Sun, 13 Aug 2017 16:37:05 GMT']
+      Server: [gunicorn/19.7.1]
     status: {code: 200, message: OK}
 version: 1

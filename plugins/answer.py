@@ -18,8 +18,8 @@ class Answer(BotPlugin):
                                'question: {}'.format(arg))
             yield 'Something went wrong, please check logs'.format()
         if answers:
-            yield requests.get(urljoin(os.environ['ANSWER_END'],  'summarize'),
-                               params={'text': answers[0][0]}).json()['res']
+            yield requests.post(urljoin(os.environ['ANSWER_END'],  'summarize'),
+                                json={'text': answers[0][0]}).json()['res']
             # Ignore InvalidLinkBear
             doc_link = 'https://api.coala.io/en/latest/Developers/' + \
                 answers[0][0].splitlines()[-1]

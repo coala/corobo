@@ -19,10 +19,10 @@ def serve_answer():
     return jsonify(list(get_answer(request.args.get('question'), GRAPH)))
 
 
-@app.route('/summarize')
+@app.route('/summarize', methods=['POST'])
 def serve_summary():
     try:
-        summary = summarize(request.args.get('text'))
+        summary = summarize(request.get_json().get('text'))
     except ValueError:
-        summary = request.args.get('text')
-    return jsonify({'res': summarize(request.args.get('text'))})
+        summary = request.get_json().get('text')
+    return jsonify({'res': summary})
