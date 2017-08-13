@@ -1,6 +1,6 @@
 import json
 import os
-from urllib.parse import quote, urljoin
+from urllib.parse import urljoin
 
 from errbot import BotPlugin, botcmd
 import requests
