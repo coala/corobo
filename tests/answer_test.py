@@ -15,12 +15,8 @@ class TestAnswer(unittest.TestCase):
         os.environ['ANSWER_END'] = 'http://0.0.0.0:8000'
         testbot = TestBot(extra_plugin_dir='plugins', loglevel=logging.ERROR)
         testbot.start()
-
         testbot.assertCommand('!answer something', 'Dunno')
-
         testbot.push_message('!answer getting started with coala')
-        testbot.pop_message()
         self.assertIn('You can read more here', testbot.pop_message())
         testbot.push_message('!answer shell autocompletion')
-        testbot.pop_message()
         self.assertIn('You can read more here', testbot.pop_message())
