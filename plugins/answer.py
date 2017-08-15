@@ -33,7 +33,7 @@ class Answer(BotPlugin):
         if answers:
             reply = requests.post(urljoin(os.environ['ANSWER_END'],
                                           'summarize'),
-                                  data={'text': answers[0][0]}).json()['res']
+                                  json={'text': answers[0][0]}).json()['res']
             # Ignore InvalidLinkBear
             reply += '\n' + 'You can read more here: {}'.format(
                 type(self).construct_link(answers[0][0].splitlines()[-1])
