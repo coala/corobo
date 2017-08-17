@@ -9,7 +9,7 @@ import requests
 class Answer(BotPlugin):
 
     # Ignore LineLengthBear, PyCodestyleBear
-    SURVEY_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSdQSWtGa6SsUb14h8fkhhZjz6rvPg6sIU31bJpbFz1RNJi4Og/viewform?usp=pp_url&entry.1041743666={question}&entry.2054411228={response}&entry.1180476220={message_link}'
+    SURVEY_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSeD8lqMWAwJx0Mewlpc5Sbeo3MH5Yi9fSfXA6jnk07-aIURSA/viewform?usp=pp_url&entry.1236347280={question}&entry.1734934116={response}&entry.75323266={message_link}'
     MESSAGE_LINK = 'https://gitter.im/{uri}?at={idd}'
 
     @staticmethod
@@ -31,13 +31,11 @@ class Answer(BotPlugin):
                                'question: {}'.format(arg))
             yield 'Something went wrong, please check logs'.format()
         if answers:
-            reply = requests.post(urljoin(os.environ['ANSWER_END'],
-                                          'summarize'),
-                                  json={'text': answers[0][0]}).json()['res']
-            # Ignore InvalidLinkBear
-            reply += '\n' + 'You can read more here: {}'.format(
-                type(self).construct_link(answers[0][0].splitlines()[-1])
-            )
+            reply = 'Please checkout the following links: \n- '
+            reply += '- '.join(map(lambda x:
+                                   type(self).construct_link(
+                                        x[0].splitlines()[-1]) + '\n',
+                                   answers))
             try:
                 reply += ('\n\nPlease fill in [this]({}) form to rate the '
                           'answer'.format(self.SURVEY_LINK.format(
