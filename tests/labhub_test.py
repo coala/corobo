@@ -1,8 +1,9 @@
 import logging
 import os
 import queue
+import time
 import unittest
-from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock
+from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock, patch
 
 import github3
 import IGitt
@@ -227,3 +228,40 @@ class TestLabHub(unittest.TestCase):
         mock_mr.labels = ['process/wip']
         testbot.assertCommand(cmd.format('pending', 'coala', 'a', '23'),
                               'marked pending review')
+
+    def test_alive(self):
+        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
+        with patch('plugins.labhub.time.sleep') as mock_sleep:
+            labhub.gh_repos = {
+                'coala': create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
+                'coala-bears': create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
+                'coala-utils': create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
+            }
+            # for the branch where program sleeps
+            labhub.gh_repos.update({str(i):
+                                    create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
+                                    for i in range(30)})
+            labhub.gl_repos = {
+                'test': create_autospec(IGitt.GitLab.GitLab.GitLabRepository)
+            }
+            labhub.activate()
+
+            labhub.gh_repos['coala'].search_mrs.return_value = [1, 2]
+            labhub.gh_repos['coala-bears'].search_mrs.return_value = []
+            labhub.gh_repos['coala-utils'].search_mrs.return_value = []
+            testbot.assertCommand('!pr stats 10hours',
+                                  '2 PRs opened in last 10 hours\n'
+                                  'The community is alive', timeout=100)
+
+            labhub.gh_repos['coala'].search_mrs.return_value = []
+            testbot.assertCommand('!pr stats 5hours',
+                                  '0 PRs opened in last 5 hours\n'
+                                  'The community is dead')
+
+            labhub.gh_repos['coala'].search_mrs.return_value = [
+                1, 2, 3, 4, 5,
+                6, 7, 8, 9, 10
+            ]
+            testbot.assertCommand('!pr stats 3hours',
+                                  '10 PRs opened in last 3 hours\n'
+                                  'The community is on fire')
