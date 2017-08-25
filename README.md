@@ -3,7 +3,7 @@
 [![Travis branch](https://img.shields.io/travis/coala/corobo/master.svg)](https://travis-ci.org/coala/corobo)
 [![Codecov branch](https://img.shields.io/codecov/c/github/coala/corobo/master.svg)](https://codecov.io/gh/coala/corobo)
 [![Semaphore branch](https://semaphoreci.com/api/v1/coala/corobo/branches/master/badge.svg)](https://semaphoreci.com/coala/corobo)
-
+[![Gitter Room](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/coala/corobo)
 ## Environment Variables
 
 1. `COBOT_ROOT` - absolute path of the project root.
