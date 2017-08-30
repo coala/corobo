@@ -4,6 +4,31 @@
 [![Codecov branch](https://img.shields.io/codecov/c/github/coala/corobo/master.svg)](https://codecov.io/gh/coala/corobo)
 [![Semaphore branch](https://semaphoreci.com/api/v1/coala/corobo/branches/master/badge.svg)](https://semaphoreci.com/coala/corobo)
 [![Gitter Room](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/coala/corobo)
+
+## About
+
+`corobo` is a Python based chatbot that could be connected to many messaging
+platforms including Slack, HipChat, Telegram, IRC, XMPP, Tox, Campfire, Gitter,
+Skype. Check all the backends available
+[here](http://errbot.io/en/latest/features.html#multiple-server-backends)
+
+This repository is mainly a collection of plugins that are written for
+[errbot](http://errbot.io). Errbot is a Python based chatbot framework.
+
+As described on Errbot website:
+> Errbot is a chatbot, a daemon that connects to your favorite chat service
+  and brings your tools into the conversation.
+
+It handles sending messages to correct rooms/person, receiving messages,
+calling your command routines on matching commands, etc. These command routines
+are added by writing plugins, which are collected and loaded by Errbot when it
+is ran.
+
+## Features
+
+Read more about what `corobo` could do for you
+[here](https://github.com/coala/corobo/blob/master/docs/corobo.rst).
+
 ## Environment Variables
 
 1. `COBOT_ROOT` - absolute path of the project root.
