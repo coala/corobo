@@ -309,6 +309,7 @@ class LabHub(BotPlugin):
             'corobo will invite you.'.format(self.GH_ORG_NAME),
             '- A newcomer cannot be assigned to an issue with a difficulty '
             'level higher than newcomer or low difficulty.',
+            '- A newcomer cannot be assigned to unlabelled issues.'
         ]
 
         try:
