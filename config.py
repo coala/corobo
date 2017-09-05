@@ -17,6 +17,10 @@ BOT_LOG_LEVEL = logging.DEBUG
 
 BOT_PREFIX = os.environ.get('COBOT_PREFIX', 'corobo ')
 
+# Also listen to cobot, if the bot being ran is corobo
+if not os.environ.get('COBOT_PREFIX'):
+    BOT_ALT_PREFIXES = ('cobot ', )
+
 BOT_ADMINS = os.environ.get('BOT_ADMINS', '').split() or ('meetmangukiya', )
 
 BOT_IDENTITY = {
