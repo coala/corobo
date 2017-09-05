@@ -1,0 +1,10 @@
+[Core]
+name = deprecate_cobot
+module = deprecate_cobot
+
+[Documentation]
+description = A callback for every message that starts with cobot, hence, leaving a deprecation notice
+
+[Python]
+version = 3
+
