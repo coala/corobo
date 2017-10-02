@@ -158,6 +158,12 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand('!assign coala/a#23',
                               "You've been assigned to the issue")
 
+        # test super-short issue reference
+        mock_issue.assignees = tuple()
+        self.mock_team.is_member.return_value = False
+        testbot.assertCommand('!assign #23',
+                              "You've been assigned to the issue")
+
         cmd = '!assign https://github.com/{}/{}/issues/{}'
         # no assignee, not newcomer
         mock_issue.assignees = tuple()

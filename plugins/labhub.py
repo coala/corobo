@@ -266,9 +266,29 @@ class LabHub(BotPlugin):
 
             return m.group(1), m.group(2), m.group(3)
 
+        # Super short issue reference (e.g. `#1234`)
+        def process_super_short_ref(issue_reference):
+            issue_rgx = r'#(\d+)'
+            issue_reference_match = re.fullmatch(issue_rgx, issue_reference)
+
+            if issue_reference_match is None:
+                return None
+
+            roomname_rgx = r'(.+?)/(.+)'
+            roomname_match = re.fullmatch(
+                roomname_rgx, msg.frm.room.uri, re.IGNORECASE)
+
+            if roomname_match is None:
+                return None
+
+            return (roomname_match.group(1),
+                    roomname_match.group(2),
+                    issue_reference_match.group(1))
+
         issue_processors = [
             process_full_url,
-            process_short_ref
+            process_short_ref,
+            process_super_short_ref
         ]
 
         for issue_processor in issue_processors:
