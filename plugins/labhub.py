@@ -7,7 +7,7 @@ import time
 import github3
 from IGitt.GitHub.GitHub import GitHub, GitHubToken
 from IGitt.GitLab.GitLab import GitLab, GitLabPrivateToken
-from errbot import BotPlugin, re_botcmd
+from errbot import BotPlugin, arg_botcmd, re_botcmd
 
 from plugins import constants
 
@@ -242,14 +242,34 @@ class LabHub(BotPlugin):
                             bot_prefix=self.bot_config.BOT_PREFIX)
                         )
 
-    @re_botcmd(pattern=r'^assign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+/)+issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
-               re_cmd_name_help='assign <complete-issue-URL>',
-               flags=re.IGNORECASE)
-    def assign_cmd(self, msg, match):
+    @arg_botcmd('issue_reference', type=str)
+    def assign(self, msg, issue_reference):
         """Assign to GitLab and GitHub issues."""  # Ignore QuotesBear
-        org = match.group(2)
-        repo_name = match.group(3)[:-1]
-        iss_number = match.group(4)
+
+        # Complete URL to issue
+        def process_full_url(issue_reference):
+            rgx = r'https://(github|gitlab)\.com/([^/]+)/([^/]+/)+issues/(\d+)'
+            m = re.fullmatch(rgx, issue_reference, re.IGNORECASE)
+
+            if m is None:
+                return None
+
+            return m.group(2), m.group(3)[:-1], m.group(4)
+
+        issue_processors = [
+            process_full_url
+        ]
+
+        for issue_processor in issue_processors:
+            issue_data = issue_processor(issue_reference)
+
+            if issue_data is not None:
+                break
+        else:
+            yield 'Invalid issue.'
+            return
+
+        org, repo_name, iss_number = issue_data
 
         user = msg.frm.nick
 

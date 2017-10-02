@@ -148,6 +148,10 @@ class TestLabHub(unittest.TestCase):
                         'coala developers': mock_dev_team,
                         'coala maintainers': mock_maint_team}
 
+        # invalid issue format
+        testbot.assertCommand('!assign this-is-an-invalid-issue-xyz',
+                              'Invalid issue.')
+
         cmd = '!assign https://github.com/{}/{}/issues/{}'
         # no assignee, not newcomer
         mock_issue.assignees = tuple()
