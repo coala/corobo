@@ -256,8 +256,19 @@ class LabHub(BotPlugin):
 
             return m.group(2), m.group(3)[:-1], m.group(4)
 
+        # Short issue reference (e.g. `coala/corobo#12`)
+        def process_short_ref(issue_reference):
+            rgx = r'(.+?)/(.+?)#(\d+)'
+            m = re.fullmatch(rgx, issue_reference, re.IGNORECASE)
+
+            if m is None:
+                return None
+
+            return m.group(1), m.group(2), m.group(3)
+
         issue_processors = [
-            process_full_url
+            process_full_url,
+            process_short_ref
         ]
 
         for issue_processor in issue_processors:

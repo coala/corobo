@@ -152,6 +152,12 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand('!assign this-is-an-invalid-issue-xyz',
                               'Invalid issue.')
 
+        # test short issue reference
+        mock_issue.assignees = tuple()
+        self.mock_team.is_member.return_value = False
+        testbot.assertCommand('!assign coala/a#23',
+                              "You've been assigned to the issue")
+
         cmd = '!assign https://github.com/{}/{}/issues/{}'
         # no assignee, not newcomer
         mock_issue.assignees = tuple()
