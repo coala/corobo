@@ -280,3 +280,5 @@ class TestLabHub(unittest.TestCase):
         plugins.labhub.os.environ['GH_TOKEN'] = 'patched?'
         testbot.assertCommand('!invite me',
                               'We\'ve just sent you an invite')
+        with self.assertRaises(queue.Empty):
+            testbot.pop_message()

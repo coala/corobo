@@ -95,7 +95,7 @@ class LabHub(BotPlugin):
         self._teams = new
 
     # Ignore LineLengthBear, PycodestyleBear
-    @re_botcmd(pattern=r'(?:(?:invite)|(?:inv))\s+@?([\w-]+)(?:\s*(?:to)\s+(\w+))?',
+    @re_botcmd(pattern=r'(?:(?:invite)|(?:inv))\s+(?:(?:@?([\w-]+)(?:\s*(?:to)\s+(\w+))?)|(me))',
                re_cmd_name_help='invite [to team]')
     def invite_cmd(self, msg, match):
         """
@@ -104,6 +104,13 @@ class LabHub(BotPlugin):
         """
         invitee = match.group(1)
         inviter = msg.frm.nick
+
+        if invitee == 'me':
+            user = msg.frm.nick
+            self.send(msg.frm, self.INVITE_SUCCESS['newcomers'].format(user))
+            self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
+            self.invited_users.add(user)
+            return
 
         team = 'newcomers' if match.group(2) is None else match.group(2)
 
@@ -137,16 +144,6 @@ class LabHub(BotPlugin):
                           self.INVITE_SUCCESS['newcomers'].format(user))
                 self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
                 self.invited_users.add(user)
-
-    @re_botcmd(pattern=r'^(invite|inv) me$',
-               re_cmd_name_help='invite me',
-               flags=re.IGNORECASE)
-    def invite_me(self, msg, match):
-        """Invite the user who's issuing ``invite me`` command."""
-        user = msg.frm.nick
-        self.send(msg.frm, self.INVITE_SUCCESS['newcomers'].format(user))
-        self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
-        self.invited_users.add(user)
 
     @re_botcmd(pattern=r'(?:new|file) issue ([\w-]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='new issue repo-name title\n[description]',
