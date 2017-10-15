@@ -138,6 +138,16 @@ class LabHub(BotPlugin):
                 self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
                 self.invited_users.add(user)
 
+    @re_botcmd(pattern=r'^(invite|inv) me$',
+               re_cmd_name_help='invite me',
+               flags=re.IGNORECASE)
+    def invite_me(self, msg, match):
+        """Invite the user who's issuing ``invite me`` command."""
+        user = msg.frm.nick
+        self.send(msg.frm, self.INVITE_SUCCESS['newcomers'].format(user))
+        self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
+        self.invited_users.add(user)
+
     @re_botcmd(pattern=r'(?:new|file) issue ([\w-]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='new issue repo-name title\n[description]',
                flags=re.IGNORECASE)
