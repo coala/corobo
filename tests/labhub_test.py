@@ -81,7 +81,8 @@ class TestLabHub(unittest.TestCase):
         plugins.labhub.GitHubToken = create_autospec(IGitt.GitHub.GitHubToken)
         plugins.labhub.GitLabPrivateToken = create_autospec(IGitt.GitLab.GitLabPrivateToken)
 
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
+        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR,
+                                         {'BACKEND': 'text'})
         labhub.activate()
         plugins.labhub.GitHubToken.assert_called_with(None)
         plugins.labhub.GitLabPrivateToken.assert_called_with(None)
@@ -93,7 +94,7 @@ class TestLabHub(unittest.TestCase):
                               'Here you go')
 
         labhub.REPOS['repository'].create_issue.assert_called_once_with(
-            'this is the title', 'bo\ndy\nOpened by @None '
+            'this is the title', 'bo\ndy\nOpened by @None at [text]()'
         )
 
         testbot.assertCommand('!new issue coala title', 'repository that does not exist')

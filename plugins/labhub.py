@@ -10,6 +10,7 @@ from IGitt.GitLab.GitLab import GitLab, GitLabPrivateToken
 from errbot import BotPlugin, re_botcmd
 
 from plugins import constants
+from utils.backends import message_link
 
 
 class LabHub(BotPlugin):
@@ -153,17 +154,11 @@ class LabHub(BotPlugin):
         repo_name = match.group(1)
         iss_title = match.group(2)
         iss_description = match.group(3) if match.group(3) is not None else ''
-        extra_msg = '\nOpened by @{} '.format(msg.frm.nick)
-
-        try:  # This is gitter backend specific
-            extra_msg += ('at [gitter/{uri}](https://gitter.im/{uri}?at={idd})'
-                          ''.format(
-                             uri=msg.frm.room.uri,
-                             idd=msg.extras['id']
-                          ))
-        except (AttributeError, KeyError):
-            self.log.exception('An exception occured while getting the link to'
-                               ' the message')
+        extra_msg = '\nOpened by @{username} at [{backend}]({msg_link})'.format(
+            username=msg.frm.nick,
+            backend=self.bot_config.BACKEND,
+            msg_link=message_link(self, msg)
+        )
 
         if repo_name in self.REPOS:
             repo = self.REPOS[repo_name]
