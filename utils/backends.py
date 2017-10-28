@@ -10,8 +10,8 @@ def message_link(bot, msg):
     """
     backend = bot.bot_config.BACKEND.lower()
     if backend == 'gitter':
-        return 'https://gitter.im/{uri}?at={idd}'.format(msg.frm.room.uri,
-                                                         msg.extras['id'])
+        return 'https://gitter.im/{uri}?at={idd}'.format(uri=msg.frm.room.uri,
+                                                         idd=msg.extras['id'])
     elif backend == 'slack':
         return msg.extras['url']
     elif backend == 'telegram':
