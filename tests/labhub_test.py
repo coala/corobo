@@ -203,6 +203,11 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'already assigned to someone')
 
+        # has assignee same as user
+        mock_issue.assignees = (None, )
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'already assigned to you')
+
         # non-existent repository
         testbot.assertCommand(cmd.format('coala', 'c', '23'),
                               'Repository doesn\'t exist.')

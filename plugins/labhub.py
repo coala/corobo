@@ -337,6 +337,8 @@ class LabHub(BotPlugin):
                 else:
                     yield 'You are not eligible to be assigned to this issue.'
                     yield '\n'.join(eligility_conditions)
+            elif user in iss.assignees:
+                yield ('The issue is already assigned to you.')
             else:
                 yield ('The issue is already assigned to someone. Please '
                        'check if the assignee is still working on the issue, '
