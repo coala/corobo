@@ -1,9 +1,7 @@
 import logging
-import os
 import queue
-import time
 import unittest
-from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock, patch
+from unittest.mock import MagicMock, create_autospec, PropertyMock, patch
 
 import github3
 import IGitt
@@ -13,7 +11,6 @@ from IGitt.GitHub.GitHubIssue import GitHubIssue
 from errbot.backends.test import TestBot
 
 import plugins.labhub
-from plugins.labhub import LabHub
 
 from tests.helper import plugin_testbot
 
