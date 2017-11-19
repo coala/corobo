@@ -141,7 +141,7 @@ class LabHub(BotPlugin):
     @re_botcmd(pattern=r'(?:new|file) issue ([\w-]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='new issue repo-name title\n[description]',
                flags=re.IGNORECASE)
-    def create_issut_cmd(self, msg, match):
+    def create_issue_cmd(self, msg, match):
         """Create issues on GitHub and GitLab repositories."""  # Ignore QuotesBear, LineLengthBear, PyCodeStyleBear
         repo_name = match.group(1)
         iss_title = match.group(2)
