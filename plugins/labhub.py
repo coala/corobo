@@ -276,7 +276,7 @@ class LabHub(BotPlugin):
 
             roomname_rgx = r'(.+?)/(.+)'
             roomname_match = re.fullmatch(
-                roomname_rgx, msg.frm.room.uri, re.IGNORECASE)
+                roomname_rgx, msg.to.name, re.IGNORECASE)
 
             if roomname_match is None:
                 return None
