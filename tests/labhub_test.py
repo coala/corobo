@@ -14,6 +14,7 @@ import plugins.labhub
 
 from tests.helper import plugin_testbot
 
+
 class TestLabHub(unittest.TestCase):
 
     def setUp(self):
