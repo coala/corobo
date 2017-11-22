@@ -3,7 +3,7 @@ import os
 
 COBOT_ROOT = os.environ.get('COBOT_ROOT', os.getcwd())
 
-BACKEND = os.environ.get('BACKEND', 'Gitter')
+BACKEND = os.environ.get('BACKEND', 'Text')
 
 BOT_EXTRA_BACKEND_DIR = os.path.join(COBOT_ROOT, 'err-backend-gitter')
 
@@ -21,7 +21,7 @@ BOT_PREFIX = os.environ.get('COBOT_PREFIX', 'corobo ')
 if not os.environ.get('COBOT_PREFIX'):
     BOT_ALT_PREFIXES = ('cobot ', )
 
-BOT_ADMINS = os.environ.get('BOT_ADMINS', '').split() or ('meetmangukiya', )
+BOT_ADMINS = os.environ.get('BOT_ADMINS', '').split() or ('*@localhost', )
 
 BOT_IDENTITY = {
     'token': os.environ.get('COBOT_TOKEN')
