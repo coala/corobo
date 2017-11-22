@@ -24,7 +24,7 @@ if not os.environ.get('COBOT_PREFIX'):
 BOT_ADMINS = os.environ.get('BOT_ADMINS', '').split() or ('meetmangukiya', )
 
 BOT_IDENTITY = {
-    'token': os.environ['COBOT_TOKEN']
+    'token': os.environ.get('COBOT_TOKEN')
 }
 
 IGNORE_USERNAMES = os.environ.get("IGNORE_USERNAMES",

@@ -37,6 +37,8 @@ Read more about what `corobo` could do for you
 4. `ROOMS` - Space separated list of rooms to join on startup. e.g.
    `ROOMS="coala/coala coala/coala/corobo"`
 5. `BACKEND` - Backend to use, default is Gitter.
+5. `COBOT_TOKEN` - Token used to connect to the backends - Mandatory for
+   backends except Text.
 6. `GH_TOKEN` - GitHub personal access token to create issues, invite people to
    org, assign and unassign issues, etc. - Mandatory for LabHub to work for
    GitHub.
@@ -57,10 +59,9 @@ Read more about what `corobo` could do for you
 
 1. Install the dependencies
    `pip install -r requirements.txt`
-2. Set environment variables `COBOT_ROOT`, `COBOT_TOKEN` to the path of corobo
-   repo and gitter token for cobot. Set other environment variables mentioned
-   above if required
-3. Run errbot: `cd COBOT_ROOT &&  errbot`
+2. Set environment variables mentioned above if required
+   `export COBOT_TOKEN=...`, or edit config.py
+3. Run `errbot`
 
 ## Setup with docker
 
