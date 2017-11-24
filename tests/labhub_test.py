@@ -294,3 +294,8 @@ class TestLabHub(unittest.TestCase):
                               'We\'ve just sent you an invite')
         with self.assertRaises(queue.Empty):
             testbot.pop_message()
+
+        testbot.assertCommand('!hey there invite me',
+                              'Command \"hey\" / \"hey there\" not found.')
+        with self.assertRaises(queue.Empty):
+             testbot.pop_message()

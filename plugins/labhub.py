@@ -96,7 +96,7 @@ class LabHub(BotPlugin):
         self._teams = new
 
     # Ignore LineLengthBear, PycodestyleBear
-    @re_botcmd(pattern=r'(?:(?:invite)|(?:inv))\s+(?:(?:@?([\w-]+)(?:\s*(?:to)\s+(\w+))?)|(me))',
+    @re_botcmd(pattern=r'^(?:(?:invite)|(?:inv))\s+(?:(?:@?([\w-]+)(?:\s*(?:to)\s+(\w+))?)|(me))$',
                re_cmd_name_help='invite [to team]')
     def invite_cmd(self, msg, match):
         """
