@@ -22,6 +22,9 @@ if not os.environ.get('COBOT_PREFIX'):
     BOT_ALT_PREFIXES = ('cobot ', )
 
 BOT_ADMINS = os.environ.get('BOT_ADMINS', '').split() or ('*@localhost', )
+# Text is a special case
+if BACKEND == 'Text':
+    BOT_ADMINS = ('@localhost', )
 
 BOT_IDENTITY = {
     'token': os.environ.get('COBOT_TOKEN')
