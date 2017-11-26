@@ -86,7 +86,7 @@ class Explain(BotPlugin):
     }
 
     ERROR_MSG = (
-        'Sorry, I only know about these things:\n' +
+        'Sorry, I only know about these things:\n- ' +
         '\n- '.join(MSGS.keys())
     )
 
