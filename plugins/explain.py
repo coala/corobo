@@ -90,7 +90,7 @@ class Explain(BotPlugin):
         '\n- '.join(MSGS.keys())
     )
 
-    @re_botcmd(pattern=r'explain\s+(\w+)(?:\s+to\s+@?([\w-]+))?',
+    @re_botcmd(pattern=r'^explain\s+(\w+)(?:\s+to\s+@?([\w-]+))?$',
                re_cmd_name_help='explain <term>',
                flags=re.IGNORECASE)
     def explain(self, msg, match):

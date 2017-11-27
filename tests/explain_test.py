@@ -19,3 +19,5 @@ def test_explain(testbot):
                           text.convert(Explain.ERROR_MSG))
     testbot.assertCommand("!explain review to @meet",
                           '@meet')
+    testbot.assertCommand("!please explain review",
+                          "Command \"please\" / \"please explain\" not found.")
