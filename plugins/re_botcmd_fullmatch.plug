@@ -1,0 +1,9 @@
+[Core]
+name = re_botcmd_fullmatch
+module = re_botcmd_fullmatch
+
+[Documentation]
+description = Checks whether all re_botcmd regexes are fullmatches or not and warns the admins.
+
+[Python]
+version = 3
