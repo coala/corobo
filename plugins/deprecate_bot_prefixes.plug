@@ -1,0 +1,9 @@
+[Core]
+name = deprecate_bot_prefixes
+module = deprecate_bot_prefixes
+
+[Documentation]
+description = A callback for every message that starts with depecrated prefix, hence, leaving a deprecation notice
+
+[Python]
+version = 3

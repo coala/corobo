@@ -21,6 +21,9 @@ BOT_PREFIX = os.environ.get('COBOT_PREFIX', 'corobo ')
 if not os.environ.get('COBOT_PREFIX'):
     BOT_ALT_PREFIXES = ('cobot ', )
 
+BOT_DEPRECATED_PREFIXES = os.environ.get(
+    'BOT_DEPRECATED_PREFIXES', '').split() or ('cobot ', )
+
 BOT_ADMINS = os.environ.get('BOT_ADMINS', '').split() or ('*@localhost', )
 # Text is a special case
 if BACKEND == 'Text':
