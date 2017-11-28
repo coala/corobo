@@ -146,7 +146,7 @@ class LabHub(BotPlugin):
                 self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
                 self.invited_users.add(user)
 
-    @re_botcmd(pattern=r'(?:new|file) issue ([\w-]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
+    @re_botcmd(pattern=r'(?:new|file) issue ([\w\-\.]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='new issue repo-name title\n[description]',
                flags=re.IGNORECASE)
     def create_issue_cmd(self, msg, match):

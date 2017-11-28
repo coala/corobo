@@ -88,13 +88,21 @@ class TestLabHub(unittest.TestCase):
         plugins.labhub.GitLabPrivateToken.assert_called_with(None)
 
 
-        labhub.REPOS = {'repository': self.mock_repo}
+        labhub.REPOS = {'repository': self.mock_repo,
+                        'repository.github.io': self.mock_repo}
 
         testbot.assertCommand('!new issue repository this is the title\nbo\ndy',
                               'Here you go')
 
         labhub.REPOS['repository'].create_issue.assert_called_once_with(
             'this is the title', 'bo\ndy\nOpened by @None at [text]()'
+        )
+
+        testbot.assertCommand('!new issue repository.github.io another title\nand body',
+                              'Here you go')
+
+        labhub.REPOS['repository.github.io'].create_issue.assert_called_with(
+            'another title', 'and body\nOpened by @None at [text]()'
         )
 
         testbot.assertCommand('!new issue coala title', 'repository that does not exist')
