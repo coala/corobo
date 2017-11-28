@@ -166,12 +166,6 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'You\'ve been assigned to the issue')
 
-        # no assignee, newcomer, difficulty/low, intiatives/gci
-        mock_issue.labels = ('difficulty/low', 'initiatives/gci')
-        testbot.assertCommand(cmd.format('coala', 'a', '23'),
-                              'not eligible to be assigned to this issue')
-        testbot.pop_message()
-
         # no assignee, newcomer, no labels
         self.mock_team.is_member.return_value = True
         mock_issue.labels = tuple()

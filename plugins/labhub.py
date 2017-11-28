@@ -299,15 +299,6 @@ class LabHub(BotPlugin):
                 elif self.GH3_ORG.is_member(user):
                     return True
 
-            @register_check
-            def block_gci_issue_assignment(user, iss):
-                """
-                False if the issue is labelled as 'initiatives/gci', else True.
-                """
-                if 'initiatives/gci' in iss.labels:
-                    return False
-                return True
-
         def eligible(user, iss):
             for chk in checks:
                 if not chk(user, iss):
@@ -320,8 +311,7 @@ class LabHub(BotPlugin):
             'corobo will invite you.'.format(self.GH_ORG_NAME),
             '- A newcomer cannot be assigned to an issue with a difficulty '
             'level higher than newcomer or low difficulty.',
-            '- A newcomer cannot be assigned to unlabelled issues.',
-            '- initiatives/gci labelled issue assignments are blocked.'
+            '- A newcomer cannot be assigned to unlabelled issues.'
         ]
 
         try:
