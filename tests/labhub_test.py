@@ -8,6 +8,7 @@ from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock, patch
 import github3
 import IGitt
 from IGitt.GitHub.GitHubMergeRequest import GitHubMergeRequest
+from IGitt.GitLab.GitLabMergeRequest import GitLabMergeRequest
 from IGitt.GitHub.GitHubIssue import GitHubIssue
 
 from errbot.backends.test import TestBot
@@ -223,24 +224,42 @@ class TestLabHub(unittest.TestCase):
         labhub.activate()
 
         labhub.REPOS = {'a': self.mock_repo}
-        mock_mr = create_autospec(GitHubMergeRequest)
-        self.mock_repo.get_mr.return_value = mock_mr
-        mock_mr.labels = PropertyMock()
-        cmd = '!mark {} https://github.com/{}/{}/pull/{}'
+        mock_github_mr = create_autospec(GitHubMergeRequest)
+        mock_gitlab_mr = create_autospec(GitLabMergeRequest)
+        mock_github_mr.labels = PropertyMock()
+        mock_gitlab_mr.labels = PropertyMock()
+        mock_github_mr.data = { 'user': { 'login': 'johndoe' } }
+        mock_gitlab_mr.data = { 'author': { 'username': 'johndoe' } }
+        cmd_github = '!mark {} https://github.com/{}/{}/pull/{}'
+        cmd_gitlab = '!mark {} https://gitlab.com/{}/{}/merge_requests/{}'
+
+        self.mock_repo.get_mr.return_value = mock_github_mr
 
         # Non-eistent repo
-        testbot.assertCommand(cmd.format('wip', 'a', 'b', '23'),
+        testbot.assertCommand(cmd_github.format('wip', 'a', 'b', '23'),
                               'Repository doesn\'t exist.')
         testbot.assertCommand('!mark wip https://gitlab.com/a/b/merge_requests/2',
                               'Repository doesn\'t exist.')
 
         # mark wip
-        mock_mr.labels = ['process/pending review']
-        testbot.assertCommand(cmd.format('wip', 'coala', 'a', '23'),
+        mock_github_mr.labels = ['process/pending review']
+        mock_gitlab_mr.labels = ['process/pending review']
+        testbot.assertCommand(cmd_github.format('wip', 'coala', 'a', '23'),
                               'marked work in progress')
+        testbot.assertCommand(cmd_github.format('wip', 'coala', 'a', '23'),
+                              '@johndoe, please check your pull request')
+
+        self.mock_repo.get_mr.return_value = mock_gitlab_mr
+
+        testbot.assertCommand(cmd_gitlab.format('wip', 'coala', 'a', '23'),
+                              '@johndoe, please check your pull request')
+
+        self.mock_repo.get_mr.return_value = mock_github_mr
+
         # mark pending
-        mock_mr.labels = ['process/wip']
-        testbot.assertCommand(cmd.format('pending', 'coala', 'a', '23'),
+        mock_github_mr.labels = ['process/wip']
+        mock_gitlab_mr.labels = ['process/wip']
+        testbot.assertCommand(cmd_github.format('pending', 'coala', 'a', '23'),
                               'marked pending review')
 
     def test_alive(self):
