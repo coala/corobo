@@ -261,6 +261,10 @@ class TestLabHub(unittest.TestCase):
         mock_gitlab_mr.labels = ['process/wip']
         testbot.assertCommand(cmd_github.format('pending', 'coala', 'a', '23'),
                               'marked pending review')
+        testbot.assertCommand(cmd_github.format('pending-review', 'coala', 'a', '23'),
+                              'marked pending review')
+        testbot.assertCommand(cmd_github.format('pending review', 'coala', 'a', '23'),
+                              'marked pending review')
 
     def test_alive(self):
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)

@@ -196,7 +196,7 @@ class LabHub(BotPlugin):
             else:
                 return 'You are not an assignee on the issue.'
 
-    @re_botcmd(pattern=r'mark\s+(wip|pending)\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/(pull|merge_requests)/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
+    @re_botcmd(pattern=r'mark\s+(wip|pending(?:(?:-|\s+)review)?\b)\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/(pull|merge_requests)/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='mark (wip|pending) <complete-PR-URL>',
                flags=re.IGNORECASE)
     def mark_cmd(self, msg, match):
