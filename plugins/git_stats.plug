@@ -1,0 +1,11 @@
+[Core]
+name = git_stats
+module = git_stats
+
+[Documentation]
+description = GitHub and GitLub statistics
+
+[Python]
+version = 3
+
+[Errbot]
