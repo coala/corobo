@@ -214,12 +214,6 @@ class LabHub(BotPlugin):
             return 'Repository doesn\'t exist.'
         else:
             current_labels = list(mr.labels)
-            data = mr.data
-            login = None
-            if 'user' in data:
-                login = data['user']['login']
-            elif 'author' in data:
-                login = data['author']['username']
             if state == 'wip':
                 pending_labels = ['process/pending_review',
                                   'process/pending review']
@@ -230,9 +224,9 @@ class LabHub(BotPlugin):
                 mr.labels = current_labels
 
                 ping = ''
-                if login is not None:
+                if mr.author is not None:
                     ping = ('\n@{user_login}, please check your pull '
-                            'request.'.format(user_login=login))
+                            'request.'.format(user_login=mr.author))
 
                 return ('The pull request {mr_link} is marked *work in progress'
                         '*. Use `{bot_prefix} mark pending` or push to your '

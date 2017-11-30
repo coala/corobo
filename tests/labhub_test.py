@@ -228,8 +228,8 @@ class TestLabHub(unittest.TestCase):
         mock_gitlab_mr = create_autospec(GitLabMergeRequest)
         mock_github_mr.labels = PropertyMock()
         mock_gitlab_mr.labels = PropertyMock()
-        mock_github_mr.data = { 'user': { 'login': 'johndoe' } }
-        mock_gitlab_mr.data = { 'author': { 'username': 'johndoe' } }
+        mock_github_mr.author = 'johndoe'
+        mock_gitlab_mr.author = 'johndoe'
         cmd_github = '!mark {} https://github.com/{}/{}/pull/{}'
         cmd_gitlab = '!mark {} https://gitlab.com/{}/{}/merge_requests/{}'
 
