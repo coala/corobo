@@ -1,3 +1,4 @@
+pyopenssl<17.5
 git+https://github.com/errbotio/errbot@c2639879d4c298933cdf406193de5a5e626db12b
 wolframalpha
 github3.py
