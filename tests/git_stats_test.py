@@ -1,5 +1,6 @@
 import logging
 from tempfile import mkdtemp
+from errbot import BotPlugin
 import unittest
 from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock, patch
 
@@ -12,6 +13,7 @@ from git import Repo
 import github3
 import IGitt
 import plugins.git_stats
+import plugins.labhub
 from tests.helper import plugin_testbot
 
 
@@ -26,8 +28,11 @@ class TestGitStats(unittest.TestCase):
         self.mock_gh.organization.return_value = self.mock_org
         plugins.git_stats.github3.organization.return_value = self.mock_org
 
+        self.plugin = plugins.git_stats.GitStats
+        self.plugin.__bases__ = (BotPlugin, )
+
     def test_pr_list(self):
-        git_stats, testbot = plugin_testbot(plugins.git_stats.GitStats, logging.ERROR)
+        git_stats, testbot = plugin_testbot(self.plugin, logging.ERROR)
         git_stats.activate()
 
         git_stats.REPOS = {'test': self.mock_repo}
@@ -45,7 +50,7 @@ class TestGitStats(unittest.TestCase):
         cmd_github = '!mergable {}'
         cmd_gitlab = '!mergable {}'
 
-        self.mock_repo.merge_requests.return_value = [mock_github_mr]
+        self.mock_repo.merge_requests = [mock_github_mr]
 
         # Non-existing repo
         testbot.assertCommand(cmd_github.format('b'),

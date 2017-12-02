@@ -26,7 +26,7 @@ class GitStats(LabHub):
         repo_name = match.groups(1)[0]
 
         try:
-            merge_requests = self.REPOS[repo_name].merge_requests()
+            merge_requests = self.REPOS[repo_name].merge_requests
         except KeyError:
             return "Repository doesn't exist."
 
