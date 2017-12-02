@@ -27,7 +27,7 @@ bears = LineLengthBear
 [all.links]
 bears = InvalidLinkBear
 
-[commits]
+[commit]
 bears = GitCommitBear
 shortlog_regex = ([^:]*|[^:]+[^ ]: [A-Z0-9*].*)
 shortlog_trailing_period = False
