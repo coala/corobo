@@ -318,12 +318,7 @@ class LabHub(BotPlugin):
             'corobo will invite you.'.format(self.GH_ORG_NAME),
             '- A newcomer cannot be assigned to an issue with a difficulty '
             'level higher than newcomer or low difficulty.',
-            '- A newcomer cannot be assigned to unlabelled issues.',
-            '- You cannot be assigned to a medium level issue'
-            'if you are not a developer.'
-            'If you want to be a developer you need '
-            'to complete all the 5 tasks in '
-            'http://api.coala.io/en/latest/Developers/Newcomers_Guide.html'
+            '- A newcomer cannot be assigned to unlabelled issues.'
         ]
 
         try:
