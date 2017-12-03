@@ -14,13 +14,22 @@ addons:
       - libssl-dev
       - python3-dev
 
+before_install:
+  - cp requirements.txt requirements.orig
+  - printf '%s\n%s\n%s\n%s\n'
+           "git+https://github.com/coala/coala"
+           "git+https://github.com/coala/coala-bears"
+           "$(cat test-requirements.txt)"
+           "$(cat requirements.txt)"
+           > requirements.txt
+
 before_script:
-  - pip install coala-bears
-  - pip install -r requirements.txt
-  - pip install -r test-requirements.txt
+  # Docker will fail to build if coala-bears is included
+  # as one of the bears depends on its own version of
+  # libbrotli which doesnt compile without a lot of deps.
+  - mv requirements.orig requirements.txt
 
 script:
-  - sed -i.bak '/bears = GitCommitBear/d' .coafile
   - coala --non-interactive -V
   - python -m pytest
   - docker build -t "corobo" .
