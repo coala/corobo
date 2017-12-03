@@ -82,31 +82,41 @@ class TestLabHub(unittest.TestCase):
         plugins.labhub.GitHubToken = create_autospec(IGitt.GitHub.GitHubToken)
         plugins.labhub.GitLabPrivateToken = create_autospec(IGitt.GitLab.GitLabPrivateToken)
 
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR,
-                                         {'BACKEND': 'text'})
+        labhub, testbot_private = plugin_testbot(
+            plugins.labhub.LabHub, logging.ERROR,
+            {'BACKEND': 'text', 'ACCESS_CONTROLS':{'create_issue_cmd' : {'allowprivate':False}}}
+        )
         labhub.activate()
         plugins.labhub.GitHubToken.assert_called_with(None)
         plugins.labhub.GitLabPrivateToken.assert_called_with(None)
 
+        # Creating issue in private chat
+        testbot_private.assertCommand('!new issue repository this is the title\nbo\ndy',
+                              'You\'re not allowed')
 
+        # Creating issue in public chat
+        labhub, testbot_public = plugin_testbot(
+            plugins.labhub.LabHub, logging.ERROR, {'BACKEND': 'text'}
+        )
+        labhub.activate()
         labhub.REPOS = {'repository': self.mock_repo,
                         'repository.github.io': self.mock_repo}
 
-        testbot.assertCommand('!new issue repository this is the title\nbo\ndy',
+        testbot_public.assertCommand('!new issue repository this is the title\nbo\ndy',
                               'Here you go')
 
         labhub.REPOS['repository'].create_issue.assert_called_once_with(
             'this is the title', 'bo\ndy\nOpened by @None at [text]()'
         )
 
-        testbot.assertCommand('!new issue repository.github.io another title\nand body',
+        testbot_public.assertCommand('!new issue repository.github.io another title\nand body',
                               'Here you go')
 
         labhub.REPOS['repository.github.io'].create_issue.assert_called_with(
             'another title', 'and body\nOpened by @None at [text]()'
         )
 
-        testbot.assertCommand('!new issue coala title', 'repository that does not exist')
+        testbot_public.assertCommand('!new issue coala title', 'repository that does not exist')
 
     def test_unassign_cmd(self):
         plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)

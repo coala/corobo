@@ -56,6 +56,7 @@ ROOMS_TO_JOIN = (
 CHATROOM_PRESENCE = os.environ.get('ROOMS', '').split() or ROOMS_TO_JOIN
 
 ACCESS_CONTROLS = {'render test': {
-    'allowrooms': ('coala/cobot-test', 'coala/corobo',)}, }
+    'allowrooms': ('coala/cobot-test', 'coala/corobo',)},
+    'LabHub:create_issue_cmd': {'allowprivate': False}}
 
 AUTOINSTALL_DEPS = True
