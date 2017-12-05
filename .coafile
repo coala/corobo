@@ -27,6 +27,11 @@ bears = LineLengthBear
 [all.links]
 bears = InvalidLinkBear
 
+[jinja2]
+files = plugins/templates/**/*.jinja2.md
+bears = Jinja2Bear
+default_actions = Jinja2Bear: ApplyPatchAction
+
 [commit]
 bears = GitCommitBear
 shortlog_regex = ([^:]*|[^:]+[^ ]: [A-Z0-9*].*)

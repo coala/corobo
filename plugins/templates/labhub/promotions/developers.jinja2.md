@@ -1,0 +1,1 @@
+Wow @{{ target }}, you are a part of developers team now! :tada: Welcome to our community! You were a newcomer before, and we'd like to know what could've been better, please fill out http://coala.io/newform

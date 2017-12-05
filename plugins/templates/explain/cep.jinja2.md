@@ -1,0 +1,1 @@
+At coala we're using [cEP's (coala Enhancement Proposals)](http://coala.io/cep) to define major design decisions - they're a bit like PEP's but not quite as extensive and obviously written with a lower case c.

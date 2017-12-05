@@ -9,7 +9,4 @@ extra_plugin_dir = 'plugins'
 text = errbot.rendering.text()
 
 def test_lmgtfy(testbot):
-    testbot.assertCommand("!lmgtfy py c",
-                          text.convert(
-                              Lmgtfy.MSG.format("https://www.lmgtfy.com/?q=py c")
-                          ))
+    testbot.assertCommand("!lmgtfy py c", "https://www.lmgtfy.com/?q=py c")

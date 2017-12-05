@@ -1,0 +1,1 @@
+We are currently evaluating on if we want to use GitLab for code hosting. That's why some repositories are already on GitLab, if you want to participate in the migration discussion, please add information [at our GitLab wiki page](https://github.com/coala/coala/wiki/GitLab).

@@ -8,6 +8,7 @@ import github3
 from IGitt.GitHub.GitHub import GitHub, GitHubToken
 from IGitt.GitLab.GitLab import GitLab, GitLabPrivateToken
 from errbot import BotPlugin, re_botcmd
+from errbot.templating import tenv
 
 from plugins import constants
 from utils.backends import message_link
@@ -15,31 +16,6 @@ from utils.backends import message_link
 
 class LabHub(BotPlugin):
     """GitHub and GitLab utilities"""  # Ignore QuotesBear
-
-    INVITE_SUCCESS = {
-        'newcomers': 'Welcome @{}! :tada:\n\nWe\'ve just sent you an invite'
-                     ' via email. Please accept it before proceeding forward.'
-                     '\nTo get started, please follow our [newcomers guide]'
-                     '(https://coala.io/newcomer). Most '
-                     'issues will be explained there and in linked pages - it '
-                     'will save you a lot of time, just read it. *Really.*\n\n'
-                     '*Do not take an issue if you don\'t understand it on '
-                     'your own.*Especially if you are new you have to be aware '
-                     'that getting started with an open source community is '
-                     'not trivial: you will have to work hard and most likely '
-                     'become a better coder than you are now just as we all '
-                     'did.\n\nDon\'t get us wrong: we are *very* glad to have '
-                     'you with us on this journey into open source! We will '
-                     'also be there for you at all times to help you with '
-                     'actual problems. :)',
-        'developers': ' Wow @{}, you are a part of developers team now! :tada: '
-                      'Welcome to our community! You were a newcomer before, '
-                      'and we\'d like to know what could\'ve been better, '
-                      'please fill http://coala.io/newform',
-        'maintainers': ' @{} you seem to be awesome! You are now a maintainer! '
-                       ':tada: Please go through '
-                       'https://github.com/coala/coala/wiki/Membership'
-    }
 
     GH_ORG_NAME = constants.GH_ORG_NAME
     GL_ORG_NAME = constants.GL_ORG_NAME
@@ -108,7 +84,12 @@ class LabHub(BotPlugin):
 
         if invitee == 'me':
             user = msg.frm.nick
-            self.send(msg.frm, self.INVITE_SUCCESS['newcomers'].format(user))
+            response = tenv().get_template(
+                'labhub/promotions/newcomers.jinja2.md'
+            ).render(
+                username=user,
+            )
+            self.send(msg.frm, response)
             self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
             self.invited_users.add(user)
             return
@@ -129,10 +110,18 @@ class LabHub(BotPlugin):
 
             # send the invite
             self.TEAMS[team_mapping[team.lower()]].invite(invitee)
-            return self.INVITE_SUCCESS[team.lower()].format(invitee)
+            return tenv().get_template(
+                'labhub/promotions/{}.jinja2.md'.format(team.lower())
+            ).render(
+                target=invitee,
+            )
         else:
-            return ('@{}, you are not a maintainer, only maintainers can invite'
-                    ' other people. Nice try :poop:'.format(inviter))
+            return tenv().get_template(
+                'labhub/errors/not-maintainer.jinja2.md'
+            ).render(
+                action='invite other people',
+                target=invitee,
+            )
 
     def callback_message(self, msg):
         """Invite the user whose message includes the holy 'hello world'"""
@@ -141,8 +130,12 @@ class LabHub(BotPlugin):
             if (not self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user)
                     and user not in self.invited_users):
                 # send the invite
-                self.send(msg.frm,
-                          self.INVITE_SUCCESS['newcomers'].format(user))
+                response = tenv().get_template(
+                    'labhub/promotions/newcomers.jinja2.md'
+                ).render(
+                    target=user,
+                )
+                self.send(msg.frm, response)
                 self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
                 self.invited_users.add(user)
 
@@ -151,11 +144,12 @@ class LabHub(BotPlugin):
                flags=re.IGNORECASE)
     def create_issue_cmd(self, msg, match):
         """Create issues on GitHub and GitLab repositories."""  # Ignore QuotesBear, LineLengthBear, PyCodeStyleBear
+        user = msg.frm.nick
         repo_name = match.group(1)
         iss_title = match.group(2)
         iss_description = match.group(3) if match.group(3) is not None else ''
         extra_msg = '\nOpened by @{username} at [{backend}]({msg_link})'.format(
-            username=msg.frm.nick,
+            username=user,
             backend=self.bot_config.BACKEND,
             msg_link=message_link(self, msg)
         )
@@ -165,9 +159,11 @@ class LabHub(BotPlugin):
             iss = repo.create_issue(iss_title, iss_description + extra_msg)
             return 'Here you go: {}'.format(iss.url)
         else:
-            return ('Can\'t create an issue for a repository that does not '
-                    'exist. Please ensure that the repository is available '
-                    'and owned by the org.')
+            return tenv().get_template(
+                'labhub/errors/no-repository.jinja2.md'
+            ).render(
+                target=user,
+            )
 
     @re_botcmd(pattern=r'^unassign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='unassign <complete-issue-URL>',
@@ -312,15 +308,6 @@ class LabHub(BotPlugin):
                     return False
             return True
 
-        eligility_conditions = [
-            '- You must be a member of {} org to be assigned an issue '
-            'If you are not a member yet, just type Hello World and '
-            'corobo will invite you.'.format(self.GH_ORG_NAME),
-            '- A newcomer cannot be assigned to an issue with a difficulty '
-            'level higher than newcomer or low difficulty.',
-            '- A newcomer cannot be assigned to unlabelled issues.'
-        ]
-
         try:
             iss = self.REPOS[repo_name].get_issue(int(iss_number))
         except KeyError:
@@ -333,13 +320,19 @@ class LabHub(BotPlugin):
                            'issue. :tada:')
                 else:
                     yield 'You are not eligible to be assigned to this issue.'
-                    yield '\n'.join(eligility_conditions)
+                    yield tenv().get_template(
+                        'labhub/errors/not-eligible.jinja2.md'
+                    ).render(
+                        organization=self.GH_ORG_NAME,
+                    )
             elif user in iss.assignees:
                 yield ('The issue is already assigned to you.')
             else:
-                yield ('The issue is already assigned to someone. Please '
-                       'check if the assignee is still working on the issue, '
-                       'if not, you should ask for reassignment.')
+                yield tenv().get_template(
+                    'labhub/errors/already-assigned.jinja2.md'
+                ).render(
+                    username=user,
+                )
 
     @staticmethod
     def community_state(pr_count: dict):

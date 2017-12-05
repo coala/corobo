@@ -1,0 +1,1 @@
+We use bug prediction in coala which relies on the `Fixes` keyword in commit messages. To get good results from that we need to use `Fixes` for bugfix issues instead of `Closes`. (See also [the commit message docs](https://coala.io/commit).) To change your message you just use `git commit --amend` and then `git push --force` the new commit to replace the old one.
