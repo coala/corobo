@@ -61,7 +61,7 @@ class LabHub(BotPlugin):
         else:
             self.REPOS.update(self.gl_repos)
 
-        self.invited_users = set()
+        self.helloed_users = set()
 
     @property
     def TEAMS(self):
@@ -72,7 +72,7 @@ class LabHub(BotPlugin):
         self._teams = new
 
     # Ignore LineLengthBear, PycodestyleBear
-    @re_botcmd(pattern=r'^(?:(?:welcome)|(?:inv)|(?:invite))\s+(?:(?:@?([\w-]+)(?:\s*(?:to)\s+(\w+))?)|(me))$',
+    @re_botcmd(pattern=r'^(?:(?:welcome)|(?:inv)|(?:invite))\s+@?([\w-]+)(?:\s*(?:to)\s+(\w+))?$',
                re_cmd_name_help='invite [to team]')
     def invite_cmd(self, msg, match):
         """
@@ -81,18 +81,6 @@ class LabHub(BotPlugin):
         """
         invitee = match.group(1)
         inviter = msg.frm.nick
-
-        if invitee == 'me':
-            user = msg.frm.nick
-            response = tenv().get_template(
-                'labhub/promotions/newcomers.jinja2.md'
-            ).render(
-                username=user,
-            )
-            self.send(msg.frm, response)
-            self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
-            self.invited_users.add(user)
-            return
 
         team = 'newcomers' if match.group(2) is None else match.group(2)
 
@@ -128,16 +116,16 @@ class LabHub(BotPlugin):
         if re.search(r'hello\s*,?\s*world', msg.body, flags=re.IGNORECASE):
             user = msg.frm.nick
             if (not self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user)
-                    and user not in self.invited_users):
-                # send the invite
-                response = tenv().get_template(
-                    'labhub/promotions/newcomers.jinja2.md'
-                ).render(
-                    target=user,
+                    and user not in self.helloed_users):
+                self.send(
+                    msg.frm,
+                    tenv().get_template(
+                        'labhub/hello_world.jinja2.md'
+                    ).render(
+                        target=user,
+                    )
                 )
-                self.send(msg.frm, response)
-                self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
-                self.invited_users.add(user)
+                self.helloed_users.add(user)
 
     @re_botcmd(pattern=r'(?:new|file) issue ([\w\-\.]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='new issue repo-name title\n[description]',
