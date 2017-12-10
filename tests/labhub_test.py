@@ -69,12 +69,11 @@ class TestLabHub(unittest.TestCase):
         labhub = testbot.bot.plugin_manager.get_plugin_obj_by_name('LabHub')
         labhub.TEAMS = teams
         self.mock_team.is_member.return_value = False
-        testbot.assertCommand('hello, world', 'newcomer')
+        testbot.assertCommand('hello, world', 'newcomer', timeout=10000)
         # Since the user won't be invited again, it'll timeout waiting for a
         # response.
         with self.assertRaises(queue.Empty):
             testbot.assertCommand('helloworld', 'newcomer')
-        self.mock_team.invite.assert_called_with(None)
 
     def test_create_issue_cmd(self):
         plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
@@ -312,25 +311,3 @@ class TestLabHub(unittest.TestCase):
             testbot.assertCommand('!pr stats 3hours',
                                   '10 PRs opened in last 3 hours\n'
                                   'The community is on fire')
-
-    def test_invite_me(self):
-        teams = {
-            'coala maintainers': self.mock_team,
-            'coala newcomers': self.mock_team,
-            'coala developers': self.mock_team
-        }
-
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
-        labhub.activate()
-        labhub._teams = teams
-
-        plugins.labhub.os.environ['GH_TOKEN'] = 'patched?'
-        testbot.assertCommand('!invite me',
-                              'We\'ve just sent you an invite')
-        with self.assertRaises(queue.Empty):
-            testbot.pop_message()
-
-        testbot.assertCommand('!hey there invite me',
-                              'Command \"hey\" / \"hey there\" not found.')
-        with self.assertRaises(queue.Empty):
-             testbot.pop_message()
