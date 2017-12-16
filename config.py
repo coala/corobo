@@ -3,6 +3,29 @@ import os
 
 COBOT_ROOT = os.environ.get('COBOT_ROOT', os.getcwd())
 
+_BOT_IDENTITY_KEYS = (
+    'endpoint',
+    'nickname',
+    'password',
+    'port',
+    'server',
+    'ssl',
+    'token',
+    'username',
+)
+
+BOT_IDENTITY = {}
+
+for _key in _BOT_IDENTITY_KEYS:
+    BOT_IDENTITY[_key] = os.environ.get('BOT_' + _key.upper())
+
+if not BOT_IDENTITY['token']:
+    BOT_IDENTITY['token'] = os.environ.get('COBOT_TOKEN')
+
+if BOT_IDENTITY['server'] and ':' in BOT_IDENTITY['server']:
+    server, port = os.environ['BOT_SERVER'].split(':')
+    BOT_IDENTITY['server'] = (server, int(port))
+
 BACKEND = os.environ.get('BACKEND', 'Text')
 
 BOT_EXTRA_BACKEND_DIR = os.path.join(COBOT_ROOT, 'err-backend-gitter')
@@ -28,10 +51,6 @@ BOT_ADMINS = os.environ.get('BOT_ADMINS', '').split() or ('*@localhost', )
 # Text is a special case
 if BACKEND == 'Text':
     BOT_ADMINS = ('@localhost', )
-
-BOT_IDENTITY = {
-    'token': os.environ.get('COBOT_TOKEN')
-}
 
 IGNORE_USERNAMES = os.environ.get("IGNORE_USERNAMES",
                                   'co-robo coala-bot').split()

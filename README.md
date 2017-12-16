@@ -36,7 +36,7 @@ Read more about what `corobo` could do for you
 4. `ROOMS` - Space separated list of rooms to join on startup. e.g.
    `ROOMS="coala/coala coala/coala/corobo"`
 5. `BACKEND` - Backend to use, default is Gitter.
-5. `COBOT_TOKEN` - Token used to connect to the backends - Mandatory for
+5. `BOT_TOKEN` - Token used to connect to the backends - Mandatory for
    backends except Text.
 6. `GH_TOKEN` - GitHub personal access token to create issues, invite people to
    org, assign and unassign issues, etc. - Mandatory for LabHub to work for
