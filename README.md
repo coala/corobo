@@ -35,7 +35,8 @@ Read more about what `corobo` could do for you
 3. `BOT_ADMINS` - Admins of the errbot instance.
 4. `ROOMS` - Space separated list of rooms to join on startup. e.g.
    `ROOMS="coala/coala coala/coala/corobo"`
-5. `BACKEND` - Backend to use, default is Gitter.
+5. `BACKEND` - Backend to use.
+   Default is Text, or Gitter when `BOT_TOKEN` is set.
 5. `BOT_TOKEN` - Token used to connect to the backends - Mandatory for
    backends except Text.
 6. `GH_TOKEN` - GitHub personal access token to create issues, invite people to

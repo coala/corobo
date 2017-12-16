@@ -26,9 +26,23 @@ if BOT_IDENTITY['server'] and ':' in BOT_IDENTITY['server']:
     server, port = os.environ['BOT_SERVER'].split(':')
     BOT_IDENTITY['server'] = (server, int(port))
 
-BACKEND = os.environ.get('BACKEND', 'Text')
+BACKEND = os.environ.get('BACKEND')
+if not BACKEND:
+    if BOT_IDENTITY['token']:
+        BACKEND = 'Gitter'
+    else:
+        BACKEND = 'Text'
 
-BOT_EXTRA_BACKEND_DIR = os.path.join(COBOT_ROOT, 'err-backend-gitter')
+if BACKEND == 'Gitter':
+    BOT_EXTRA_BACKEND_DIR = os.path.join(COBOT_ROOT, 'err-backend-gitter')
+else:
+    BOT_EXTRA_BACKEND_DIR = None
+
+if BOT_EXTRA_BACKEND_DIR:
+    plug_file = BACKEND.lower() + '.plug'
+    if not os.path.exists(os.path.join(BOT_EXTRA_BACKEND_DIR, plug_file)):
+        raise SystemExit('Directory %s not initialised' %
+                         BOT_EXTRA_BACKEND_DIR)
 
 HIDE_RESTRICTED_COMMANDS = True
 
