@@ -1,0 +1,9 @@
+[Core]
+name = SpammingAlert
+module = spam
+
+[Documentation]
+description = A callback to alert the user that they might be spamming.
+
+[Python]
+version = 3
