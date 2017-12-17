@@ -251,6 +251,9 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand('!mark wip https://gitlab.com/a/b/merge_requests/2',
                               'Repository doesn\'t exist.')
 
+        mock_github_mr.web_url = 'https://github.com/coala/a/pull/23'
+        mock_gitlab_mr.web_url = 'https://gitlab.com/coala/a/merge_requests/23'
+
         # mark wip
         mock_github_mr.labels = ['process/pending review']
         mock_gitlab_mr.labels = ['process/pending review']
@@ -258,11 +261,15 @@ class TestLabHub(unittest.TestCase):
                               'marked work in progress')
         testbot.assertCommand(cmd_github.format('wip', 'coala', 'a', '23'),
                               '@johndoe, please check your pull request')
+        testbot.assertCommand(cmd_github.format('wip', 'coala', 'a', '23'),
+                              'https://github.com/coala/a/pull/23')
 
         self.mock_repo.get_mr.return_value = mock_gitlab_mr
 
         testbot.assertCommand(cmd_gitlab.format('wip', 'coala', 'a', '23'),
                               '@johndoe, please check your pull request')
+        testbot.assertCommand(cmd_gitlab.format('wip', 'coala', 'a', '23'),
+                              'https://gitlab.com/coala/a/merge_requests/23')
 
         self.mock_repo.get_mr.return_value = mock_github_mr
 

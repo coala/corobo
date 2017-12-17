@@ -157,7 +157,7 @@ class LabHub(BotPlugin):
         if repo_name in self.REPOS:
             repo = self.REPOS[repo_name]
             iss = repo.create_issue(iss_title, iss_description + extra_msg)
-            return 'Here you go: {}'.format(iss.url)
+            return 'Here you go: {}'.format(iss.web_url)
         else:
             return tenv().get_template(
                 'labhub/errors/no-repository.jinja2.md'
@@ -228,7 +228,7 @@ class LabHub(BotPlugin):
                         '*. Use `{bot_prefix} mark pending` or push to your '
                         'branch if feedback from the community is needed '
                         'again.{ping}'.format(
-                            mr_link=mr.url,
+                            mr_link=mr.web_url,
                             bot_prefix=self.bot_config.BOT_PREFIX,
                             ping=ping)
                         )
@@ -243,7 +243,7 @@ class LabHub(BotPlugin):
                         'so you will get feedback from the community. Use '
                         '`{bot_prefix} mark wip` if there are known issues that'
                         ' should be corrected by the author.'.format(
-                            mr_link=mr.url,
+                            mr_link=mr.web_url,
                             bot_prefix=self.bot_config.BOT_PREFIX)
                         )
 
