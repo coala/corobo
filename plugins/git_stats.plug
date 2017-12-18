@@ -3,7 +3,7 @@ name = git_stats
 module = git_stats
 
 [Documentation]
-description = GitHub and GitLub statistics
+description = GitHub and GitLab statistics
 
 [Python]
 version = 3
