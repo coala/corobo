@@ -89,6 +89,7 @@ class TestLabHub(unittest.TestCase):
             {'BACKEND': 'text', 'ACCESS_CONTROLS':{'create_issue_cmd' : {'allowprivate':False}}}
         )
         labhub.activate()
+        labhub.REPOS = {'repository': self.mock_repo}
         plugins.labhub.GitHubToken.assert_called_with(None)
         plugins.labhub.GitLabPrivateToken.assert_called_with(None)
 
