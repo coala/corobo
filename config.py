@@ -52,10 +52,16 @@ BOT_EXTRA_PLUGIN_DIR = COBOT_ROOT
 BOT_LOG_FILE = os.path.join(COBOT_ROOT, 'errbot.log')
 BOT_LOG_LEVEL = logging.DEBUG
 
-BOT_PREFIX = os.environ.get('COBOT_PREFIX', 'corobo ')
+BOT_PREFIX = os.environ.get('BOT_PREFIX', 'corobo ')
+
+if 'COBOT_PREFIX' in os.environ:
+    BOT_PREFIX = os.environ['COBOT_PREFIX']
+    logging.warning(
+        'Deprecation warning: environment variable COBOT_PREFIX is replaced '
+        'by BOT_PREFIX.')
 
 # Also listen to cobot, if the bot being ran is corobo
-if not os.environ.get('COBOT_PREFIX'):
+if not os.environ.get('BOT_PREFIX'):
     BOT_ALT_PREFIXES = ('cobot ', )
 
 BOT_DEPRECATED_PREFIXES = os.environ.get(
