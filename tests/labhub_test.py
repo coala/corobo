@@ -59,6 +59,8 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand('!invite meet to developers',
                                    ':poop:')
 
+        testbot.assertCommand('!invite meetto newcomers',
+                                   'Command "invite" / "invite meetto" not found.')
     def test_hello_world_callback(self):
         teams = {
             'coala newcomers': self.mock_team,
