@@ -1,8 +1,8 @@
 FROM python:3-alpine
 
-ENV COBOT_ROOT=/opt/errbot
+ENV BOT_ROOT=/opt/errbot
 
-ADD requirements.txt $COBOT_ROOT/requirements.txt
+ADD requirements.txt $BOT_ROOT/requirements.txt
 
 RUN apk add --no-cache libffi openssl git \
     && apk add --no-cache --virtual .build-deps \
@@ -10,16 +10,16 @@ RUN apk add --no-cache libffi openssl git \
            libc-dev \
            libffi-dev \
            openssl-dev \
-    && pip install -r $COBOT_ROOT/requirements.txt \
+    && pip install -r $BOT_ROOT/requirements.txt \
     && pip install slackclient python-telegram-bot \
     && apk del .build-deps
 
-ADD . $COBOT_ROOT
+ADD . $BOT_ROOT
 
 RUN addgroup -S errbot \
-    && adduser -h $COBOT_ROOT -G errbot -S errbot \
-    && mkdir -p $COBOT_ROOT/data $COBOT_ROOT/plugins \
-    && chown -R errbot:errbot $COBOT_ROOT
+    && adduser -h $BOT_ROOT -G errbot -S errbot \
+    && mkdir -p $BOT_ROOT/data $BOT_ROOT/plugins \
+    && chown -R errbot:errbot $BOT_ROOT
 
 USER errbot
 WORKDIR /opt/errbot

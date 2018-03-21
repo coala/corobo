@@ -17,7 +17,7 @@ class Utils(BotPlugin):
     @botcmd(admin_only=True)
     def sync(self, msg, arg):
         """Sync the repository from github."""  # Ignore QuotesBear
-        repo = git.Repo(self.bot_config.COBOT_ROOT)
+        repo = git.Repo(self.bot_config.BOT_ROOT)
         try:
             repo.remote('origin').pull('--rebase')
             yield 'Sync\'d successfully! :tada:'
@@ -27,14 +27,14 @@ class Utils(BotPlugin):
     @botcmd
     def get_head(self, msg, arg):
         """Yields the head commit."""  # Ignore QuotesBear
-        repo = git.Repo(self.bot_config.COBOT_ROOT)
+        repo = git.Repo(self.bot_config.BOT_ROOT)
         head = repo.commit('HEAD')
         yield '`{}`: {}'.format(head.hexsha, head.message)
 
     @botcmd(admin_only=True)
     def install_requirements(self, msg, arg):
         """Installs requirements"""  # Ignore QuotesBear
-        os.chdir(self.bot_config.COBOT_ROOT)
+        os.chdir(self.bot_config.BOT_ROOT)
         ran = run('pip install -r requirements.txt')
         yield 'installing requirements...'
         yield ran.stdout.read().decode('utf-8')

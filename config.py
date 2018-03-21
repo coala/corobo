@@ -1,7 +1,15 @@
 import logging
 import os
 
-COBOT_ROOT = os.environ.get('COBOT_ROOT', os.getcwd())
+BOT_ROOT_KEY = 'BOT_ROOT'
+
+if 'COBOT_ROOT' in os.environ and BOT_ROOT_KEY not in os.environ:
+    logging.warning(
+        "Environment variable COBOT_ROOT is deprecated, use {} instead."
+        .format(BOT_ROOT_KEY))
+    BOT_ROOT_KEY = 'COBOT_ROOT'
+BOT_ROOT = os.environ.get(BOT_ROOT_KEY, os.getcwd())
+
 
 _BOT_IDENTITY_KEYS = (
     'endpoint',
@@ -34,7 +42,7 @@ if not BACKEND:
         BACKEND = 'Text'
 
 if BACKEND == 'Gitter':
-    BOT_EXTRA_BACKEND_DIR = os.path.join(COBOT_ROOT, 'err-backend-gitter')
+    BOT_EXTRA_BACKEND_DIR = os.path.join(BOT_ROOT, 'err-backend-gitter')
 else:
     BOT_EXTRA_BACKEND_DIR = None
 
@@ -46,10 +54,10 @@ if BOT_EXTRA_BACKEND_DIR:
 
 HIDE_RESTRICTED_COMMANDS = True
 
-BOT_DATA_DIR = os.path.join(COBOT_ROOT, 'data')
-BOT_EXTRA_PLUGIN_DIR = COBOT_ROOT
+BOT_DATA_DIR = os.path.join(BOT_ROOT, 'data')
+BOT_EXTRA_PLUGIN_DIR = BOT_ROOT
 
-BOT_LOG_FILE = os.path.join(COBOT_ROOT, 'errbot.log')
+BOT_LOG_FILE = os.path.join(BOT_ROOT, 'errbot.log')
 BOT_LOG_LEVEL = logging.DEBUG
 
 BOT_PREFIX = os.environ.get('BOT_PREFIX', 'corobo ')
