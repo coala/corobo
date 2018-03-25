@@ -32,7 +32,7 @@ class TestLabHub(unittest.TestCase):
 
         plugins.labhub.github3.login.return_value = self.mock_gh
         self.mock_gh.organization.return_value = self.mock_org
-        self.mock_org.iter_teams.return_value = [self.mock_team]
+        self.mock_org.teams.return_value = [self.mock_team]
         plugins.labhub.github3.organization.return_value = self.mock_org
 
     def test_invite_cmd(self):

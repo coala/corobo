@@ -31,7 +31,7 @@ class LabHub(BotPlugin):
             self.log.error('Cannot create github object, please check GH_TOKEN')
         else:
             self.GH3_ORG = gh.organization(self.GH_ORG_NAME)
-            for team in self.GH3_ORG.iter_teams():
+            for team in self.GH3_ORG.teams():
                 teams[team.name] = team
 
         self._teams = teams
