@@ -233,6 +233,27 @@ class TestLabHub(unittest.TestCase):
 
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'You\'ve been assigned to the issue')
+        
+        # no assignee, newcomer, initiatives/gci
+        mock_maint_team.is_member.return_value = False
+        mock_dev_team.is_member.return_value = False
+        mock_issue.labels = 'initiatives/gci',
+        mock_issue.assignees = tuple()
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'You are not eligible to be assigned'
+                              ' to this issue')
+        testbot.pop_message()
+
+        # no assignee, developer, initiatives/gci
+        mock_maint_team.is_member.return_value = False
+        mock_dev_team.is_member.return_value = True
+        mock_issue.labels = 'initiatives/gci',
+        mock_issue.assignees = tuple()
+        testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                              'You are not eligible to be assigned'
+                              ' to this issue')
+        testbot.pop_message()
+        mock_dev_team.is_member.return_value = False
 
         # no assignee, newcomer, difficulty/low
         mock_issue.labels = PropertyMock()

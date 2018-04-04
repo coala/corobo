@@ -2,3 +2,4 @@
 - A newcomer cannot be assigned to an issue with a difficulty level higher than newcomer or low difficulty.
 - A newcomer cannot be assigned to unlabelled issues.
 - A newcomer cannot be assigned to more than one difficulty/newcomer issue.
+- corobo cannot assign issues labelled with 'initiatives/gci' tag.

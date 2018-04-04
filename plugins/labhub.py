@@ -350,6 +350,14 @@ class LabHub(BotPlugin):
                 else:
                     return True
 
+            @register_check
+            def block_gci_issue_assignment(user, iss):
+                """
+                True if the issue is not labelled with 'initiatives/gci'.
+                False if the issue has been labelled with 'initiatives/gci'.
+                """
+                return 'initiatives/gci' not in iss.labels
+
         def eligible(user, iss):
             for chk in checks:
                 if not chk(user, iss):
