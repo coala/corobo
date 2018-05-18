@@ -2,21 +2,21 @@ import logging
 import unittest
 import queue
 
-from errbot.backends.test import TestBot
+from errbot.backends.test import FullStackTest
 import vcr
 
 from plugins.coatils import Coatils
 
 
-class TestCoatils(unittest.TestCase):
+class TestCoatils(FullStackTest):
 
-    def setUp(self):
-        self.testbot = TestBot(extra_plugin_dir='plugins',
-                               loglevel=logging.ERROR)
-        self.testbot.start()
-
-    def tearDown(self):
-        self.testbot.stop()
+    def setUp(self,
+              extra_plugin_dir=None,
+              extra_test_file=None,
+              loglevel=logging.DEBUG,
+              extra_config=None):
+        super().setUp(extra_plugin_dir='plugins',
+                      loglevel=logging.ERROR)
 
     @vcr.use_cassette('tests/cassettes/coatils_total_bears.yaml')
     def test_total_bears(self):
@@ -30,68 +30,68 @@ class TestCoatils(unittest.TestCase):
 
     @vcr.use_cassette('tests/cassettes/coatils_contrib.yaml')
     def test_contrib_stats(self):
-        self.testbot.assertCommand('!contrib stats sils',
-                                    'Commited 2654 commits')
-        self.testbot.assertCommand('!contrib stats some-non-existent',
-                                   'stats for some-non-existent not found')
+        self.assertCommand('!contrib stats sils',
+                           'Commited 2654 commits')
+        self.assertCommand('!contrib stats some-non-existent',
+                           'stats for some-non-existent not found')
 
     @vcr.use_cassette('tests/cassettes/coatils_lang_stats.yaml')
     def test_lang_stats(self):
-        self.testbot.assertCommand('!lang  stats',
-                                   'coala supports 63 languages')
+        self.assertCommand('!lang  stats',
+                           'coala supports 63 languages')
 
     @vcr.use_cassette('tests/cassettes/coatils_bear_stats.yaml')
     def test_bear_stats(self):
-        self.testbot.assertCommand('!bear stats',
-                                   'There are total 102 bears')
+        self.assertCommand('!bear stats',
+                           'There are total 102 bears')
 
     @vcr.use_cassette('tests/cassettes/coatils_bear_stats_lang.yaml')
     def test_bear_stats_lang(self):
-        self.testbot.assertCommand('!bear stats python',
-                                   'There are 17 bears for python language')
-        self.testbot.assertCommand('!bear stats abc',
-                                   'No bear exists for abc')
+        self.assertCommand('!bear stats python',
+                           'There are 17 bears for python language')
+        self.assertCommand('!bear stats abc',
+                           'No bear exists for abc')
 
     @vcr.use_cassette('tests/cassettes/coatils_bear_stats_lang.yaml')
     def test_ls_bears(self):
-        self.testbot.assertCommand('!ls bears r',
-                                   'Bears for r are')
-        self.assertIn('RLintBear', self.testbot.pop_message())
-        self.testbot.assertCommand('!ls bears brainfuck',
-                                   'No bears found for brainfuck')
+        self.assertCommand('!ls bears r',
+                           'Bears for r are')
+        self.assertIn('RLintBear', self.pop_message())
+        self.assertCommand('!ls bears brainfuck',
+                           'No bears found for brainfuck')
 
     @vcr.use_cassette('tests/cassettes/coatils_stats.yaml')
     def test_stats(self):
-        self.testbot.assertCommand('!stats',
-                                   'coala has 102 bears across 63 languages')
+        self.assertCommand('!stats',
+                           'coala has 102 bears across 63 languages')
 
     @vcr.use_cassette('tests/cassettes/coatils_run_coala.yaml')
     def test_run_coala(self):
         # no results
-        self.testbot.push_message('!run python SpaceConsistencyBear use_spaces=yes\n```\nimport this\n\n```')
-        self.assertEqual(self.testbot.pop_message(),
+        self.push_message('!run python SpaceConsistencyBear use_spaces=yes\n```\nimport this\n\n```')
+        self.assertEqual(self.pop_message(),
                          'coala analysis in progress...')
-        self.assertEqual(self.testbot.pop_message(),
+        self.assertEqual(self.pop_message(),
                          'Your code is flawless :tada:')
         # results and diffs
-        self.testbot.push_message('!run python PyUnusedCodeBear remove_unused_imports=yes '
-                                  'PycodestyleBear\n```\nimport os\nimport this\na=1\n```')
-        self.assertEqual(self.testbot.pop_message(),
+        self.push_message('!run python PyUnusedCodeBear remove_unused_imports=yes '
+                          'PycodestyleBear\n```\nimport os\nimport this\na=1\n```')
+        self.assertEqual(self.pop_message(),
                          'coala analysis in progress...')
-        msg = self.testbot.pop_message()
+        msg = self.pop_message()
         self.assertIn('Here is what I think is wrong:', msg)
         self.assertIn('This file contains unused source code',
                       msg)
 
         # ensuring that only one result is yielded
         with self.assertRaises(queue.Empty):
-            next_msg = self.testbot.pop_message()
+            next_msg = self.pop_message()
         # error
-        self.testbot.push_message('!run a b\n```\nc\n```')
-        self.assertEqual(self.testbot.pop_message(),
+        self.push_message('!run a b\n```\nc\n```')
+        self.assertEqual(self.pop_message(),
                          'coala analysis in progress...')
         self.assertIn('Something went wrong, things to check for',
-                      self.testbot.pop_message())
+                      self.pop_message())
 
     def test_construct_settings(self):
         self.assertEqual(Coatils.construct_settings('bear1 a=1 b=2 bear2 bear3'),
