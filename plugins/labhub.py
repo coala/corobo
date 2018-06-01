@@ -71,8 +71,12 @@ class LabHub(BotPlugin):
     def TEAMS(self, new):
         self._teams = new
 
+    @staticmethod
+    def is_room_member(invitee, msg):
+        return invitee in msg.frm.room.occupants
+
     # Ignore LineLengthBear, PycodestyleBear
-    @re_botcmd(pattern=r'^(?:(?:welcome)|(?:inv)|(?:invite))\s+(?:(?:@?([\w-]+)(?:\s+(?:to)\s+(\w+))?)|(me))$',
+    @re_botcmd(pattern=r'^(?:(?:welcome)|(?:inv)|(?:invite))\s+@?([\w-]+)(?:\s+(?:to)\s+(\w+))?$',
                re_cmd_name_help='invite ([@]<username> [to <team>]|me)')
     def invite_cmd(self, msg, match):
         """
@@ -82,45 +86,63 @@ class LabHub(BotPlugin):
         invitee = match.group(1)
         inviter = msg.frm.nick
 
-        if invitee == 'me':
-            user = msg.frm.nick
-            response = tenv().get_template(
-                'labhub/promotions/newcomers.jinja2.md'
-            ).render(
-                username=user,
-            )
-            self.send(msg.frm, response)
-            self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
-            self.invited_users.add(user)
-            return
-
         team = 'newcomers' if match.group(2) is None else match.group(2)
+        team = team.lower()
+
+        is_developer = self.TEAMS[self.GH_ORG_NAME +
+                                  ' developers'].is_member(inviter)
+        is_maintainer = self.TEAMS[self.GH_ORG_NAME +
+                                   ' maintainers'].is_member(inviter)
 
         self.log.info('{} invited {} to {}'.format(inviter, invitee, team))
 
-        if self.TEAMS[self.GH_ORG_NAME + ' maintainers'].is_member(inviter):
-            valid_teams = ['newcomers', 'developers', 'maintainers']
-            if team.lower() not in valid_teams:
-                return 'Please select from one of the ' + ', '.join(valid_teams)
+        valid_teams = ['newcomers', 'developers', 'maintainers']
+        if team not in valid_teams:
+            return 'Please select from one of the valid teams: ' + ', '.join(
+                    valid_teams)
+
+        def invite(invitee, team):
             team_mapping = {
                 'newcomers': self.GH_ORG_NAME + ' newcomers',
                 'developers': self.GH_ORG_NAME + ' developers',
                 'maintainers': self.GH_ORG_NAME + ' maintainers'
             }
 
-            # send the invite
-            self.TEAMS[team_mapping[team.lower()]].invite(invitee)
+            self.TEAMS[team_mapping[team]].invite(invitee)
+
+        if not self.is_room_member(invitee, msg):
+            return '@{} is not a member of this room.'.format(invitee)
+
+        if is_maintainer:
+            invite(invitee, team)
             return tenv().get_template(
-                'labhub/promotions/{}.jinja2.md'.format(team.lower())
+                'labhub/promotions/{}.jinja2.md'.format(team)
             ).render(
                 target=invitee,
             )
+        elif is_developer:
+            if team == 'newcomers':
+                invite(invitee, team)
+                return tenv().get_template(
+                    'labhub/promotions/{}.jinja2.md'.format(team)
+                ).render(
+                    target=invitee,
+                )
+            else:
+                return tenv().get_template(
+                    'labhub/errors/not-eligible-invite.jinja2.md'
+                ).render(
+                    action='invite someone to developers or maintainers',
+                    designation='maintainer',
+                    target=inviter,
+                )
         else:
             return tenv().get_template(
-                'labhub/errors/not-maintainer.jinja2.md'
+                'labhub/errors/not-eligible-invite.jinja2.md'
             ).render(
                 action='invite other people',
-                target=invitee,
+                designation='developer/maintainer',
+                target=inviter,
             )
 
     def callback_message(self, msg):

@@ -12,6 +12,7 @@ from IGitt.GitLab.GitLabMergeRequest import GitLabMergeRequest
 from IGitt.GitHub.GitHubIssue import GitHubIssue
 
 from errbot.backends.test import TestBot
+from errbot.backends.base import Message
 
 import plugins.labhub
 from plugins.labhub import LabHub
@@ -36,31 +37,77 @@ class TestLabHub(unittest.TestCase):
         plugins.labhub.github3.organization.return_value = self.mock_org
 
     def test_invite_cmd(self):
+        mock_team_newcomers = create_autospec(github3.orgs.Team)
+        mock_team_developers = create_autospec(github3.orgs.Team)
+        mock_team_maintainers = create_autospec(github3.orgs.Team)
+
         teams = {
-            'coala maintainers': self.mock_team,
-            'coala newcomers': self.mock_team,
-            'coala developers': self.mock_team
+            'coala maintainers': mock_team_maintainers,
+            'coala newcomers': mock_team_newcomers,
+            'coala developers': mock_team_developers
         }
 
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         labhub.activate()
         labhub._teams = teams
 
-        self.mock_team.is_member.return_value = True
         plugins.labhub.os.environ['GH_TOKEN'] = 'patched?'
+
+        self.assertEqual(labhub.TEAMS, teams)
+
+        labhub.is_room_member = MagicMock(return_value=False)
+        testbot.assertCommand('!invite meet to newcomers',
+                                   '@meet is not a member of this room.')
+
+        labhub.is_room_member = MagicMock(return_value=True)
+
+        # invite by maintainer
+        mock_team_newcomers.is_member.return_value = True
+        mock_team_developers.is_member.return_value = True
+        mock_team_maintainers.is_member.return_value = True
+
+        testbot.assertCommand('!invite meet to newcomers',
+                                   'To get started, please follow our [newcomers guide]')
         testbot.assertCommand('!invite meet to developers',
                                    '@meet, you are a part of developers')
-        self.assertEqual(labhub.TEAMS, teams)
-        testbot.assertCommand('!invite meet to something',
-                                   'select from one of the')
+        testbot.assertCommand('!invite meet to maintainers',
+                                   '@meet you seem to be awesome!')
 
-        self.mock_team.is_member.return_value = False
+        # invite by developer
+        mock_team_maintainers.is_member.return_value = False
+        labhub.is_room_member = MagicMock(return_value = True)
 
+        testbot.assertCommand('!invite meet to newcomers',
+                                   'To get started, please follow our [newcomers guide]')
         testbot.assertCommand('!invite meet to developers',
                                    ':poop:')
+        testbot.assertCommand('!invite meet to maintainers',
+                                   ':poop:')
 
+        # invite by newcomer
+        mock_team_developers.is_member.return_value = False
+
+        testbot.assertCommand('!invite meet to newcomers',
+                                   ':poop')
+        testbot.assertCommand('!invite meet to developers',
+                                   ':poop:')
+        testbot.assertCommand('!invite meet to maintainers',
+                                   ':poop:')
+
+        # invalid team
+        testbot.assertCommand('!invite meet to something',
+                                   'select from one of the valid')
+
+        #invalid command
         testbot.assertCommand('!invite meetto newcomers',
                                    'Command "invite" / "invite meetto" not found.')
+
+    def test_is_room_member(self):
+        msg = create_autospec(Message)
+        msg.frm.room.occupants = PropertyMock()
+        msg.frm.room.occupants = ['batman', 'superman']
+        self.assertTrue(LabHub.is_room_member('batman', msg))
+
     def test_hello_world_callback(self):
         teams = {
             'coala newcomers': self.mock_team,
@@ -324,25 +371,3 @@ class TestLabHub(unittest.TestCase):
             testbot.assertCommand('!pr stats 3hours',
                                   '10 PRs opened in last 3 hours\n'
                                   'The community is on fire')
-
-    def test_invite_me(self):
-        teams = {
-            'coala maintainers': self.mock_team,
-            'coala newcomers': self.mock_team,
-            'coala developers': self.mock_team
-        }
-
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
-        labhub.activate()
-        labhub._teams = teams
-
-        plugins.labhub.os.environ['GH_TOKEN'] = 'patched?'
-        testbot.assertCommand('!invite me',
-                              'We\'ve just sent you an invite')
-        with self.assertRaises(queue.Empty):
-            testbot.pop_message()
-
-        testbot.assertCommand('!hey there invite me',
-                              'Command \"hey\" / \"hey there\" not found.')
-        with self.assertRaises(queue.Empty):
-             testbot.pop_message()
