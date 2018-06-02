@@ -123,7 +123,6 @@ class TestLabHub(unittest.TestCase):
         # response.
         with self.assertRaises(queue.Empty):
             testbot.assertCommand('helloworld', 'newcomer')
-        self.mock_team.invite.assert_called_with(None)
 
     def test_create_issue_cmd(self):
         plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)

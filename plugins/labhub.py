@@ -62,6 +62,7 @@ class LabHub(BotPlugin):
             self.REPOS.update(self.gl_repos)
 
         self.invited_users = set()
+        self.hello_world_users = set()
 
     @property
     def TEAMS(self):
@@ -150,16 +151,14 @@ class LabHub(BotPlugin):
         if re.search(r'hello\s*,?\s*world', msg.body, flags=re.IGNORECASE):
             user = msg.frm.nick
             if (not self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user)
-                    and user not in self.invited_users):
-                # send the invite
+                    and user not in self.hello_world_users):
                 response = tenv().get_template(
-                    'labhub/promotions/newcomers.jinja2.md'
+                    'labhub/hello-world.jinja2.md'
                 ).render(
                     target=user,
                 )
                 self.send(msg.frm, response)
-                self.TEAMS[self.GH_ORG_NAME + ' newcomers'].invite(user)
-                self.invited_users.add(user)
+                self.hello_world_users.add(user)
 
     @re_botcmd(pattern=r'(?:new|file) issue ([\w\-\.]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='new issue repo-name title\n[description]',
