@@ -1,3 +1,4 @@
 - You must be a member of the {{ organization }} org to be assigned an issue. If you are not a member yet, just type Hello World and corobo will invite you.
 - A newcomer cannot be assigned to an issue with a difficulty level higher than newcomer or low difficulty.
 - A newcomer cannot be assigned to unlabelled issues.
+- A newcomer cannot be assigned to more than one difficulty/newcomer issue.

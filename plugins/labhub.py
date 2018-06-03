@@ -187,6 +187,14 @@ class LabHub(BotPlugin):
                 target=user,
             )
 
+    @staticmethod
+    def is_newcomer_issue(iss):
+        diff_labels = filter(lambda x: 'difficulty' in x, iss.labels)
+        if list(filter(lambda x: 'newcomer' in x, diff_labels)):
+            return True
+        else:
+            return False
+
     @re_botcmd(pattern=r'^unassign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='unassign <complete-issue-URL>',
                flags=re.IGNORECASE)
@@ -300,7 +308,7 @@ class LabHub(BotPlugin):
                 1. A newcomer is asking for assignment to low or newcomer issue.
                 2. The user belongs to developers or maintainers team as well as
                    newcomers team.
-                False if
+                False if:
                 1. A newcomer asks for assignment to an issue that has no
                    difficulty label.
                 2. A newcomer asks for assignment to an issue with difficulty
@@ -322,6 +330,25 @@ class LabHub(BotPlugin):
                     else:
                         return False
                 elif self.GH3_ORG.is_member(user):
+                    return True
+
+            @register_check
+            def newcomer_issue_check(user, iss):
+                """
+                True if:  Issue is not labeled `difficulty/newcomer` and
+                          user is not a newcomer.
+                False if: A `difficulty/newcomer` issue is already assigned
+                          to the user.
+                """
+                if (self.is_newcomer_issue(iss)
+                    and self.TEAMS[self.GH_ORG_NAME +
+                                   ' newcomers'].is_member(user)):
+                    search_query = 'user:coala assignee:{} ' \
+                                   'label:difficulty/newcomer'.format(user)
+                    result = GitHub.raw_search(GitHubToken(
+                        os.environ.get('GH_TOKEN')), search_query)
+                    return not (sum(1 for _ in result) >= 1)
+                else:
                     return True
 
         def eligible(user, iss):

@@ -170,6 +170,14 @@ class TestLabHub(unittest.TestCase):
 
         testbot_public.assertCommand('!new issue coala title', 'repository that does not exist')
 
+    def test_is_newcomer_issue(self):
+        mock_iss = create_autospec(IGitt.GitHub.GitHubIssue)
+        mock_iss.labels = PropertyMock()
+        mock_iss.labels = ('difficulty/newcomer',)
+        self.assertTrue(LabHub.is_newcomer_issue(mock_iss))
+        mock_iss.labels = ('difficulty/medium',)
+        self.assertFalse(LabHub.is_newcomer_issue(mock_iss))
+
     def test_unassign_cmd(self):
         plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
         plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
@@ -195,7 +203,6 @@ class TestLabHub(unittest.TestCase):
 
         testbot.assertCommand('!unassign https://github.com/coala/s/issues/52',
                               'Repository doesn\'t exist.')
-
 
         testbot.assertCommand('!unassign https://gitlab.com/ala/am/issues/532',
                                'Repository not owned by our org.')
@@ -280,6 +287,17 @@ class TestLabHub(unittest.TestCase):
         # unknown org
         testbot.assertCommand(cmd.format('coa', 'a', '23'),
                               'Repository not owned by our org.')
+
+        # no assignee, newcomer, difficulty/newcomer, second newcomer issue
+        mock_issue.assignees = tuple()
+        mock_dev_team.is_member.return_value = False
+        mock_issue.labels = ('difficulty/newcomer', )
+
+        with patch('plugins.labhub.GitHub') as mock_gh:
+            mock_gh.raw_search = Mock()
+            mock_gh.raw_search.return_value = ['mocked?']
+            testbot.assertCommand(cmd.format('coala', 'a', '23'),
+                                  'not eligible to be assigned to this issue')
 
     def test_mark_cmd(self):
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
