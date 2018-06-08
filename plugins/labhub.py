@@ -9,8 +9,28 @@ from IGitt.GitLab.GitLab import GitLab, GitLabPrivateToken
 from errbot import BotPlugin, re_botcmd
 from errbot.templating import tenv
 
+from functools import wraps
 from plugins import constants
 from utils.backends import message_link
+
+
+def members_only(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # plugin instance
+        instance = args[0]
+        msg = args[1]
+        user = msg.frm.nick
+        ret = func(*args, **kwargs)
+
+        for team in instance.team_mapping().values():
+            if team.is_member(user):
+                yield from ret
+                return
+        yield ('You need to be a member of this organization'
+               ' to use this command.')
+
+    return wrapper
 
 
 class LabHub(BotPlugin):
@@ -88,6 +108,7 @@ class LabHub(BotPlugin):
     # Ignore LineLengthBear, PycodestyleBear
     @re_botcmd(pattern=r'^(?:(?:welcome)|(?:inv)|(?:invite))\s+@?([\w-]+)(?:\s+(?:to)\s+(\w+))?$',
                re_cmd_name_help='invite ([@]<username> [to <team>]|me)')
+    @members_only
     def invite_cmd(self, msg, match):
         """
         Invite given user to given team. By default it invites to
@@ -106,18 +127,20 @@ class LabHub(BotPlugin):
 
         valid_teams = self.team_mapping()
         if team not in valid_teams:
-            return 'Please select from one of the valid teams: ' + ', '.join(
-                    valid_teams)
+            yield 'Please select from one of the valid teams: ' + ', '.join(
+                   valid_teams)
+            return
 
         def invite(invitee, team):
             self.team_mapping()[team].invite(invitee)
 
         if not self.is_room_member(invitee, msg):
-            return '@{} is not a member of this room.'.format(invitee)
+            yield '@{} is not a member of this room.'.format(invitee)
+            return
 
         if is_maintainer:
             invite(invitee, team)
-            return tenv().get_template(
+            yield tenv().get_template(
                 'labhub/promotions/{}.jinja2.md'.format(team)
             ).render(
                 target=invitee,
@@ -125,13 +148,13 @@ class LabHub(BotPlugin):
         elif is_developer:
             if team == 'newcomers':
                 invite(invitee, team)
-                return tenv().get_template(
+                yield tenv().get_template(
                     'labhub/promotions/{}.jinja2.md'.format(team)
                 ).render(
                     target=invitee,
                 )
             else:
-                return tenv().get_template(
+                yield tenv().get_template(
                     'labhub/errors/not-eligible-invite.jinja2.md'
                 ).render(
                     action='invite someone to developers or maintainers',
@@ -139,7 +162,7 @@ class LabHub(BotPlugin):
                     target=inviter,
                 )
         else:
-            return tenv().get_template(
+            yield tenv().get_template(
                 'labhub/errors/not-eligible-invite.jinja2.md'
             ).render(
                 action='invite other people',
@@ -164,6 +187,7 @@ class LabHub(BotPlugin):
     @re_botcmd(pattern=r'(?:new|file) issue ([\w\-\.]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='new issue repo-name title\n[description]',
                flags=re.IGNORECASE)
+    @members_only
     def create_issue_cmd(self, msg, match):
         """Create issues on GitHub and GitLab repositories."""  # Ignore QuotesBear, LineLengthBear, PyCodeStyleBear
         user = msg.frm.nick
@@ -179,9 +203,9 @@ class LabHub(BotPlugin):
         if repo_name in self.REPOS:
             repo = self.REPOS[repo_name]
             iss = repo.create_issue(iss_title, iss_description + extra_msg)
-            return 'Here you go: {}'.format(iss.web_url)
+            yield 'Here you go: {}'.format(iss.web_url)
         else:
-            return tenv().get_template(
+            yield tenv().get_template(
                 'labhub/errors/no-repository.jinja2.md'
             ).render(
                 target=user,
@@ -198,6 +222,7 @@ class LabHub(BotPlugin):
     @re_botcmd(pattern=r'^unassign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='unassign <complete-issue-URL>',
                flags=re.IGNORECASE)
+    @members_only
     def unassign_cmd(self, msg, match):
         """Unassign from an issue."""  # Ignore QuotesBear
         org = match.group(2)
@@ -209,22 +234,24 @@ class LabHub(BotPlugin):
         try:
             assert org == self.GH_ORG_NAME or org == self.GL_ORG_NAME
         except AssertionError:
-            return 'Repository not owned by our org.'
+            yield 'Repository not owned by our org.'
+            return
 
         try:
             iss = self.REPOS[repo_name].get_issue(int(issue_number))
         except KeyError:
-            return 'Repository doesn\'t exist.'
+            yield 'Repository doesn\'t exist.'
         else:
             if user in iss.assignees:
                 iss.unassign(user)
-                return '@{}, you are unassigned now :+1:'.format(user)
+                yield '@{}, you are unassigned now :+1:'.format(user)
             else:
-                return 'You are not an assignee on the issue.'
+                yield 'You are not an assignee on the issue.'
 
     @re_botcmd(pattern=r'mark\s+(wip|pending(?:(?:-|\s+)review)?\b)\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/(pull|merge_requests)/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='mark (wip|pending) <complete-PR-URL>',
                flags=re.IGNORECASE)
+    @members_only
     def mark_cmd(self, msg, match):
         """Mark a given PR/MR with status labels."""  # Ignore QuotesBear
         state, host, org, repo_name, xr, number = match.groups()
@@ -237,7 +264,7 @@ class LabHub(BotPlugin):
         try:
             mr = self.REPOS[repo_name].get_mr(number)
         except KeyError:
-            return 'Repository doesn\'t exist.'
+            yield 'Repository doesn\'t exist.'
         else:
             current_labels = list(mr.labels)
             if state == 'wip':
@@ -254,14 +281,14 @@ class LabHub(BotPlugin):
                     ping = ('\n@{user_login}, please check your pull '
                             'request.'.format(user_login=mr.author))
 
-                return ('The pull request {mr_link} is marked *work in progress'
-                        '*. Use `{bot_prefix} mark pending` or push to your '
-                        'branch if feedback from the community is needed '
-                        'again.{ping}'.format(
-                            mr_link=mr.web_url,
-                            bot_prefix=self.bot_config.BOT_PREFIX,
-                            ping=ping)
-                        )
+                yield ('The pull request {mr_link} is marked *work in progress'
+                       '*. Use `{bot_prefix} mark pending` or push to your '
+                       'branch if feedback from the community is needed '
+                       'again.{ping}'.format(
+                           mr_link=mr.web_url,
+                           bot_prefix=self.bot_config.BOT_PREFIX,
+                           ping=ping)
+                       )
             else:
                 wip_labels = ['process/wip']
                 for label in filter(lambda x: x in current_labels,
@@ -269,17 +296,18 @@ class LabHub(BotPlugin):
                     current_labels.remove(label)
                 current_labels.append('process/pending review')
                 mr.labels = current_labels
-                return ('The pull request {mr_link} is marked *pending review*,'
-                        'so you will get feedback from the community. Use '
-                        '`{bot_prefix} mark wip` if there are known issues that'
-                        ' should be corrected by the author.'.format(
-                            mr_link=mr.web_url,
-                            bot_prefix=self.bot_config.BOT_PREFIX)
-                        )
+                yield ('The pull request {mr_link} is marked *pending review*,'
+                       'so you will get feedback from the community. Use '
+                       '`{bot_prefix} mark wip` if there are known issues that'
+                       ' should be corrected by the author.'.format(
+                           mr_link=mr.web_url,
+                           bot_prefix=self.bot_config.BOT_PREFIX)
+                       )
 
     @re_botcmd(pattern=r'^assign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+/)+issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='assign <complete-issue-URL>',
                flags=re.IGNORECASE)
+    @members_only
     def assign_cmd(self, msg, match):
         """Assign to GitLab and GitHub issues."""  # Ignore QuotesBear
         org = match.group(2)
@@ -399,6 +427,7 @@ class LabHub(BotPlugin):
 
     @re_botcmd(pattern=r'pr\s+stats\s+(\d+)(?:hours|hrs)',
                re_cmd_name_help='pr stats <number-of-hours>(hours|hrs)')
+    @members_only
     def pr_stats(self, msg, match):
         hours = match.group(1)
         pr_count = dict()

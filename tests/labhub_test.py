@@ -29,6 +29,11 @@ class TestLabHub(unittest.TestCase):
         self.mock_team = create_autospec(github3.orgs.Team)
         self.mock_team.name = PropertyMock()
         self.mock_team.name = 'mocked team'
+        self.teams = {
+            'coala newcomers': self.mock_team,
+            'coala developers': self.mock_team,
+            'coala maintainers': self.mock_team,
+        }
         self.mock_repo = create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
 
         plugins.labhub.github3.login.return_value = self.mock_gh
@@ -41,19 +46,17 @@ class TestLabHub(unittest.TestCase):
         mock_team_developers = create_autospec(github3.orgs.Team)
         mock_team_maintainers = create_autospec(github3.orgs.Team)
 
-        teams = {
-            'coala maintainers': mock_team_maintainers,
-            'coala newcomers': mock_team_newcomers,
-            'coala developers': mock_team_developers
-        }
+        self.teams['coala newcomers'] = mock_team_newcomers
+        self.teams['coala developers'] = mock_team_developers
+        self.teams['coala maintainers'] = mock_team_maintainers
 
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         labhub.activate()
-        labhub._teams = teams
+        labhub._teams = self.teams
 
         plugins.labhub.os.environ['GH_TOKEN'] = 'patched?'
 
-        self.assertEqual(labhub.TEAMS, teams)
+        self.assertEqual(labhub.TEAMS, self.teams)
 
         labhub.is_room_member = MagicMock(return_value=False)
         testbot.assertCommand('!invite meet to newcomers',
@@ -104,6 +107,15 @@ class TestLabHub(unittest.TestCase):
         testbot.assertCommand('!invite meetto newcomers',
                               'Command "invite" / "invite meetto" not found.')
 
+        # not a member of org
+        mock_team_newcomers.is_member.return_value = False
+        mock_team_developers.is_member.return_value = False
+        mock_team_maintainers.is_member.return_value = False
+
+        testbot.assertCommand(
+            '!invite meet to newcomers',
+            'You need to be a member of this organization to use this command')
+
     def test_is_room_member(self):
         msg = create_autospec(Message)
         msg.frm.room.occupants = PropertyMock()
@@ -111,16 +123,10 @@ class TestLabHub(unittest.TestCase):
         self.assertTrue(LabHub.is_room_member('batman', msg))
 
     def test_hello_world_callback(self):
-        teams = {
-            'coala newcomers': self.mock_team,
-            'coala developers': self.mock_team,
-            'coala maintainers': self.mock_team,
-        }
-
         testbot = TestBot(extra_plugin_dir='plugins', loglevel=logging.ERROR)
         testbot.start()
         labhub = testbot.bot.plugin_manager.get_plugin_obj_by_name('LabHub')
-        labhub.TEAMS = teams
+        labhub.TEAMS = self.teams
         self.mock_team.is_member.return_value = False
         testbot.assertCommand('hello, world', 'newcomer')
         # Since the user won't be invited again, it'll timeout waiting for a
@@ -159,6 +165,8 @@ class TestLabHub(unittest.TestCase):
             plugins.labhub.LabHub, logging.ERROR, {'BACKEND': 'text'}
         )
         labhub.activate()
+        labhub._teams = self.teams
+        self.mock_team.is_member.return_value = True
         labhub.REPOS = {'repository': self.mock_repo,
                         'repository.github.io': self.mock_repo}
 
@@ -196,6 +204,20 @@ class TestLabHub(unittest.TestCase):
             '!new issue coala title',
             'repository that does not exist')
 
+        # not a member of org
+        self.mock_team.is_member.return_value = False
+        labhub.REPOS = {
+            'repository': self.mock_repo,
+            'repository.github.io': self.mock_repo,
+        }
+        testbot_public.assertCommand(
+            textwrap.dedent('''\
+                !new issue repository this is the title
+                body
+            '''),
+            'You need to be a member of this organization to use this command.'
+        )
+
     def test_is_newcomer_issue(self):
         mock_iss = create_autospec(IGitt.GitHub.GitHubIssue)
         mock_iss.labels = PropertyMock()
@@ -211,12 +233,14 @@ class TestLabHub(unittest.TestCase):
 
         labhub.activate()
         labhub.REPOS = {'example': self.mock_repo}
+        labhub._teams = self.teams
 
         mock_iss = create_autospec(IGitt.GitHub.GitHubIssue)
         self.mock_repo.get_issue.return_value = mock_iss
         mock_iss.assignees = PropertyMock()
         mock_iss.assignees = (None, )
         mock_iss.unassign = MagicMock()
+        self.mock_team.is_member.return_value = True
 
         testbot.assertCommand(
             '!unassign https://github.com/coala/example/issues/999',
@@ -238,6 +262,13 @@ class TestLabHub(unittest.TestCase):
             '!unassign https://gitlab.com/example/test/issues/999',
             'Repository not owned by our org.')
 
+        # not a member of org
+        self.mock_team.is_member.return_value = False
+        testbot.assertCommand(
+            '!unassign https://github.com/coala/test/issues/23',
+            'You need to be a member of this organization '
+            'to use this command.')
+
     def test_assign_cmd(self):
         plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
         plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
@@ -254,9 +285,9 @@ class TestLabHub(unittest.TestCase):
         mock_dev_team.is_member.return_value = False
         mock_maint_team.is_member.return_value = False
 
-        labhub.TEAMS = {'coala newcomers': self.mock_team,
-                        'coala developers': mock_dev_team,
-                        'coala maintainers': mock_maint_team}
+        self.teams['coala developers'] = mock_dev_team
+        self.teams['coala maintainers'] = mock_maint_team
+        labhub._teams = self.teams
 
         cmd = '!assign https://github.com/{}/{}/issues/{}'
         # no assignee, not newcomer
@@ -264,9 +295,11 @@ class TestLabHub(unittest.TestCase):
         self.mock_team.is_member.return_value = False
 
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
-                              'You\'ve been assigned to the issue')
+                              'You need to be a member of this organization '
+                              'to use this command.')
 
         # no assignee, newcomer, initiatives/gci
+        self.mock_team.is_member.return_value = True
         mock_maint_team.is_member.return_value = False
         mock_dev_team.is_member.return_value = False
         mock_issue.labels = 'initiatives/gci',
@@ -312,9 +345,16 @@ class TestLabHub(unittest.TestCase):
 
         # no assignee, newcomer, difficulty medium
         labhub.GH_ORG_NAME = 'not-coala'
+        labhub.TEAMS = {
+            'not-coala newcomers': self.mock_team,
+            'not-coala developers': mock_dev_team,
+            'not-coala maintainers': mock_maint_team
+        }
+
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'assigned')
         labhub.GH_ORG_NAME = 'coala'
+        labhub.TEAMS = self.teams
 
         # newcomer, developer, difficulty/medium
         mock_dev_team.is_member.return_value = True
@@ -356,6 +396,7 @@ class TestLabHub(unittest.TestCase):
         labhub.activate()
 
         labhub.REPOS = {'test': self.mock_repo}
+        labhub._teams = self.teams
         mock_github_mr = create_autospec(GitHubMergeRequest)
         mock_gitlab_mr = create_autospec(GitLabMergeRequest)
         mock_github_mr.labels = PropertyMock()
@@ -366,6 +407,7 @@ class TestLabHub(unittest.TestCase):
         cmd_gitlab = '!mark {} https://gitlab.com/{}/{}/merge_requests/{}'
 
         self.mock_repo.get_mr.return_value = mock_github_mr
+        self.mock_team.is_member.return_value = True
 
         # Non-eistent repo
         testbot.assertCommand(cmd_github.format('wip', 'a', 'b', '23'),
@@ -411,6 +453,12 @@ class TestLabHub(unittest.TestCase):
             cmd_github.format('pending review', 'coala', 'test', '23'),
             'marked pending review')
 
+        # not a member of org
+        self.mock_team.is_member.return_value = False
+        testbot.assertCommand(
+            cmd_github.format('pending review', 'coala', 'a', '23'),
+            'You need to be a member of this organization to use this command')
+
     def test_alive(self):
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         with patch('plugins.labhub.time.sleep') as mock_sleep:
@@ -431,6 +479,8 @@ class TestLabHub(unittest.TestCase):
                 'test': create_autospec(IGitt.GitLab.GitLab.GitLabRepository),
             }
             labhub.activate()
+            labhub._teams = self.teams
+            self.mock_team.is_member.return_value = True
 
             labhub.gh_repos['coala'].search_mrs.return_value = [1, 2]
             labhub.gh_repos['coala-bears'].search_mrs.return_value = []
@@ -451,3 +501,10 @@ class TestLabHub(unittest.TestCase):
             testbot.assertCommand('!pr stats 3hours',
                                   '10 PRs opened in last 3 hours\n'
                                   'The community is on fire', timeout=100)
+
+            # not a member of org
+            self.mock_team.is_member.return_value = False
+            testbot.assertCommand(
+                '!pr stats 3hours',
+                'You need to be a member of this organization '
+                'to use this command.', timeout=100)
