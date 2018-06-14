@@ -61,7 +61,6 @@ class LabHub(BotPlugin):
         else:
             self.REPOS.update(self.gl_repos)
 
-        self.invited_users = set()
         self.hello_world_users = set()
 
     @property
