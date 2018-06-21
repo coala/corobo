@@ -400,7 +400,7 @@ class TestLabHub(unittest.TestCase):
             labhub.gh_repos['coala'].search_mrs.return_value = []
             testbot.assertCommand('!pr stats 5hours',
                                   '0 PRs opened in last 5 hours\n'
-                                  'The community is dead')
+                                  'The community is dead', timeout=100)
 
             labhub.gh_repos['coala'].search_mrs.return_value = [
                 1, 2, 3, 4, 5,
@@ -408,4 +408,4 @@ class TestLabHub(unittest.TestCase):
             ]
             testbot.assertCommand('!pr stats 3hours',
                                   '10 PRs opened in last 3 hours\n'
-                                  'The community is on fire')
+                                  'The community is on fire', timeout=100)
