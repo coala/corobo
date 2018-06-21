@@ -4,5 +4,4 @@ wolframalpha
 github3.py~=1.0.0
 IGitt==0.4.1.dev20180317153318
 gitpython
-vcrpy
 ramlient
