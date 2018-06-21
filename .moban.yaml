@@ -1,0 +1,24 @@
+overrides: coala.yaml
+
+name: corobo
+
+dependencies:
+  - pyopenssl<17.5
+  - git+https://github.com/errbotio/errbot@c2639879d4c298933cdf406193de5a5e626db12b
+  - wolframalpha
+  - github3.py~=1.0.0
+  - IGitt==0.4.1.dev20180317153318
+  - gitpython
+  - ramlient
+
+configuration:
+  template_dir:
+    - .moban.dt/
+    - ../coala-mobans/templates/
+    - ../coala-mobans/assets/
+  configuration: .moban.yaml
+  configuration_dir: ../coala-mobans/
+targets:
+  - .gitignore: coala-gitignore.jj2
+  - requirements.txt: requirements.txt.jj2
+  - test-requirements.txt: corobo-test-requirements.txt.jj2
