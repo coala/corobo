@@ -16,12 +16,13 @@ from errbot.backends.base import Message
 import plugins.labhub
 from plugins.labhub import LabHub
 
-from tests.helper import plugin_testbot
+from tests.helper import load_templates, plugin_testbot
 
 
 class TestLabHub(unittest.TestCase):
 
     def setUp(self):
+        load_templates('labhub.plug')
         plugins.labhub.github3 = create_autospec(github3)
 
         self.mock_org = create_autospec(github3.orgs.Organization)

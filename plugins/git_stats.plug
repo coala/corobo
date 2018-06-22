@@ -1,5 +1,5 @@
 [Core]
-name = git_stats
+name = GitStats
 module = git_stats
 
 [Documentation]
