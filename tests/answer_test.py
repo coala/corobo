@@ -20,6 +20,7 @@ class TestAnswer(FullStackTest):
 
     @vcr.use_cassette('tests/cassettes/answer.yaml')
     def test_answer(self):
+        # Ignore InvalidLinkBear
         os.environ['ANSWER_END'] = 'http://0.0.0.0:8000'
         self.assertCommand('!answer something', 'Dunno')
         self.push_message('!answer getting started with coala')

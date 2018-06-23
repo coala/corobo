@@ -63,14 +63,16 @@ class TestGitStats(unittest.TestCase):
         mock_gitlab_mr.labels = ['process/approved', 'difficulty/newcomer']
         mock_github_mr.state = 'open'
         mock_gitlab_mr.state = 'open'
-        self.mock_repo.get_clone.return_value = (mock_repo_obj, mkdtemp('mock_repo/'))
+        self.mock_repo.get_clone.return_value = (
+            mock_repo_obj, mkdtemp('mock_repo/'))
         mock_repo_obj.head.commit.hexsha = '1'
         mock_github_mr.base.sha = '1'
         mock_gitlab_mr.base.sha = '1'
         testbot.assertCommand(cmd_github.format('test'),
                               'PRs ready to be merged:\n '
                               'http://www.example.com/')
-        self.mock_repo.get_clone.return_value = (mock_repo_obj, mkdtemp('mock_repo/'))
+        self.mock_repo.get_clone.return_value = (
+            mock_repo_obj, mkdtemp('mock_repo/'))
         testbot.assertCommand(cmd_gitlab.format('test'),
                               'PRs ready to be merged:\n '
                               'http://www.example.com/')
@@ -78,10 +80,12 @@ class TestGitStats(unittest.TestCase):
         # PR is not suitable (wrong labels)
         mock_github_mr.labels = ['process/wip', 'difficulty/newcomer']
         mock_gitlab_mr.labels = ['process/wip', 'difficulty/newcomer']
-        self.mock_repo.get_clone.return_value = (mock_repo_obj, mkdtemp('mock_repo/'))
+        self.mock_repo.get_clone.return_value = (
+            mock_repo_obj, mkdtemp('mock_repo/'))
         testbot.assertCommand(cmd_github.format('test'),
                               'No merge-ready PRs!')
-        self.mock_repo.get_clone.return_value = (mock_repo_obj, mkdtemp('mock_repo/'))
+        self.mock_repo.get_clone.return_value = (
+            mock_repo_obj, mkdtemp('mock_repo/'))
         testbot.assertCommand(cmd_gitlab.format('test'),
                               'No merge-ready PRs!')
         mock_github_mr.labels = ['process/approved', 'difficulty/newcomer']
@@ -89,10 +93,12 @@ class TestGitStats(unittest.TestCase):
 
         # PR is not suitable (needs rebase)
         mock_repo_obj.head.commit.hexsha = '2'
-        self.mock_repo.get_clone.return_value = (mock_repo_obj, mkdtemp('mock_repo/'))
+        self.mock_repo.get_clone.return_value = (
+            mock_repo_obj, mkdtemp('mock_repo/'))
         testbot.assertCommand(cmd_github.format('test'),
                               'No merge-ready PRs!')
-        self.mock_repo.get_clone.return_value = (mock_repo_obj, mkdtemp('mock_repo/'))
+        self.mock_repo.get_clone.return_value = (
+            mock_repo_obj, mkdtemp('mock_repo/'))
         testbot.assertCommand(cmd_gitlab.format('test'),
                               'No merge-ready PRs!')
         mock_repo_obj.head.commit.hexsha = '1'
@@ -100,9 +106,11 @@ class TestGitStats(unittest.TestCase):
         # PR is not suitable (already closed)
         mock_github_mr.state = 'closed'
         mock_gitlab_mr.state = 'closed'
-        self.mock_repo.get_clone.return_value = (mock_repo_obj, mkdtemp('mock_repo/'))
+        self.mock_repo.get_clone.return_value = (
+            mock_repo_obj, mkdtemp('mock_repo/'))
         testbot.assertCommand(cmd_github.format('test'),
                               'No merge-ready PRs!')
-        self.mock_repo.get_clone.return_value = (mock_repo_obj, mkdtemp('mock_repo/'))
+        self.mock_repo.get_clone.return_value = (
+            mock_repo_obj, mkdtemp('mock_repo/'))
         testbot.assertCommand(cmd_gitlab.format('test'),
                               'No merge-ready PRs!')

@@ -1,5 +1,5 @@
 [all]
-files = *.py, plugins/**.py, answers/*.py
+files = *.py, plugins/**.py, answers/*.py, tests/**.py
 max_line_length = 80
 use_spaces = True
 
@@ -26,6 +26,7 @@ bears = LineLengthBear
 
 [all.links]
 bears = InvalidLinkBear
+link_ignore_regex = (example|test|{|})
 
 [jinja2]
 files = plugins/templates/**/*.jinja2.md

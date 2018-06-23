@@ -4,6 +4,7 @@ pytest_plugins = ['errbot.backends.test']
 
 extra_plugin_dir = 'plugins'
 
+
 def test_the_rules(testbot):
     testbot.assertCommand('!the rules', 'A robot may not harm humanity')
     testbot.assertCommand('!the  rules', 'A robot may not injure a human')

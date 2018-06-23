@@ -68,14 +68,17 @@ class TestCoatils(FullStackTest):
     @vcr.use_cassette('tests/cassettes/coatils_run_coala.yaml')
     def test_run_coala(self):
         # no results
-        self.push_message('!run python SpaceConsistencyBear use_spaces=yes\n```\nimport this\n\n```')
+        self.push_message(
+            '!run python SpaceConsistencyBear use_spaces=yes\n'
+            '```\nimport this\n\n```')
         self.assertEqual(self.pop_message(),
                          'coala analysis in progress...')
         self.assertEqual(self.pop_message(),
                          'Your code is flawless :tada:')
         # results and diffs
-        self.push_message('!run python PyUnusedCodeBear remove_unused_imports=yes '
-                          'PycodestyleBear\n```\nimport os\nimport this\na=1\n```')
+        self.push_message(
+            '!run python PyUnusedCodeBear remove_unused_imports=yes '
+            'PycodestyleBear\n```\nimport os\nimport this\na=1\n```')
         self.assertEqual(self.pop_message(),
                          'coala analysis in progress...')
         msg = self.pop_message()
@@ -94,10 +97,13 @@ class TestCoatils(FullStackTest):
                       self.pop_message())
 
     def test_construct_settings(self):
-        self.assertEqual(Coatils.construct_settings('bear1 a=1 b=2 bear2 bear3'),
-                         {'bear1': {'a': '1', 'b': '2'},
-                          'bear2': {},
-                          'bear3': {}})
+        self.assertEqual(
+            Coatils.construct_settings('bear1 a=1 b=2 bear2 bear3'),
+            {'bear1': {'a': '1', 'b': '2'},
+             'bear2': {},
+             'bear3': {},
+             }
+        )
 
     def test_position(self):
         self.assertEqual(Coatils.position(1, 1, 1, 1),

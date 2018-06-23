@@ -1,6 +1,7 @@
 import logging
 import os
 import queue
+import textwrap
 import time
 import unittest
 from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock, patch
@@ -18,6 +19,7 @@ import plugins.labhub
 from plugins.labhub import LabHub
 
 from tests.helper import plugin_testbot
+
 
 class TestLabHub(unittest.TestCase):
 
@@ -57,7 +59,7 @@ class TestLabHub(unittest.TestCase):
 
         labhub.is_room_member = MagicMock(return_value=False)
         testbot.assertCommand('!invite meet to newcomers',
-                                   '@meet is not a member of this room.')
+                              '@meet is not a member of this room.')
 
         labhub.is_room_member = MagicMock(return_value=True)
 
@@ -66,41 +68,43 @@ class TestLabHub(unittest.TestCase):
         mock_team_developers.is_member.return_value = True
         mock_team_maintainers.is_member.return_value = True
 
-        testbot.assertCommand('!invite meet to newcomers',
-                                   'To get started, please follow our [newcomers guide]')
+        testbot.assertCommand(
+            '!invite meet to newcomers',
+            'To get started, please follow our [newcomers guide]')
         testbot.assertCommand('!invite meet to developers',
-                                   '@meet, you are a part of developers')
+                              '@meet, you are a part of developers')
         testbot.assertCommand('!invite meet to maintainers',
-                                   '@meet you seem to be awesome!')
+                              '@meet you seem to be awesome!')
 
         # invite by developer
         mock_team_maintainers.is_member.return_value = False
-        labhub.is_room_member = MagicMock(return_value = True)
+        labhub.is_room_member = MagicMock(return_value=True)
 
-        testbot.assertCommand('!invite meet to newcomers',
-                                   'To get started, please follow our [newcomers guide]')
+        testbot.assertCommand(
+            '!invite meet to newcomers',
+            'To get started, please follow our [newcomers guide]')
         testbot.assertCommand('!invite meet to developers',
-                                   ':poop:')
+                              ':poop:')
         testbot.assertCommand('!invite meet to maintainers',
-                                   ':poop:')
+                              ':poop:')
 
         # invite by newcomer
         mock_team_developers.is_member.return_value = False
 
         testbot.assertCommand('!invite meet to newcomers',
-                                   ':poop')
+                              ':poop')
         testbot.assertCommand('!invite meet to developers',
-                                   ':poop:')
+                              ':poop:')
         testbot.assertCommand('!invite meet to maintainers',
-                                   ':poop:')
+                              ':poop:')
 
         # invalid team
         testbot.assertCommand('!invite meet to something',
-                                   'select from one of the valid')
+                              'select from one of the valid')
 
-        #invalid command
+        # invalid command
         testbot.assertCommand('!invite meetto newcomers',
-                                   'Command "invite" / "invite meetto" not found.')
+                              'Command "invite" / "invite meetto" not found.')
 
     def test_is_room_member(self):
         msg = create_autospec(Message)
@@ -130,22 +134,27 @@ class TestLabHub(unittest.TestCase):
         plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
         plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
         plugins.labhub.GitHubToken = create_autospec(IGitt.GitHub.GitHubToken)
-        plugins.labhub.GitLabPrivateToken = create_autospec(IGitt.GitLab.GitLabPrivateToken)
+        plugins.labhub.GitLabPrivateToken = create_autospec(
+            IGitt.GitLab.GitLabPrivateToken)
 
         labhub, testbot_private = plugin_testbot(
             plugins.labhub.LabHub, logging.ERROR,
-            {'BACKEND': 'text', 'ACCESS_CONTROLS':{'create_issue_cmd' : {'allowprivate':False}}}
+            {'BACKEND': 'text',
+             'ACCESS_CONTROLS': {'create_issue_cmd': {'allowprivate': False}},
+             }
         )
         labhub.activate()
         labhub.REPOS = {'repository': self.mock_repo}
         plugins.labhub.GitHubToken.assert_called_with(None)
         plugins.labhub.GitLabPrivateToken.assert_called_with(None)
 
+        # Start ignoring PycodestyleBear, LineLengthBear
         # TODO
         # Ignoring assertion to prevent build failure for time being
         # Creating issue in private chat
         # testbot_private.assertCommand('!new issue repository this is the title\nbo\ndy',
         #                       'You\'re not allowed')
+        # Stop ignoring
 
         # Creating issue in public chat
         labhub, testbot_public = plugin_testbot(
@@ -155,21 +164,39 @@ class TestLabHub(unittest.TestCase):
         labhub.REPOS = {'repository': self.mock_repo,
                         'repository.github.io': self.mock_repo}
 
-        testbot_public.assertCommand('!new issue repository this is the title\nbo\ndy',
-                              'Here you go')
+        testbot_public.assertCommand(
+            textwrap.dedent('''\
+                !new issue repository this is the title
+                first line of body
+                second line of body
+            '''),
+            'Here you go')
 
         labhub.REPOS['repository'].create_issue.assert_called_once_with(
-            'this is the title', 'bo\ndy\nOpened by @None at [text]()'
+            'this is the title',
+            textwrap.dedent('''\
+                first line of body
+                second line of body
+                Opened by @None at [text]()''')
         )
 
-        testbot_public.assertCommand('!new issue repository.github.io another title\nand body',
-                              'Here you go')
+        testbot_public.assertCommand(
+            textwrap.dedent('''\
+                !new issue repository.github.io another title
+                body
+            '''),
+            'Here you go')
 
         labhub.REPOS['repository.github.io'].create_issue.assert_called_with(
-            'another title', 'and body\nOpened by @None at [text]()'
+            'another title',
+            textwrap.dedent('''\
+                body
+                Opened by @None at [text]()''')
         )
 
-        testbot_public.assertCommand('!new issue coala title', 'repository that does not exist')
+        testbot_public.assertCommand(
+            '!new issue coala title',
+            'repository that does not exist')
 
     def test_is_newcomer_issue(self):
         mock_iss = create_autospec(IGitt.GitHub.GitHubIssue)
@@ -185,7 +212,7 @@ class TestLabHub(unittest.TestCase):
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
 
         labhub.activate()
-        labhub.REPOS = {'name': self.mock_repo}
+        labhub.REPOS = {'example': self.mock_repo}
 
         mock_iss = create_autospec(IGitt.GitHub.GitHubIssue)
         self.mock_repo.get_issue.return_value = mock_iss
@@ -193,20 +220,25 @@ class TestLabHub(unittest.TestCase):
         mock_iss.assignees = (None, )
         mock_iss.unassign = MagicMock()
 
-        testbot.assertCommand('!unassign https://github.com/coala/name/issues/23',
-                              'you are unassigned now', timeout=10000)
-        self.mock_repo.get_issue.assert_called_with(23)
+        testbot.assertCommand(
+            '!unassign https://github.com/coala/example/issues/999',
+            'you are unassigned now',
+            timeout=10000)
+        self.mock_repo.get_issue.assert_called_with(999)
         mock_iss.unassign.assert_called_once_with(None)
 
         mock_iss.assignees = ('meetmangukiya', )
-        testbot.assertCommand('!unassign https://github.com/coala/name/issues/23',
-                           'not an assignee on the issue')
+        testbot.assertCommand(
+            '!unassign https://github.com/coala/example/issues/999',
+            'not an assignee on the issue')
 
-        testbot.assertCommand('!unassign https://github.com/coala/s/issues/52',
-                              'Repository doesn\'t exist.')
+        testbot.assertCommand(
+            '!unassign https://github.com/coala/example2/issues/999',
+            'Repository doesn\'t exist.')
 
-        testbot.assertCommand('!unassign https://gitlab.com/ala/am/issues/532',
-                               'Repository not owned by our org.')
+        testbot.assertCommand(
+            '!unassign https://gitlab.com/example/test/issues/999',
+            'Repository not owned by our org.')
 
     def test_assign_cmd(self):
         plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
@@ -235,7 +267,7 @@ class TestLabHub(unittest.TestCase):
 
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'You\'ve been assigned to the issue')
-        
+
         # no assignee, newcomer, initiatives/gci
         mock_maint_team.is_member.return_value = False
         mock_dev_team.is_member.return_value = False
@@ -325,7 +357,7 @@ class TestLabHub(unittest.TestCase):
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         labhub.activate()
 
-        labhub.REPOS = {'a': self.mock_repo}
+        labhub.REPOS = {'test': self.mock_repo}
         mock_github_mr = create_autospec(GitHubMergeRequest)
         mock_gitlab_mr = create_autospec(GitLabMergeRequest)
         mock_github_mr.labels = PropertyMock()
@@ -340,55 +372,65 @@ class TestLabHub(unittest.TestCase):
         # Non-eistent repo
         testbot.assertCommand(cmd_github.format('wip', 'a', 'b', '23'),
                               'Repository doesn\'t exist.')
-        testbot.assertCommand('!mark wip https://gitlab.com/a/b/merge_requests/2',
-                              'Repository doesn\'t exist.')
+        testbot.assertCommand(
+            '!mark wip https://gitlab.com/a/b/merge_requests/2',
+            'Repository doesn\'t exist.')
 
-        mock_github_mr.web_url = 'https://github.com/coala/a/pull/23'
-        mock_gitlab_mr.web_url = 'https://gitlab.com/coala/a/merge_requests/23'
+        mock_github_mr.web_url = 'https://github.com/coala/test/pull/23'
+        mock_gitlab_mr.web_url = (
+            'https://gitlab.com/coala/test/merge_requests/23')
 
         # mark wip
         mock_github_mr.labels = ['process/pending review']
         mock_gitlab_mr.labels = ['process/pending review']
-        testbot.assertCommand(cmd_github.format('wip', 'coala', 'a', '23'),
+        testbot.assertCommand(cmd_github.format('wip', 'coala', 'test', '23'),
                               'marked work in progress')
-        testbot.assertCommand(cmd_github.format('wip', 'coala', 'a', '23'),
+        testbot.assertCommand(cmd_github.format('wip', 'coala', 'test', '23'),
                               '@johndoe, please check your pull request')
-        testbot.assertCommand(cmd_github.format('wip', 'coala', 'a', '23'),
-                              'https://github.com/coala/a/pull/23')
+        testbot.assertCommand(cmd_github.format('wip', 'coala', 'test', '23'),
+                              'https://github.com/coala/test/pull/23')
 
         self.mock_repo.get_mr.return_value = mock_gitlab_mr
 
-        testbot.assertCommand(cmd_gitlab.format('wip', 'coala', 'a', '23'),
+        testbot.assertCommand(cmd_gitlab.format('wip', 'coala', 'test', '23'),
                               '@johndoe, please check your pull request')
-        testbot.assertCommand(cmd_gitlab.format('wip', 'coala', 'a', '23'),
-                              'https://gitlab.com/coala/a/merge_requests/23')
+        testbot.assertCommand(
+            cmd_gitlab.format('wip', 'coala', 'test', '23'),
+            'https://gitlab.com/coala/test/merge_requests/23')
 
         self.mock_repo.get_mr.return_value = mock_github_mr
 
         # mark pending
         mock_github_mr.labels = ['process/wip']
         mock_gitlab_mr.labels = ['process/wip']
-        testbot.assertCommand(cmd_github.format('pending', 'coala', 'a', '23'),
-                              'marked pending review')
-        testbot.assertCommand(cmd_github.format('pending-review', 'coala', 'a', '23'),
-                              'marked pending review')
-        testbot.assertCommand(cmd_github.format('pending review', 'coala', 'a', '23'),
-                              'marked pending review')
+        testbot.assertCommand(
+            cmd_github.format('pending', 'coala', 'test', '23'),
+            'marked pending review')
+        testbot.assertCommand(
+            cmd_github.format('pending-review', 'coala', 'test', '23'),
+            'marked pending review')
+        testbot.assertCommand(
+            cmd_github.format('pending review', 'coala', 'test', '23'),
+            'marked pending review')
 
     def test_alive(self):
         labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         with patch('plugins.labhub.time.sleep') as mock_sleep:
             labhub.gh_repos = {
-                'coala': create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
-                'coala-bears': create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
-                'coala-utils': create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
+                'coala':
+                    create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
+                'coala-bears':
+                    create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
+                'coala-utils':
+                    create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
             }
             # for the branch where program sleeps
             labhub.gh_repos.update({str(i):
-                                    create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
+                                    create_autospec(
+                                        IGitt.GitHub.GitHub.GitHubRepository)
                                     for i in range(30)})
             labhub.gl_repos = {
-                'test': create_autospec(IGitt.GitLab.GitLab.GitLabRepository)
+                'test': create_autospec(IGitt.GitLab.GitLab.GitLabRepository),
             }
             labhub.activate()
 

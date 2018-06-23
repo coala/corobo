@@ -5,6 +5,7 @@ pytest_plugins = ['errbot.backends.test']
 
 extra_plugin_dir = 'plugins'
 
+
 @vcr.use_cassette('tests/cassettes/ghetto.yaml')
 def test_ghetto(testbot):
     testbot.assertCommand("!ghetto hi, whats up?", "hi, wassup?")
