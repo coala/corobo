@@ -111,6 +111,8 @@ class TestLabHub(unittest.TestCase):
     def test_hello_world_callback(self):
         teams = {
             'coala newcomers': self.mock_team,
+            'coala developers': self.mock_team,
+            'coala maintainers': self.mock_team,
         }
 
         testbot = TestBot(extra_plugin_dir='plugins', loglevel=logging.ERROR)

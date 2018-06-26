@@ -71,6 +71,17 @@ class LabHub(BotPlugin):
     def TEAMS(self, new):
         self._teams = new
 
+    def team_mapping(self):
+        return {
+            'newcomers': self.TEAMS[self.GH_ORG_NAME + ' newcomers'],
+            'developers': self.TEAMS[self.GH_ORG_NAME + ' developers'],
+            'maintainers': self.TEAMS[self.GH_ORG_NAME + ' maintainers'],
+        }
+
+    def is_team_member(self, user, team):
+        teams = self.team_mapping()
+        return teams[team].is_member(user)
+
     @staticmethod
     def is_room_member(invitee, msg):
         return invitee in msg.frm.room.occupants
@@ -89,26 +100,18 @@ class LabHub(BotPlugin):
         team = 'newcomers' if match.group(2) is None else match.group(2)
         team = team.lower()
 
-        is_developer = self.TEAMS[self.GH_ORG_NAME +
-                                  ' developers'].is_member(inviter)
-        is_maintainer = self.TEAMS[self.GH_ORG_NAME +
-                                   ' maintainers'].is_member(inviter)
+        is_developer = self.is_team_member(inviter, 'developers')
+        is_maintainer = self.is_team_member(inviter, 'maintainers')
 
         self.log.info('{} invited {} to {}'.format(inviter, invitee, team))
 
-        valid_teams = ['newcomers', 'developers', 'maintainers']
+        valid_teams = self.team_mapping()
         if team not in valid_teams:
             return 'Please select from one of the valid teams: ' + ', '.join(
                     valid_teams)
 
         def invite(invitee, team):
-            team_mapping = {
-                'newcomers': self.GH_ORG_NAME + ' newcomers',
-                'developers': self.GH_ORG_NAME + ' developers',
-                'maintainers': self.GH_ORG_NAME + ' maintainers'
-            }
-
-            self.TEAMS[team_mapping[team]].invite(invitee)
+            self.team_mapping()[team].invite(invitee)
 
         if not self.is_room_member(invitee, msg):
             return '@{} is not a member of this room.'.format(invitee)
@@ -149,7 +152,7 @@ class LabHub(BotPlugin):
         """Invite the user whose message includes the holy 'hello world'"""
         if re.search(r'hello\s*,?\s*world', msg.body, flags=re.IGNORECASE):
             user = msg.frm.nick
-            if (not self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user)
+            if (not self.is_team_member(user, 'newcomers')
                     and user not in self.hello_world_users):
                 response = tenv().get_template(
                     'labhub/hello-world.jinja2.md'
@@ -312,14 +315,9 @@ class LabHub(BotPlugin):
                 2. A newcomer asks for assignment to an issue with difficulty
                    higher than low.
                 """
-                if (self.TEAMS[self.GH_ORG_NAME + ' newcomers'].is_member(user)
-                    and not (self.TEAMS[self.GH_ORG_NAME +
-                                        ' developers'].is_member(
-                            user
-                        ) or
-                        self.TEAMS[self.GH_ORG_NAME + ' maintainers'].is_member(
-                            user
-                        ))):
+                if (self.is_team_member(user, 'newcomers') and not
+                    (self.is_team_member(user, 'developers') or
+                        self.is_team_member(user, 'maintainers'))):
                     diff_labels = filter(
                         lambda x: 'difficulty' in x, iss.labels)
                     if list(filter(lambda x: ('low' in x) or ('newcomer' in x),
@@ -339,8 +337,7 @@ class LabHub(BotPlugin):
                           to the user.
                 """
                 if (self.is_newcomer_issue(iss)
-                    and self.TEAMS[self.GH_ORG_NAME +
-                                   ' newcomers'].is_member(user)):
+                        and self.is_team_member(user, 'newcomers')):
                     search_query = 'user:coala assignee:{} ' \
                                    'label:difficulty/newcomer'.format(user)
                     result = GitHub.raw_search(GitHubToken(
