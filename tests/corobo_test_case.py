@@ -28,10 +28,14 @@ class CoroboTestCase(FullStackTest):
             self.plug_files[klass.__name__] = plug_info
             add_plugin_templates_path(plug_info)
 
-    def load_plugin(self, plugin_name: str, mock_dict=False):
+    def load_plugin(self,
+                    plugin_name: str,
+                    mock_dict=False,
+                    plugin_config=None):
         """Load plugin manually"""
         klass = self.klasses[plugin_name]
         plugin = klass(self.bot, plugin_name)
+        plugin.configure(plugin_config)
         self.plugins[plugin_name] = plugin
         self.bot.plugin_manager.plugins[plugin_name] = plugin
         plug_file = self.plug_files[plugin_name]

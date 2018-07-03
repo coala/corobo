@@ -111,3 +111,12 @@ ACCESS_CONTROLS = {'render test': {
     'LabHub:*': {'allowprivate': False}}
 
 AUTOINSTALL_DEPS = True
+
+DEFAULT_CONFIG = {
+    'LabHub': {
+        'GH_TOKEN': os.environ.get('GH_TOKEN'),
+        'GL_TOKEN': os.environ.get('GL_TOKEN'),
+        'GH_ORG_NAME': os.environ.get('GH_ORG_NAME', 'coala'),
+        'GL_ORG_NAME': os.environ.get('GL_ORG_NAME', 'coala'),
+    },
+}

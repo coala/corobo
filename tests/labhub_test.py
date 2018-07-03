@@ -27,7 +27,13 @@ class TestLabHub(LabHubTestCase):
             },
             '_teams': self.teams,
         }
-        self.labhub = self.load_plugin('LabHub', self.global_mocks)
+        configs = {
+            'GH_TOKEN': None,
+            'GL_TOKEN': None,
+            'GH_ORG_NAME': 'coala',
+            'GL_ORG_NAME': 'coala',
+        }
+        self.labhub = self.load_plugin('LabHub', self.global_mocks, configs)
 
     def test_invite_cmd(self):
         mock_team_newcomers = create_autospec(github3.orgs.Team)
@@ -44,8 +50,6 @@ class TestLabHub(LabHubTestCase):
         }
         self.inject_mocks('LabHub', mock_dict)
         testbot = self
-
-        plugins.labhub.os.environ['GH_TOKEN'] = 'patched?'
 
         self.assertEqual(self.labhub.TEAMS, self.teams)
 
@@ -304,7 +308,6 @@ class TestLabHub(LabHubTestCase):
 
         # no assignee, newcomer, difficulty medium
         mock_dict = {
-            'GH_ORG_NAME': 'not-coala',
             'TEAMS': {
                 'not-coala newcomers': self.mock_team,
                 'not-coala developers': mock_dev_team,
@@ -312,10 +315,11 @@ class TestLabHub(LabHubTestCase):
             },
         }
         self.inject_mocks('LabHub', mock_dict)
+        self.labhub.config['GH_ORG_NAME'] = 'not-coala'
 
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'assigned')
-        mock_dict['GH_ORG_NAME'] = 'coala'
+        self.labhub.config['GH_ORG_NAME'] = 'coala'
         mock_dict['TEAMS'] = self.teams
         self.inject_mocks('LabHub', mock_dict)
 
@@ -472,3 +476,12 @@ class TestLabHub(LabHubTestCase):
                 '!pr stats 3hours',
                 'You need to be a member of this organization '
                 'to use this command.', timeout=100)
+
+    def test_invalid_token(self):
+        plugins.labhub.github3.login.return_value = None
+        with self.assertLogs() as cm:
+            self.labhub.activate()
+        self.assertIn(
+            'ERROR:errbot.plugins.LabHub:Cannot create github object,'
+            ' please check GH_TOKEN',
+            cm.output)

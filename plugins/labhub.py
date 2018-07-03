@@ -1,5 +1,4 @@
 import datetime
-import os
 import re
 import time
 
@@ -10,8 +9,8 @@ from errbot import BotPlugin, re_botcmd
 from errbot.templating import tenv
 
 from functools import wraps
-from plugins import constants
 from utils.backends import message_link
+from utils.mixin import DefaultConfigMixin
 
 
 def members_only(func):
@@ -33,18 +32,22 @@ def members_only(func):
     return wrapper
 
 
-class LabHub(BotPlugin):
+class LabHub(DefaultConfigMixin, BotPlugin):
     """GitHub and GitLab utilities"""  # Ignore QuotesBear
 
-    GH_ORG_NAME = constants.GH_ORG_NAME
-    GL_ORG_NAME = constants.GL_ORG_NAME
+    CONFIG_TEMPLATE = {
+        'GH_ORG_NAME': None,
+        'GH_TOKEN': None,
+        'GL_ORG_NAME': None,
+        'GL_TOKEN': None,
+    }
 
-    def __init__(self, bot, name=None):
-        super().__init__(bot, name)
+    def activate(self):
+        super().activate()
 
         teams = dict()
         try:
-            gh = github3.login(token=os.environ.get('GH_TOKEN'))
+            gh = github3.login(token=self.config['GH_TOKEN'])
             assert gh is not None
         except AssertionError:
             self.log.error('Cannot create github object, please check GH_TOKEN')
@@ -55,8 +58,8 @@ class LabHub(BotPlugin):
 
         self._teams = teams
 
-        self.IGH = GitHub(GitHubToken(os.environ.get('GH_TOKEN')))
-        self.IGL = GitLab(GitLabPrivateToken(os.environ.get('GL_TOKEN')))
+        self.IGH = GitHub(GitHubToken(self.config['GH_TOKEN']))
+        self.IGL = GitLab(GitLabPrivateToken(self.config['GL_TOKEN']))
 
         self.REPOS = dict()
 
@@ -65,7 +68,7 @@ class LabHub(BotPlugin):
                              filter(lambda x: (x.full_name.split('/')[0] ==
                                                self.GH_ORG_NAME),
                                     self.IGH.write_repositories)}
-        except RuntimeError:
+        except RuntimeError:  # pragma: no cover, for logging
             self.log.exception('Something went wrong in fetching github repos.')
         else:
             self.REPOS.update(self.gh_repos)
@@ -81,6 +84,14 @@ class LabHub(BotPlugin):
             self.REPOS.update(self.gl_repos)
 
         self.hello_world_users = set()
+
+    @property
+    def GH_ORG_NAME(self):
+        return self.config['GH_ORG_NAME']
+
+    @property
+    def GL_ORG_NAME(self):
+        return self.config['GL_ORG_NAME']
 
     @property
     def TEAMS(self):
@@ -368,7 +379,7 @@ class LabHub(BotPlugin):
                     search_query = 'user:coala assignee:{} ' \
                                    'label:difficulty/newcomer'.format(user)
                     result = GitHub.raw_search(GitHubToken(
-                        os.environ.get('GH_TOKEN')), search_query)
+                        self.config['GH_TOKEN']), search_query)
                     return not (sum(1 for _ in result) >= 1)
                 else:
                     return True
