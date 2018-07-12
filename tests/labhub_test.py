@@ -1,7 +1,5 @@
-import logging
 import queue
 import textwrap
-import unittest
 from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock, patch
 
 import github3
@@ -16,13 +14,13 @@ from errbot.backends.base import Message
 import plugins.labhub
 from plugins.labhub import LabHub
 
-from tests.helper import load_templates, plugin_testbot
+from tests.corobo_test_case import CoroboTestCase
 
 
-class TestLabHub(unittest.TestCase):
+class TestLabHub(CoroboTestCase):
 
     def setUp(self):
-        load_templates('labhub.plug')
+        super().setUp((plugins.labhub.LabHub,))
         plugins.labhub.github3 = create_autospec(github3)
 
         self.mock_org = create_autospec(github3.orgs.Organization)
@@ -42,6 +40,22 @@ class TestLabHub(unittest.TestCase):
         self.mock_org.teams.return_value = [self.mock_team]
         plugins.labhub.github3.organization.return_value = self.mock_org
 
+        # patching
+        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
+        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
+        plugins.labhub.GitHubToken = create_autospec(IGitt.GitHub.GitHubToken)
+        plugins.labhub.GitLabPrivateToken = create_autospec(
+            IGitt.GitLab.GitLabPrivateToken)
+
+        self.global_mocks = {
+            'REPOS': {
+                'repository': self.mock_repo,
+                'repository.github.io': self.mock_repo,
+            },
+            '_teams': self.teams,
+        }
+        self.labhub = self.load_plugin('LabHub', self.global_mocks)
+
     def test_invite_cmd(self):
         mock_team_newcomers = create_autospec(github3.orgs.Team)
         mock_team_developers = create_autospec(github3.orgs.Team)
@@ -51,19 +65,22 @@ class TestLabHub(unittest.TestCase):
         self.teams['coala developers'] = mock_team_developers
         self.teams['coala maintainers'] = mock_team_maintainers
 
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
-        labhub.activate()
-        labhub._teams = self.teams
+        mock_dict = {
+            'TEAMS': self.teams,
+            'is_room_member': MagicMock(),
+        }
+        self.inject_mocks('LabHub', mock_dict)
+        testbot = self
 
         plugins.labhub.os.environ['GH_TOKEN'] = 'patched?'
 
-        self.assertEqual(labhub.TEAMS, self.teams)
+        self.assertEqual(self.labhub.TEAMS, self.teams)
 
-        labhub.is_room_member = MagicMock(return_value=False)
+        mock_dict['is_room_member'].return_value = False
         testbot.assertCommand('!invite meet to newcomers',
                               '@meet is not a member of this room.')
 
-        labhub.is_room_member = MagicMock(return_value=True)
+        mock_dict['is_room_member'].return_value = True
 
         # invite by maintainer
         mock_team_newcomers.is_member.return_value = True
@@ -80,7 +97,7 @@ class TestLabHub(unittest.TestCase):
 
         # invite by developer
         mock_team_maintainers.is_member.return_value = False
-        labhub.is_room_member = MagicMock(return_value=True)
+        mock_dict['is_room_member'].return_value = True
 
         testbot.assertCommand(
             '!invite meet to newcomers',
@@ -124,11 +141,8 @@ class TestLabHub(unittest.TestCase):
         self.assertTrue(LabHub.is_room_member('batman', msg))
 
     def test_hello_world_callback(self):
-        testbot = TestBot(extra_plugin_dir='plugins', loglevel=logging.ERROR)
-        testbot.start()
-        labhub = testbot.bot.plugin_manager.get_plugin_obj_by_name('LabHub')
-        labhub.TEAMS = self.teams
         self.mock_team.is_member.return_value = False
+        testbot = self
         testbot.assertCommand('hello, world', 'newcomer')
         # Since the user won't be invited again, it'll timeout waiting for a
         # response.
@@ -136,20 +150,6 @@ class TestLabHub(unittest.TestCase):
             testbot.assertCommand('helloworld', 'newcomer')
 
     def test_create_issue_cmd(self):
-        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
-        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
-        plugins.labhub.GitHubToken = create_autospec(IGitt.GitHub.GitHubToken)
-        plugins.labhub.GitLabPrivateToken = create_autospec(
-            IGitt.GitLab.GitLabPrivateToken)
-
-        labhub, testbot_private = plugin_testbot(
-            plugins.labhub.LabHub, logging.ERROR,
-            {'BACKEND': 'text',
-             'ACCESS_CONTROLS': {'create_issue_cmd': {'allowprivate': False}},
-             }
-        )
-        labhub.activate()
-        labhub.REPOS = {'repository': self.mock_repo}
         plugins.labhub.GitHubToken.assert_called_with(None)
         plugins.labhub.GitLabPrivateToken.assert_called_with(None)
 
@@ -162,14 +162,8 @@ class TestLabHub(unittest.TestCase):
         # Stop ignoring
 
         # Creating issue in public chat
-        labhub, testbot_public = plugin_testbot(
-            plugins.labhub.LabHub, logging.ERROR, {'BACKEND': 'text'}
-        )
-        labhub.activate()
-        labhub._teams = self.teams
         self.mock_team.is_member.return_value = True
-        labhub.REPOS = {'repository': self.mock_repo,
-                        'repository.github.io': self.mock_repo}
+        testbot_public = self
 
         testbot_public.assertCommand(
             textwrap.dedent('''\
@@ -179,12 +173,13 @@ class TestLabHub(unittest.TestCase):
             '''),
             'Here you go')
 
-        labhub.REPOS['repository'].create_issue.assert_called_once_with(
-            'this is the title',
-            textwrap.dedent('''\
-                first line of body
-                second line of body
-                Opened by @None at [text]()''')
+        self.global_mocks['REPOS']['repository'].create_issue \
+            .assert_called_once_with(
+                'this is the title',
+                textwrap.dedent('''\
+                    first line of body
+                    second line of body
+                    Opened by @None at [text]()''')
         )
 
         testbot_public.assertCommand(
@@ -194,11 +189,12 @@ class TestLabHub(unittest.TestCase):
             '''),
             'Here you go')
 
-        labhub.REPOS['repository.github.io'].create_issue.assert_called_with(
-            'another title',
-            textwrap.dedent('''\
-                body
-                Opened by @None at [text]()''')
+        self.global_mocks['REPOS']['repository.github.io'].create_issue \
+            .assert_called_with(
+                'another title',
+                textwrap.dedent('''\
+                    body
+                    Opened by @None at [text]()''')
         )
 
         testbot_public.assertCommand(
@@ -207,10 +203,6 @@ class TestLabHub(unittest.TestCase):
 
         # not a member of org
         self.mock_team.is_member.return_value = False
-        labhub.REPOS = {
-            'repository': self.mock_repo,
-            'repository.github.io': self.mock_repo,
-        }
         testbot_public.assertCommand(
             textwrap.dedent('''\
                 !new issue repository this is the title
@@ -228,20 +220,14 @@ class TestLabHub(unittest.TestCase):
         self.assertFalse(LabHub.is_newcomer_issue(mock_iss))
 
     def test_unassign_cmd(self):
-        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
-        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
-
-        labhub.activate()
-        labhub.REPOS = {'example': self.mock_repo}
-        labhub._teams = self.teams
-
+        self.inject_mocks('LabHub', {'REPOS': {'example': self.mock_repo}})
         mock_iss = create_autospec(IGitt.GitHub.GitHubIssue)
         self.mock_repo.get_issue.return_value = mock_iss
         mock_iss.assignees = PropertyMock()
         mock_iss.assignees = (None, )
         mock_iss.unassign = MagicMock()
         self.mock_team.is_member.return_value = True
+        testbot = self
 
         testbot.assertCommand(
             '!unassign https://github.com/coala/example/issues/999',
@@ -271,15 +257,8 @@ class TestLabHub(unittest.TestCase):
             'to use this command.')
 
     def test_assign_cmd(self):
-        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
-        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
-        labhub.activate()
-
         mock_issue = create_autospec(GitHubIssue)
         self.mock_repo.get_issue.return_value = mock_issue
-
-        labhub.REPOS = {'a': self.mock_repo}
 
         mock_dev_team = create_autospec(github3.orgs.Team)
         mock_maint_team = create_autospec(github3.orgs.Team)
@@ -288,7 +267,13 @@ class TestLabHub(unittest.TestCase):
 
         self.teams['coala developers'] = mock_dev_team
         self.teams['coala maintainers'] = mock_maint_team
-        labhub._teams = self.teams
+
+        mock_dict = {
+            'REPOS': {'a': self.mock_repo},
+            'TEAMS': self.teams,
+        }
+        self.inject_mocks('LabHub', mock_dict)
+        testbot = self
 
         cmd = '!assign https://github.com/{}/{}/issues/{}'
         # no assignee, not newcomer
@@ -345,17 +330,21 @@ class TestLabHub(unittest.TestCase):
         testbot.pop_message()
 
         # no assignee, newcomer, difficulty medium
-        labhub.GH_ORG_NAME = 'not-coala'
-        labhub.TEAMS = {
-            'not-coala newcomers': self.mock_team,
-            'not-coala developers': mock_dev_team,
-            'not-coala maintainers': mock_maint_team
+        mock_dict = {
+            'GH_ORG_NAME': 'not-coala',
+            'TEAMS': {
+                'not-coala newcomers': self.mock_team,
+                'not-coala developers': mock_dev_team,
+                'not-coala maintainers': mock_maint_team,
+            },
         }
+        self.inject_mocks('LabHub', mock_dict)
 
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'assigned')
-        labhub.GH_ORG_NAME = 'coala'
-        labhub.TEAMS = self.teams
+        mock_dict['GH_ORG_NAME'] = 'coala'
+        mock_dict['TEAMS'] = self.teams
+        self.inject_mocks('LabHub', mock_dict)
 
         # newcomer, developer, difficulty/medium
         mock_dev_team.is_member.return_value = True
@@ -393,11 +382,9 @@ class TestLabHub(unittest.TestCase):
                                   'not eligible to be assigned to this issue')
 
     def test_mark_cmd(self):
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
-        labhub.activate()
+        self.inject_mocks('LabHub', {'REPOS': {'test': self.mock_repo}})
+        testbot = self
 
-        labhub.REPOS = {'test': self.mock_repo}
-        labhub._teams = self.teams
         mock_github_mr = create_autospec(GitHubMergeRequest)
         mock_gitlab_mr = create_autospec(GitLabMergeRequest)
         mock_github_mr.labels = PropertyMock()
@@ -461,9 +448,8 @@ class TestLabHub(unittest.TestCase):
             'You need to be a member of this organization to use this command')
 
     def test_alive(self):
-        labhub, testbot = plugin_testbot(plugins.labhub.LabHub, logging.ERROR)
         with patch('plugins.labhub.time.sleep') as mock_sleep:
-            labhub.gh_repos = {
+            gh_repos_mock = {
                 'coala':
                     create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
                 'coala-bears':
@@ -472,30 +458,34 @@ class TestLabHub(unittest.TestCase):
                     create_autospec(IGitt.GitHub.GitHub.GitHubRepository),
             }
             # for the branch where program sleeps
-            labhub.gh_repos.update({str(i):
-                                    create_autospec(
+            gh_repos_mock.update({str(i):
+                                  create_autospec(
                                         IGitt.GitHub.GitHub.GitHubRepository)
-                                    for i in range(30)})
-            labhub.gl_repos = {
+                                  for i in range(30)})
+            gl_repos_mock = {
                 'test': create_autospec(IGitt.GitLab.GitLab.GitLabRepository),
             }
-            labhub.activate()
-            labhub._teams = self.teams
             self.mock_team.is_member.return_value = True
+            mock_dict = {
+                'gh_repos': gh_repos_mock,
+                'gl_repos': gl_repos_mock,
+            }
+            self.inject_mocks('LabHub', mock_dict)
+            testbot = self
 
-            labhub.gh_repos['coala'].search_mrs.return_value = [1, 2]
-            labhub.gh_repos['coala-bears'].search_mrs.return_value = []
-            labhub.gh_repos['coala-utils'].search_mrs.return_value = []
+            mock_dict['gh_repos']['coala'].search_mrs.return_value = [1, 2]
+            mock_dict['gh_repos']['coala-bears'].search_mrs.return_value = []
+            mock_dict['gh_repos']['coala-utils'].search_mrs.return_value = []
             testbot.assertCommand('!pr stats 10hours',
                                   '2 PRs opened in last 10 hours\n'
                                   'The community is alive', timeout=100)
 
-            labhub.gh_repos['coala'].search_mrs.return_value = []
+            mock_dict['gh_repos']['coala'].search_mrs.return_value = []
             testbot.assertCommand('!pr stats 5hours',
                                   '0 PRs opened in last 5 hours\n'
                                   'The community is dead', timeout=100)
 
-            labhub.gh_repos['coala'].search_mrs.return_value = [
+            mock_dict['gh_repos']['coala'].search_mrs.return_value = [
                 1, 2, 3, 4, 5,
                 6, 7, 8, 9, 10
             ]

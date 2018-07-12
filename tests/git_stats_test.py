@@ -1,7 +1,5 @@
-import logging
 from tempfile import mkdtemp
 from errbot import BotPlugin
-import unittest
 from unittest.mock import create_autospec
 
 from IGitt.GitHub.GitHubMergeRequest import GitHubMergeRequest
@@ -14,12 +12,13 @@ import github3
 import IGitt
 import plugins.git_stats
 import plugins.labhub
-from tests.helper import plugin_testbot
+from tests.corobo_test_case import CoroboTestCase
 
 
-class TestGitStats(unittest.TestCase):
+class TestGitStats(CoroboTestCase):
 
     def setUp(self):
+        super().setUp((plugins.git_stats.GitStats,))
         plugins.git_stats.github3 = create_autospec(github3)
         self.mock_org = create_autospec(github3.orgs.Organization)
         self.mock_gh = create_autospec(github3.GitHub)
@@ -30,12 +29,10 @@ class TestGitStats(unittest.TestCase):
 
         self.plugin = plugins.git_stats.GitStats
         self.plugin.__bases__ = (BotPlugin, )
+        self.git_stats = self.load_plugin('GitStats')
+        self.git_stats.REPOS = {'test': self.mock_repo}
 
     def test_pr_list(self):
-        git_stats, testbot = plugin_testbot(self.plugin, logging.ERROR)
-        git_stats.activate()
-
-        git_stats.REPOS = {'test': self.mock_repo}
         mock_github_mr = create_autospec(GitHubMergeRequest)
         mock_gitlab_mr = create_autospec(GitLabMergeRequest)
         mock_github_issue = create_autospec(GitHubIssue)
@@ -49,6 +46,7 @@ class TestGitStats(unittest.TestCase):
         mock_repo_obj = create_autospec(Repo)
         cmd_github = '!mergable {}'
         cmd_gitlab = '!mergable {}'
+        testbot = self
 
         self.mock_repo.merge_requests = [mock_github_mr]
 
