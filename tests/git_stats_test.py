@@ -2,7 +2,7 @@ import logging
 from tempfile import mkdtemp
 from errbot import BotPlugin
 import unittest
-from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock, patch
+from unittest.mock import create_autospec
 
 from IGitt.GitHub.GitHubMergeRequest import GitHubMergeRequest
 from IGitt.GitLab.GitLabMergeRequest import GitLabMergeRequest

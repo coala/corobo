@@ -1,6 +1,5 @@
 import re
 import glob
-import os.path
 
 from errbot import BotPlugin, re_botcmd
 from errbot.templating import tenv

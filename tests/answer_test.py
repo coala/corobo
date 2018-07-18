@@ -1,5 +1,4 @@
 import os
-import unittest
 import logging
 
 from errbot.backends.test import FullStackTest

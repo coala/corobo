@@ -1,5 +1,4 @@
 import logging
-import unittest
 import queue
 
 from errbot.backends.test import FullStackTest
@@ -88,7 +87,7 @@ class TestCoatils(FullStackTest):
 
         # ensuring that only one result is yielded
         with self.assertRaises(queue.Empty):
-            next_msg = self.pop_message()
+            self.pop_message()
         # error
         self.push_message('!run a b\n```\nc\n```')
         self.assertEqual(self.pop_message(),

@@ -16,6 +16,7 @@ default_actions = *: ApplyPatchAction
 
 bears += KeywordBear
 keywords = pdb
+bears += PyUnusedCodeBear
 
 [all.autopep8]
 bears = PEP8Bear, PycodestyleBear

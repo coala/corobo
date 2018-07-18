@@ -1,8 +1,6 @@
 import logging
-import os
 import queue
 import textwrap
-import time
 import unittest
 from unittest.mock import Mock, MagicMock, create_autospec, PropertyMock, patch
 

@@ -1,5 +1,4 @@
 from collections import OrderedDict, Counter
-import logging
 
 from gensim.parsing.preprocessing import STOPWORDS
 from gensim.utils import simple_preprocess
@@ -60,9 +59,7 @@ def get_answer(question, graph, final=False):
 
     grapheize(q_graph, q_doc, attrs={'q_type': q_type})
     scores = Counter()
-    found_common = False
     for start, end in q_graph.edges():
-        found_common = True
         if start in graph and end in graph:
             for path in networkx.algorithms.all_shortest_paths(
                     graph, start, end):
