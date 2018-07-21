@@ -1,9 +1,6 @@
 from collections import OrderedDict, Counter
 
-from gensim.parsing.preprocessing import STOPWORDS
-from gensim.utils import simple_preprocess
 import networkx
-import nltk
 import spacy
 
 from extraction import parse_docs
