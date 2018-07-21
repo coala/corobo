@@ -1,12 +1,11 @@
-from itertools import chain
-
 from errbot import BotPlugin
 from errbot.templating import tenv
 
 from plugins import constants
+from utils.mixin import DefaultConfigMixin
 
 
-class SpammingAlert(BotPlugin):
+class SpammingAlert(DefaultConfigMixin, BotPlugin):
     """
     A plugin which alerts the user that they might be spamming.
     """
@@ -15,21 +14,6 @@ class SpammingAlert(BotPlugin):
         'MAX_MSG_LEN': constants.MAX_MSG_LEN,
         'MAX_LINES': constants.MAX_LINES
     }
-
-    def get_configuration_template(self):
-        return self.CONFIG_TEMPLATE
-
-    def configure(self, configuration):
-        """
-        Enable partial configuration.
-        """
-
-        if configuration:
-            config = dict(chain(self.CONFIG_TEMPLATE.items(),
-                                configuration.items()))
-        else:
-            config = self.CONFIG_TEMPLATE
-        super(SpammingAlert, self).configure(config)
 
     def check_configuration(self, configuration):
         pass
