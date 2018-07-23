@@ -55,6 +55,10 @@ if BOT_EXTRA_BACKEND_DIR:
 HIDE_RESTRICTED_COMMANDS = True
 
 BOT_DATA_DIR = os.path.join(BOT_ROOT, 'data')
+if not os.path.isdir(BOT_DATA_DIR):
+    # create an empty data directory
+    os.mkdir(BOT_DATA_DIR)
+
 BOT_EXTRA_PLUGIN_DIR = BOT_ROOT
 
 BOT_LOG_FILE = os.path.join(BOT_ROOT, 'errbot.log')
