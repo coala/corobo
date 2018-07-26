@@ -3,7 +3,7 @@ overrides: coala.yaml
 name: corobo
 
 dependencies:
-  - pyopenssl<17.5
+  - pyopenssl
   - git+https://github.com/errbotio/errbot@c2639879d4c298933cdf406193de5a5e626db12b
   - wolframalpha
   - github3.py~=1.0.0
