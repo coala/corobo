@@ -2,12 +2,10 @@ import datetime
 import re
 from shutil import rmtree
 
-from errbot import re_botcmd
-
-from plugins.labhub import LabHub
+from errbot import BotPlugin, re_botcmd
 
 
-class GitStats(LabHub):
+class GitStats(BotPlugin):
     """GitHub and GitLab statistics"""  # Ignore QuotesBear
 
     PR_LABELS = ('process/approved',
@@ -15,8 +13,9 @@ class GitStats(LabHub):
                  'process/pending-review'
                  )
 
-    def __init__(self, bot, name=None):
-        super().__init__(bot, name)
+    def activate(self):
+        super().activate()
+        self.REPOS = self.get_plugin('LabHub').REPOS
 
     @re_botcmd(pattern=r'mergable\s+([^/]+)',  # Ignore PyCodeStyleBear
                re_cmd_name_help='pr list <repo>',

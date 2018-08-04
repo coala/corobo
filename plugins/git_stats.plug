@@ -1,6 +1,7 @@
 [Core]
 name = GitStats
 module = git_stats
+DependsOn = LabHub
 
 [Documentation]
 description = GitHub and GitLab statistics

@@ -32,11 +32,12 @@ class CoroboTestCase(FullStackTest):
         """Load plugin manually"""
         klass = self.klasses[plugin_name]
         plugin = klass(self.bot, plugin_name)
-        plugin.activate()
         self.plugins[plugin_name] = plugin
         self.bot.plugin_manager.plugins[plugin_name] = plugin
         plug_file = self.plug_files[plugin_name]
+        plugin.dependencies = plug_file.dependencies
         self.bot.plugin_manager.plugin_infos[plug_file.name] = plug_file
+        plugin.activate()
 
         if mock_dict:
             self.inject_mocks(plugin_name=plugin_name, mock_dict=mock_dict)
