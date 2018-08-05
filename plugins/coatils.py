@@ -15,9 +15,6 @@ class Coatils(BotPlugin):
     Various coala related utilities, exposing the REST API, etc.
     """
 
-    def __init__(self, bot, name=None):
-        super().__init__(bot, name)
-
     @staticmethod
     def total_bears():
         bears = client.list.bears.get().json()
