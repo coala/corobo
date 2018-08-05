@@ -10,31 +10,29 @@ class DefaultConfigMixin():
 
     def __init__(self, bot, name=None):
         super().__init__(bot, name=name)
-        default_config = self._default_config
-        if default_config and not hasattr(self, 'config'):
-            self.configure(default_config)
+        if not hasattr(self, 'CONFIG_TEMPLATE'):  # pragma: no cover
+            self.log.error('CONFIG_TEMPLATE for plugin {} is missing.'
+                           .format(self.name))
 
     def get_configuration_template(self):
         default_config = self._default_config
+        config_template = self.CONFIG_TEMPLATE
+
         if default_config:
-            return default_config
-        elif self.CONFIG_TEMPLATE:
-            return self.CONFIG_TEMPLATE
-        else:  # pragma: no cover
-            return
+            config = dict(chain(config_template.items(),
+                                default_config.items()))
+        else:
+            config = config_template
+
+        return config
 
     def configure(self, configuration):
-        default_config = self._default_config
-        if configuration and default_config:
-            config = dict(chain(
-                default_config.items(),
-                configuration.items()))
-        elif configuration:
-            config = dict(chain(self.CONFIG_TEMPLATE.items(),
-                          configuration.items()))
-        elif default_config:
-            config = default_config
+        config_template = self.get_configuration_template()
+
+        if configuration is not None and configuration != {}:
+            config = dict(chain(config_template.items(),
+                                configuration.items()))
         else:
-            config = self.CONFIG_TEMPLATE
+            config = config_template
 
         self.config = config

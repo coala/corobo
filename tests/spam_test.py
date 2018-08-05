@@ -33,7 +33,6 @@ class TestSpamExtraConfig(IsolatedTestCase):
             'DEFAULT_CONFIG': {
                 'SpammingAlert': {
                     'MAX_MSG_LEN': 500,
-                    'MAX_LINES': 5,
                 }
             }
         }
@@ -42,13 +41,15 @@ class TestSpamExtraConfig(IsolatedTestCase):
 
     def test_spam_extra_config_callback(self):
         self.testbot.assertCommand('c'*501, 'you\'re spamming')
-        self.testbot.assertCommand('\n'*6, 'you\'re spamming')
+        self.testbot.assertCommand('\n\n'*11, 'you\'re spamming')
         # Since the message is not a spam, testbot will timeout
         # waiting for a response
         with self.assertRaises(queue.Empty):
             self.testbot.assertCommand('Not a spam', 'you\'re spamming')
 
     def test_spam_extra_config_configuration(self):
+        self.testbot.assertCommand('!plugin config SpammingAlert',
+                                   '{\'MAX_LINES\': 20, \'MAX_MSG_LEN\': 500}')
         self.testbot.assertCommand('!plugin config SpammingAlert '
                                    '{\'MAX_LINES\': 10}',
                                    'configuration done')
