@@ -1,5 +1,5 @@
 [Core]
-name = wolfram alpha
+name = WolframAlpha
 module = wolfram_alpha
 
 [Documentation]

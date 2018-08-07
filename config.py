@@ -119,4 +119,7 @@ DEFAULT_CONFIG = {
         'GH_ORG_NAME': os.environ.get('GH_ORG_NAME', 'coala'),
         'GL_ORG_NAME': os.environ.get('GL_ORG_NAME', 'coala'),
     },
+    'WolframAlpha': {
+        'WA_TOKEN': os.environ.get('WA_TOKEN'),
+    },
 }

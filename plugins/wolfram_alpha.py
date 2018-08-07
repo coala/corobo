@@ -1,18 +1,21 @@
-import os
-
 import wolframalpha
 
 from errbot import BotPlugin, botcmd
+from utils.mixin import DefaultConfigMixin
 
 
-class WolframAlpha(BotPlugin):
+class WolframAlpha(DefaultConfigMixin, BotPlugin):
     """
     Query the Computational Knowledge Engine
     """
 
+    CONFIG_TEMPLATE = {
+        'WA_TOKEN': None,
+    }
+
     def activate(self):
         super().activate()
-        self.client = wolframalpha.Client(os.environ.get('WA_TOKEN'))
+        self.client = wolframalpha.Client(self.config['WA_TOKEN'])
 
     @botcmd
     def wa(self, msg, arg):
