@@ -8,45 +8,18 @@ from IGitt.GitHub.GitHubMergeRequest import GitHubMergeRequest
 from IGitt.GitLab.GitLabMergeRequest import GitLabMergeRequest
 from IGitt.GitHub.GitHubIssue import GitHubIssue
 
-from errbot.backends.test import TestBot
 from errbot.backends.base import Message
 
 import plugins.labhub
 from plugins.labhub import LabHub
 
-from tests.corobo_test_case import CoroboTestCase
+from tests.labhub_test_case import LabHubTestCase
 
 
-class TestLabHub(CoroboTestCase):
+class TestLabHub(LabHubTestCase):
 
     def setUp(self):
         super().setUp((plugins.labhub.LabHub,))
-        plugins.labhub.github3 = create_autospec(github3)
-
-        self.mock_org = create_autospec(github3.orgs.Organization)
-        self.mock_gh = create_autospec(github3.GitHub)
-        self.mock_team = create_autospec(github3.orgs.Team)
-        self.mock_team.name = PropertyMock()
-        self.mock_team.name = 'mocked team'
-        self.teams = {
-            'coala newcomers': self.mock_team,
-            'coala developers': self.mock_team,
-            'coala maintainers': self.mock_team,
-        }
-        self.mock_repo = create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
-
-        plugins.labhub.github3.login.return_value = self.mock_gh
-        self.mock_gh.organization.return_value = self.mock_org
-        self.mock_org.teams.return_value = [self.mock_team]
-        plugins.labhub.github3.organization.return_value = self.mock_org
-
-        # patching
-        plugins.labhub.GitHub = create_autospec(IGitt.GitHub.GitHub.GitHub)
-        plugins.labhub.GitLab = create_autospec(IGitt.GitLab.GitLab.GitLab)
-        plugins.labhub.GitHubToken = create_autospec(IGitt.GitHub.GitHubToken)
-        plugins.labhub.GitLabPrivateToken = create_autospec(
-            IGitt.GitLab.GitLabPrivateToken)
-
         self.global_mocks = {
             'REPOS': {
                 'repository': self.mock_repo,

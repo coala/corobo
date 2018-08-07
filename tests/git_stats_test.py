@@ -1,5 +1,4 @@
 from tempfile import mkdtemp
-from errbot import BotPlugin
 from unittest.mock import create_autospec
 
 from IGitt.GitHub.GitHubMergeRequest import GitHubMergeRequest
@@ -8,28 +7,14 @@ from IGitt.GitHub.GitHubIssue import GitHubIssue
 from IGitt.GitLab.GitLabIssue import GitLabIssue
 from git import Repo
 
-import github3
-import IGitt
 import plugins.git_stats
-import plugins.labhub
-from tests.corobo_test_case import CoroboTestCase
+from tests.labhub_test_case import LabHubTestCase
 
 
-class TestGitStats(CoroboTestCase):
+class TestGitStats(LabHubTestCase):
 
     def setUp(self):
-        super().setUp((plugins.git_stats.GitStats,
-                       plugins.labhub.LabHub,))
-        plugins.labhub.github3 = create_autospec(github3)
-        self.mock_org = create_autospec(github3.orgs.Organization)
-        self.mock_gh = create_autospec(github3.GitHub)
-        self.mock_repo = create_autospec(IGitt.GitHub.GitHub.GitHubRepository)
-        plugins.labhub.github3.login.return_value = self.mock_gh
-        self.mock_gh.organization.return_value = self.mock_org
-        plugins.labhub.github3.organization.return_value = self.mock_org
-
-        self.plugin = plugins.git_stats.GitStats
-        self.plugin.__bases__ = (BotPlugin, )
+        super().setUp((plugins.git_stats.GitStats, plugins.labhub.LabHub,))
         self.labhub = self.load_plugin('LabHub')
         self.git_stats = self.load_plugin('GitStats')
         self.git_stats.REPOS = {'test': self.mock_repo}
