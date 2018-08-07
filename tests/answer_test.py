@@ -1,4 +1,3 @@
-import os
 import vcr
 import requests_mock
 
@@ -9,13 +8,16 @@ from tests.isolated_testcase import IsolatedTestCase
 class TestAnswer(IsolatedTestCase):
 
     def setUp(self):
-        super().setUp()
         # Ignore InvalidLinkBear
         self.answer_end_point = 'http://0.0.0.0:8000'
-        os.environ['ANSWER_END'] = self.answer_end_point
-
-    def tearDown(self):
-        del os.environ['ANSWER_END']
+        extra_config = {
+            'DEFAULT_CONFIG': {
+                'answer': {
+                    'ANSWER_END': self.answer_end_point,
+                }
+            }
+        }
+        super().setUp(extra_config=extra_config)
 
     @vcr.use_cassette('tests/cassettes/answer.yaml')
     def test_answer(self):
@@ -24,6 +26,8 @@ class TestAnswer(IsolatedTestCase):
         self.assertIn('Please checkout the following links', self.pop_message())
         self.push_message('!answer shell autocompletion')
         self.assertIn('Please checkout the following links', self.pop_message())
+        self.assertCommand('!plugin config answer',
+                           str({'ANSWER_END': self.answer_end_point}))
 
     def test_invalid_json(self):
         with requests_mock.Mocker() as m:

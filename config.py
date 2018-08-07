@@ -113,6 +113,9 @@ ACCESS_CONTROLS = {'render test': {
 AUTOINSTALL_DEPS = True
 
 DEFAULT_CONFIG = {
+    'answer': {
+        'ANSWER_END': os.environ.get('ANSWER_END'),
+    },
     'LabHub': {
         'GH_TOKEN': os.environ.get('GH_TOKEN'),
         'GL_TOKEN': os.environ.get('GL_TOKEN'),

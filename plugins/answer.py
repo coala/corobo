@@ -1,13 +1,16 @@
 import json
-import os
 from urllib.parse import quote_plus, urljoin
 
 from errbot import BotPlugin, botcmd
+from utils.mixin import DefaultConfigMixin
 import requests
 
 
-class Answer(BotPlugin):
+class Answer(DefaultConfigMixin, BotPlugin):
 
+    CONFIG_TEMPLATE = {
+        'ANSWER_END': None,
+    }
     # Ignore LineLengthBear, PyCodestyleBear
     SURVEY_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSeD8lqMWAwJx0Mewlpc5Sbeo3MH5Yi9fSfXA6jnk07-aIURSA/viewform?usp=pp_url&entry.1236347280={question}&entry.1734934116={response}&entry.75323266={message_link}'
     MESSAGE_LINK = 'https://gitter.im/{uri}?at={idd}'
@@ -26,7 +29,7 @@ class Answer(BotPlugin):
     @botcmd
     def answer(self, msg, arg):
         try:
-            answers = requests.get(urljoin(os.environ['ANSWER_END'], 'answer'),
+            answers = requests.get(urljoin(self.config['ANSWER_END'], 'answer'),
                                    params={'question': arg}).json()
         except json.JSONDecodeError:
             self.log.exception('something went wrong while fetching answer for'
