@@ -1,0 +1,17 @@
+overrides: coala.yaml
+
+allow_generic_no_cover: true
+
+nocover_file_globs:
+  - answers/extraction.py
+  - answers/final.py
+  - answers/service.py
+  - answers/utils.py
+  - utils/filters.py
+  - utils/utils.py
+  - plugins/ban.py
+  - plugins/labhub.py
+
+nocover_regexes:
+  # utils/backends.py
+  - def message_link

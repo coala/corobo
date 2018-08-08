@@ -1,6 +1,18 @@
-overrides: coala.yaml
+overrides: .nocover.yaml
 
 name: corobo
+
+package_module: plugins
+packages:
+  - answers
+  - plugins
+  - utils
+
+test_file_glob: '*_test.py'
+
+# A timeout causes the labhub tests to hang in the
+# Docker image on Travis-CI.
+test_timeout: 0
 
 dependencies:
   - pyopenssl
@@ -20,5 +32,6 @@ configuration:
   configuration_dir: ../coala-mobans/
 targets:
   - .gitignore: coala-gitignore.jj2
+  - setup.cfg: setup.cfg.jj2
   - requirements.txt: requirements.txt.jj2
   - test-requirements.txt: corobo-test-requirements.txt.jj2
