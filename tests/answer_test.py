@@ -1,22 +1,15 @@
 import os
-import logging
-
-from errbot.backends.test import FullStackTest
 import vcr
 import requests_mock
 
 import plugins.answer
+from tests.isolated_testcase import IsolatedTestCase
 
 
-class TestAnswer(FullStackTest):
+class TestAnswer(IsolatedTestCase):
 
-    def setUp(self,
-              extra_plugin_dir=None,
-              extra_test_file=None,
-              loglevel=logging.DEBUG,
-              extra_config=None):
-        super().setUp(extra_plugin_dir='plugins',
-                      loglevel=logging.ERROR)
+    def setUp(self):
+        super().setUp()
         # Ignore InvalidLinkBear
         self.answer_end_point = 'http://0.0.0.0:8000'
         os.environ['ANSWER_END'] = self.answer_end_point

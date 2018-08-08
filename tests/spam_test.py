@@ -1,19 +1,13 @@
-import logging
 import queue
-import unittest
 
-from errbot.backends.test import TestBot
+from tests.isolated_testcase import IsolatedTestCase
 
 
-class TestSpam(unittest.TestCase):
+class TestSpam(IsolatedTestCase):
 
     def setUp(self):
-        self.testbot = TestBot(extra_plugin_dir='plugins',
-                               loglevel=logging.ERROR)
-        self.testbot.start()
-
-    def tearDown(self):
-        self.testbot.stop()
+        super().setUp()
+        self.testbot = self
 
     def test_spam_callback(self):
         self.testbot.assertCommand('c'*1001, 'you\'re spamming')
@@ -32,7 +26,7 @@ class TestSpam(unittest.TestCase):
                                    '{\'MAX_LINES\': 20, \'MAX_MSG_LEN\': 200}')
 
 
-class TestSpamExtraConfig(unittest.TestCase):
+class TestSpamExtraConfig(IsolatedTestCase):
 
     def setUp(self):
         extra_config = {
@@ -43,13 +37,8 @@ class TestSpamExtraConfig(unittest.TestCase):
                 }
             }
         }
-        self.testbot = TestBot(extra_plugin_dir='plugins',
-                               loglevel=logging.ERROR,
-                               extra_config=extra_config)
-        self.testbot.start()
-
-    def tearDown(self):
-        self.testbot.stop()
+        super().setUp(extra_config=extra_config)
+        self.testbot = self
 
     def test_spam_extra_config_callback(self):
         self.testbot.assertCommand('c'*501, 'you\'re spamming')

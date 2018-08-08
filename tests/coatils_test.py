@@ -1,21 +1,12 @@
-import logging
 import queue
 
-from errbot.backends.test import FullStackTest
+from tests.isolated_testcase import IsolatedTestCase
 import vcr
 
 from plugins.coatils import Coatils
 
 
-class TestCoatils(FullStackTest):
-
-    def setUp(self,
-              extra_plugin_dir=None,
-              extra_test_file=None,
-              loglevel=logging.DEBUG,
-              extra_config=None):
-        super().setUp(extra_plugin_dir='plugins',
-                      loglevel=logging.ERROR)
+class TestCoatils(IsolatedTestCase):
 
     @vcr.use_cassette('tests/cassettes/coatils_total_bears.yaml')
     def test_total_bears(self):

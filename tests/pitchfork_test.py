@@ -1,9 +1,10 @@
-pytest_plugins = ['errbot.backends.test']
-extra_plugin_dir = 'plugins'
+from tests.isolated_testcase import IsolatedTestCase
 
 
-def test(testbot):
-    testbot.assertCommand('!pitchfork @meet', 'being pitchforked')
-    testbot.assertCommand('!pitchfork @meet down to hell', 'being pitchforked')
-    testbot.assertCommand('!pitchfork meet to hell', 'being pitchforked')
-    testbot.assertCommand('!pitchfork', 'Usage')
+class PitchForkTest(IsolatedTestCase):
+
+    def test(self):
+        self.assertCommand('!pitchfork @meet', 'being pitchforked')
+        self.assertCommand('!pitchfork @meet down to hell', 'being pitchforked')
+        self.assertCommand('!pitchfork meet to hell', 'being pitchforked')
+        self.assertCommand('!pitchfork', 'Usage')
