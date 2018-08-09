@@ -21,15 +21,18 @@ class Answer(BotPlugin):
             text = text.split('documentation/')[-1]
             return 'https://docs.coala.io/en/latest/' + text
 
+        raise ValueError('Unrecognised answer: {}'.format(text))
+
     @botcmd
     def answer(self, msg, arg):
         try:
             answers = requests.get(urljoin(os.environ['ANSWER_END'], 'answer'),
                                    params={'question': arg}).json()
-        except json.JSONDecodeError:  # pragma: no cover # for logging
+        except json.JSONDecodeError:
             self.log.exception('something went wrong while fetching answer for'
                                'question: {}'.format(arg))
-            yield 'Something went wrong, please check logs'.format()
+            yield 'Something went wrong, please check logs'
+            return
         if answers:
             reply = 'Please checkout the following links: \n- '
             reply += '- '.join(map(lambda x:
