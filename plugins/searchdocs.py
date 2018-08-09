@@ -24,13 +24,10 @@ class Searchdocs(BotPlugin):
         if match is None:
             return ('Invalid syntax, try again. It should be of the form '
                     '`search api|user search string`.')
-        doc_type = match.group(1)
+        doc_type = match.group(1).lower()
         search_string = match.group(2)
-        if doc_type.lower() == 'api':
-            return (self.API_DOCS +
-                    '/search.html?q=' +
-                    '+'.join(re.split(r'\s+', search_string)))
-        elif doc_type.lower() == 'user':
-            return (self.USER_DOCS +
-                    '/search.html?q=' +
-                    '+'.join(re.split(r'\s+', search_string)))
+        base_url = self.API_DOCS if doc_type == 'api' else self.USER_DOCS
+        return '{}/search.html?q={}'.format(
+            base_url,
+            '+'.join(re.split(r'\s+', search_string)),
+        )
