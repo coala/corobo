@@ -93,7 +93,7 @@ class Coatils(BotPlugin):
                 len(Coatils.all_langs())
             )
         # stats
-        elif stat_type == '' and entity == '':
+        else:
             yield ('coala has {} bears across {} languages'
                    ''.format(Coatils.total_bears(),
                              len(Coatils.all_langs())))
