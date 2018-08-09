@@ -20,6 +20,8 @@ class DefaultConfigMixin():
             return default_config
         elif self.CONFIG_TEMPLATE:
             return self.CONFIG_TEMPLATE
+        else:  # pragma: no cover
+            return
 
     def configure(self, configuration):
         default_config = self._default_config
