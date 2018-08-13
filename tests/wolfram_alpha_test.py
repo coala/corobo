@@ -1,6 +1,5 @@
 import vcr
 
-from plugins.wolfram_alpha import WolframAlpha
 from tests.isolated_testcase import IsolatedTestCase
 
 my_vcr = vcr.VCR(match_on=['method', 'scheme', 'host', 'port', 'path'],

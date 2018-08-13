@@ -1,7 +1,6 @@
 import vcr
 import requests_mock
 
-import plugins.answer
 from tests.isolated_testcase import IsolatedTestCase
 
 

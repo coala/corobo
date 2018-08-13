@@ -1,4 +1,3 @@
-from plugins.the_rules import The_rules
 from tests.isolated_testcase import IsolatedTestCase
 
 
