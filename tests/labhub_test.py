@@ -479,6 +479,7 @@ class TestLabHub(LabHubTestCase):
 
     def test_invalid_token(self):
         plugins.labhub.github3.login.return_value = None
+        self.labhub.deactivate()
         with self.assertLogs() as cm:
             self.labhub.activate()
         self.assertIn(

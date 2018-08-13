@@ -5,31 +5,12 @@ import time
 import github3
 from IGitt.GitHub.GitHub import GitHub, GitHubToken
 from IGitt.GitLab.GitLab import GitLab, GitLabPrivateToken
-from errbot import BotPlugin, re_botcmd
+from errbot import BotPlugin, cmdfilter, re_botcmd
 from errbot.templating import tenv
 
-from functools import wraps
+from plugins import constants
 from utils.backends import message_link
 from utils.mixin import DefaultConfigMixin
-
-
-def members_only(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        # plugin instance
-        instance = args[0]
-        msg = args[1]
-        user = msg.frm.nick
-        ret = func(*args, **kwargs)
-
-        for team in instance.team_mapping().values():
-            if team.is_member(user):
-                yield from ret
-                return
-        yield ('You need to be a member of this organization'
-               ' to use this command.')
-
-    return wrapper
 
 
 class LabHub(DefaultConfigMixin, BotPlugin):
@@ -108,6 +89,21 @@ class LabHub(DefaultConfigMixin, BotPlugin):
             'maintainers': self.TEAMS[self.GH_ORG_NAME + ' maintainers'],
         }
 
+    @cmdfilter
+    def members_only(self, msg, cmd, args, dry_run):
+        user = msg.frm.nick
+        commands = constants.PRIVATE_CMDS
+
+        if cmd in commands:
+            for team in self.team_mapping().values():
+                if team.is_member(user):
+                    return msg, cmd, args
+            self.send(msg.frm, 'You need to be a member of this organization '
+                      'to use this command.')
+            return None, None, None
+        else:
+            return msg, cmd, args
+
     def is_team_member(self, user, team):
         teams = self.team_mapping()
         return teams[team].is_member(user)
@@ -119,7 +115,6 @@ class LabHub(DefaultConfigMixin, BotPlugin):
     # Ignore LineLengthBear, PycodestyleBear
     @re_botcmd(pattern=r'^(?:(?:welcome)|(?:inv)|(?:invite))\s+@?([\w-]+)(?:\s+(?:to)\s+(\w+))?$',
                re_cmd_name_help='invite ([@]<username> [to <team>]|me)')
-    @members_only
     def invite_cmd(self, msg, match):
         """
         Invite given user to given team. By default it invites to
@@ -198,7 +193,6 @@ class LabHub(DefaultConfigMixin, BotPlugin):
     @re_botcmd(pattern=r'(?:new|file) issue ([\w\-\.]+?)(?: |\n)(.+?)(?:$|\n((?:.|\n)*))',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='new issue repo-name title\n[description]',
                flags=re.IGNORECASE)
-    @members_only
     def create_issue_cmd(self, msg, match):
         """Create issues on GitHub and GitLab repositories."""  # Ignore QuotesBear, LineLengthBear, PyCodeStyleBear
         user = msg.frm.nick
@@ -233,7 +227,6 @@ class LabHub(DefaultConfigMixin, BotPlugin):
     @re_botcmd(pattern=r'^unassign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='unassign <complete-issue-URL>',
                flags=re.IGNORECASE)
-    @members_only
     def unassign_cmd(self, msg, match):
         """Unassign from an issue."""  # Ignore QuotesBear
         org = match.group(2)
@@ -262,7 +255,6 @@ class LabHub(DefaultConfigMixin, BotPlugin):
     @re_botcmd(pattern=r'mark\s+(wip|pending(?:(?:-|\s+)review)?\b)\s+https://(github|gitlab)\.com/([^/]+)/([^/]+)/(pull|merge_requests)/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='mark (wip|pending) <complete-PR-URL>',
                flags=re.IGNORECASE)
-    @members_only
     def mark_cmd(self, msg, match):
         """Mark a given PR/MR with status labels."""  # Ignore QuotesBear
         state, host, org, repo_name, xr, number = match.groups()
@@ -318,7 +310,6 @@ class LabHub(DefaultConfigMixin, BotPlugin):
     @re_botcmd(pattern=r'^assign\s+https://(github|gitlab)\.com/([^/]+)/([^/]+/)+issues/(\d+)',  # Ignore LineLengthBear, PyCodeStyleBear
                re_cmd_name_help='assign <complete-issue-URL>',
                flags=re.IGNORECASE)
-    @members_only
     def assign_cmd(self, msg, match):
         """Assign to GitLab and GitHub issues."""  # Ignore QuotesBear
         org = match.group(2)
@@ -438,7 +429,6 @@ class LabHub(DefaultConfigMixin, BotPlugin):
 
     @re_botcmd(pattern=r'pr\s+stats\s+(\d+)(?:hours|hrs)',
                re_cmd_name_help='pr stats <number-of-hours>(hours|hrs)')
-    @members_only
     def pr_stats(self, msg, match):
         hours = match.group(1)
         pr_count = dict()
