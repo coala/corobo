@@ -1,6 +1,5 @@
 docutils
 gensim
-nltk
 networkx
 spacy
 flask
