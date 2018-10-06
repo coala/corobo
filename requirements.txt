@@ -1,4 +1,5 @@
 pyopenssl
+markdown~=2.6.11,<3.0
 git+https://github.com/errbotio/errbot@a0f35732484c8c0692e123c48653517cffa21a42
 wolframalpha
 github3.py~=1.0.0
