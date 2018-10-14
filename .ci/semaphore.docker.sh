@@ -12,6 +12,6 @@ docker run --user root meetmangukiya/corobo /bin/sh -c "
     python -m pytest
 "
 
-if [[ $BRANCH_NAME == "master" ]]
+if [[ $BRANCH_NAME == "master" && $SEMAPHORE_REPO_SLUG == "coala/corobo"  ]]
 then echo "pushing..." && docker push meetmangukiya/corobo && docker push meetmangukiya/corobo-answers
 fi
