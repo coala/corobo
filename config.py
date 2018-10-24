@@ -89,31 +89,46 @@ IGNORE_USERNAMES = os.environ.get("IGNORE_USERNAMES",
 
 DIVERT_TO_PRIVATE = ('help', )
 
-ROOMS_TO_JOIN = (
+ROOMS_TO_JOIN = [
     'coala',
-    'coala/offtopic',
-    'cobot-test',
-    'corobo',
-    'devops',
-    'community',
-    'coala/gsoc',
-    'coala/maintainers',
     'coala-bears',
-    'bearship',
-    'gci',
-    'cobot',
-    'performance',
-    'documentation',
-    'conferences',
-    'coala/workshops',
-    'coala/artwork-corner',
-    'freelancers',
-    'editor-plugins',
+    'corobo',
     'depman',
     'ast',
-    'aspects',
-    'community'
-)
+    'gci',
+]
+
+if BACKEND == 'Gitter':
+    ROOMS_TO_JOIN += [
+        'aspects',
+        'bearship',
+        'coala',
+        'coala/artwork-corner',
+        'coala/gsoc',
+        'coala/maintainers',
+        'coala/offtopic',
+        'coala/workshops',
+        'cobot',
+        'cobot-test',
+        'community',
+        'community',
+        'conferences',
+        'devops',
+        'documentation',
+        'editor-plugins',
+        'freelancers',
+        'performance',
+    ]
+elif BACKEND == 'Zulip':
+    ROOMS_TO_JOIN += [
+        'maintainers',
+        'gci-mentors-2018',
+        'gitmate',
+        'gsoc',
+        'moban',
+        'test',
+        'zulip',
+    ]
 
 if BACKEND == 'Gitter':
     ROOMS_TO_JOIN = ['coala/' + item for item in ROOMS_TO_JOIN]
