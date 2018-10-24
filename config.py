@@ -90,19 +90,33 @@ IGNORE_USERNAMES = os.environ.get("IGNORE_USERNAMES",
 DIVERT_TO_PRIVATE = ('help', )
 
 ROOMS_TO_JOIN = (
-    'coala/coala',
-    'coala/coala/offtopic',
-    'coala/cobot-test',
-    'coala/corobo',
-    'coala/devops',
-    'coala/community',
-    'coala/coala/gsoc',
-    'coala/coala/maintainers',
-    'coala/coala-bears',
-    'coala/bearship',
-    'coala/gci',
-    'coala/cobot'
+    'coala',
+    'coala/offtopic',
+    'cobot-test',
+    'corobo',
+    'devops',
+    'community',
+    'coala/gsoc',
+    'coala/maintainers',
+    'coala-bears',
+    'bearship',
+    'gci',
+    'cobot',
+    'performance',
+    'documentation',
+    'conferences',
+    'coala/workshops',
+    'coala/artwork-corner',
+    'freelancers',
+    'editor-plugins',
+    'depman',
+    'ast',
+    'aspects',
+    'community'
 )
+
+if BACKEND == 'Gitter':
+    ROOMS_TO_JOIN = ['coala/' + item for item in ROOMS_TO_JOIN]
 
 CHATROOM_PRESENCE = os.environ.get('ROOMS', '').split() or ROOMS_TO_JOIN
 
