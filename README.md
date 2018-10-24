@@ -32,7 +32,7 @@ Read more about what `corobo` could do for you
 
 1. `BOT_ROOT` - absolute path of the project root.
 2. `BOT_PREFIX` - prefix to use for issuing bot commands.
-3. `BOT_ADMINS` - Admins of the errbot instance.
+3. `BOT_ADMINS` - Space separated list of admins of the errbot instance.
 4. `ROOMS` - Space separated list of rooms to join on startup. e.g.
    `ROOMS="coala/coala coala/coala/corobo"`
 5. `BACKEND` - Backend to use.
