@@ -20,7 +20,7 @@ dependencies:
   - git+https://github.com/errbotio/errbot@a0f35732484c8c0692e123c48653517cffa21a42
   - wolframalpha
   - github3.py~=1.0.0
-  - IGitt==0.4.1.dev20180317153318
+  - IGitt==0.4.2.dev20181025081017
   - gitpython
   - ramlient
 
