@@ -85,7 +85,8 @@ if BACKEND == 'Text':
     BOT_ADMINS = ('@localhost', )
 
 IGNORE_USERNAMES = os.environ.get("IGNORE_USERNAMES",
-                                  'co-robo coala-bot').split()
+                                  'co-robo coala-bot '
+                                  'from-somewhere-else').split()
 
 DIVERT_TO_PRIVATE = ('help', )
 
