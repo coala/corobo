@@ -33,6 +33,7 @@ class TestLabHub(LabHubTestCase):
             'GH_ORG_NAME': 'coala',
             'GL_ORG_NAME': 'coala',
         }
+        self.bot.sender._nick = 'batman'
         self.labhub = self.load_plugin('LabHub', self.global_mocks, configs)
 
     def test_invite_cmd(self):
@@ -102,6 +103,11 @@ class TestLabHub(LabHubTestCase):
         testbot.assertCommand('!invite meetto newcomers',
                               'Command "invite" / "invite meetto" not found.')
 
+        self.bot.sender._nick = None
+        testbot.assertCommand(
+            '!invite meet to newcomers',
+            'ERROR: The above command cannot be operated without nick.')
+
         # not a member of org
         mock_team_newcomers.is_member.return_value = False
         mock_team_developers.is_member.return_value = False
@@ -156,7 +162,7 @@ class TestLabHub(LabHubTestCase):
                 textwrap.dedent('''\
                     first line of body
                     second line of body
-                    Opened by @None at [text]()''')
+                    Opened by @batman at [text]()''')
         )
 
         testbot_public.assertCommand(
@@ -171,12 +177,17 @@ class TestLabHub(LabHubTestCase):
                 'another title',
                 textwrap.dedent('''\
                     body
-                    Opened by @None at [text]()''')
+                    Opened by @batman at [text]()''')
         )
 
         testbot_public.assertCommand(
             '!new issue coala title',
             'repository that does not exist')
+
+        self.bot.sender._nick = None
+        testbot_public.assertCommand(
+            '!new issue coala title',
+            'ERROR: The above command cannot be operated without nick.')
 
         # not a member of org
         self.mock_team.is_member.return_value = False
@@ -201,7 +212,7 @@ class TestLabHub(LabHubTestCase):
         mock_iss = create_autospec(IGitt.GitHub.GitHubIssue)
         self.mock_repo.get_issue.return_value = mock_iss
         mock_iss.assignees = PropertyMock()
-        mock_iss.assignees = (None, )
+        mock_iss.assignees = ('batman', )
         mock_iss.unassign = MagicMock()
         self.mock_team.is_member.return_value = True
         testbot = self
@@ -211,7 +222,7 @@ class TestLabHub(LabHubTestCase):
             'you are unassigned now',
             timeout=10000)
         self.mock_repo.get_issue.assert_called_with(999)
-        mock_iss.unassign.assert_called_once_with(None)
+        mock_iss.unassign.assert_called_once_with('batman')
 
         mock_iss.assignees = ('meetmangukiya', )
         testbot.assertCommand(
@@ -225,6 +236,11 @@ class TestLabHub(LabHubTestCase):
         testbot.assertCommand(
             '!unassign https://gitlab.com/example/test/issues/999',
             'Repository not owned by our org.')
+
+        self.bot.sender._nick = None
+        testbot.assertCommand(
+            '!unassign https://gitlab.com/example/test/issues/999',
+            'ERROR: The above command cannot be operated without nick.')
 
         # not a member of org
         self.mock_team.is_member.return_value = False
@@ -253,6 +269,13 @@ class TestLabHub(LabHubTestCase):
         testbot = self
 
         cmd = '!assign https://github.com/{}/{}/issues/{}'
+
+        self.bot.sender._nick = None
+        testbot.assertCommand(
+            cmd.format('coa', 'a', '23'),
+            'ERROR: The above command cannot be operated without nick.')
+        self.bot.sender._nick = 'batman'
+
         # no assignee, not newcomer
         mock_issue.assignees = tuple()
         self.mock_team.is_member.return_value = False
@@ -335,7 +358,7 @@ class TestLabHub(LabHubTestCase):
                               'already assigned to someone')
 
         # has assignee same as user
-        mock_issue.assignees = (None, )
+        mock_issue.assignees = ('batman', )
         testbot.assertCommand(cmd.format('coala', 'a', '23'),
                               'already assigned to you')
 

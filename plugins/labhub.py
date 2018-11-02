@@ -122,6 +122,9 @@ class LabHub(DefaultConfigMixin, BotPlugin):
         """
         invitee = match.group(1)
         inviter = msg.frm.nick
+        if not inviter:
+            yield 'ERROR: The above command cannot be operated without nick.'
+            return
 
         team = 'newcomers' if match.group(2) is None else match.group(2)
         team = team.lower()
@@ -196,6 +199,9 @@ class LabHub(DefaultConfigMixin, BotPlugin):
     def create_issue_cmd(self, msg, match):
         """Create issues on GitHub and GitLab repositories."""  # Ignore QuotesBear, LineLengthBear, PyCodeStyleBear
         user = msg.frm.nick
+        if not user:
+            yield 'ERROR: The above command cannot be operated without nick.'
+            return
         repo_name = match.group(1)
         iss_title = match.group(2)
         iss_description = match.group(3) if match.group(3) is not None else ''
@@ -234,6 +240,9 @@ class LabHub(DefaultConfigMixin, BotPlugin):
         issue_number = match.group(4)
 
         user = msg.frm.nick
+        if not user:
+            yield 'ERROR: The above command cannot be operated without nick.'
+            return
 
         try:
             assert org == self.GH_ORG_NAME or org == self.GL_ORG_NAME
@@ -317,6 +326,9 @@ class LabHub(DefaultConfigMixin, BotPlugin):
         iss_number = match.group(4)
 
         user = msg.frm.nick
+        if not user:
+            yield 'ERROR: The above command cannot be operated without nick.'
+            return
 
         try:
             assert org == self.GH_ORG_NAME or org == self.GL_ORG_NAME
