@@ -33,6 +33,7 @@ configuration:
   configuration_dir: ../coala-mobans/
 targets:
   - .gitignore: coala-gitignore.jj2
+  - .editorconfig: .editorconfig.jj2
   - setup.cfg: setup.cfg.jj2
   - requirements.txt: requirements.txt.jj2
   - test-requirements.txt: corobo-test-requirements.txt.jj2

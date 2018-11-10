@@ -1,0 +1,19 @@
+# top-most EditorConfig file
+root = true
+
+[**]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+max_line_length = 80
+trim_trailing_whitespace = true
+
+# Set default indentation for python files
+[*.py]
+indent_size = 4
+
+# Override trailing whitespace for markdown files
+[*.md]
+trim_trailing_whitespace = false
