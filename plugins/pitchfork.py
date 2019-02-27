@@ -21,13 +21,13 @@ class Pitchfork(BotPlugin):
             user = match.group(1)
             place = match.group(2) if match.group(2) else 'offtopic'
             return textwrap.dedent((
-                string.Template("""
+                string.Template(r"""
                     @$user, you are being pitchforked down to $place
                     ```
                                                           .+====----->
-                                                           \('
+                                                           \\('
                     =====================================<%{%{%{>>+===---> $user
-                                                           /(,
+                                                           //(,
                                                           .+====----->
                     ```
                 """).substitute(user=user,
