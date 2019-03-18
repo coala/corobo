@@ -64,7 +64,10 @@ BOT_EXTRA_PLUGIN_DIR = BOT_ROOT
 BOT_LOG_FILE = os.path.join(BOT_ROOT, 'errbot.log')
 BOT_LOG_LEVEL = logging.DEBUG
 
-BOT_PREFIX = os.environ.get('BOT_PREFIX', 'corobo ')
+if not os.environ.get('BOT_PREFIX'):
+    raise SystemExit("Environment variable BOT_PREFIX not specified")
+
+BOT_PREFIX = os.environ.get('BOT_PREFIX')
 
 if 'COBOT_PREFIX' in os.environ:
     BOT_PREFIX = os.environ['COBOT_PREFIX']
