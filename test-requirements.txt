@@ -13,7 +13,7 @@ codecov~=2.0.5
 moban~=0.3.3 ; python_version > '3.0'
 packaging~=16.8
 pytest~=3.6.4
-pytest-cov~=2.4
+pytest-cov>=2.4,<=2.9
 pytest-env~=0.6.0
 pytest-error-for-skips~=1.0
 pytest-instafail~=0.3.0

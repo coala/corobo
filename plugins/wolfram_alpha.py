@@ -24,11 +24,10 @@ class WolframAlpha(DefaultConfigMixin, BotPlugin):
         """
         ans = ''
         res = self.client.query(arg)
-        try:
-            for pod in res.pods:
-                if pod.title in ['Result', 'Results']:
-                    for sub in pod.subpods:
-                        ans += sub.plaintext
-        except AttributeError:
-            self.log.info('KeyError triggered on retrieving pods.')
+        for pod in res.pods:
+            if pod.title in ['Result', 'Results']:
+                for sub in pod.subpods:
+                    ans += sub.plaintext
+        if ans == '':
+            self.log.info("No results found!")
         return ans if ans else 'Dunno :('

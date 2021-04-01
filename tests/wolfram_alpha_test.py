@@ -18,7 +18,7 @@ class WolframAlphaTest(IsolatedTestCase):
         with self.assertLogs() as cm:
             self.assertCommand('!wa this is a sentence',
                                'Dunno')
-        self.assertIn('INFO:errbot.plugins.WolframAlpha:KeyError triggered on '
-                      'retrieving pods.', cm.output)
+        self.assertIn('INFO:errbot.plugins.WolframAlpha:'
+                      'No results found!', cm.output)
         self.assertCommand('!plugin config WolframAlpha',
                            '{\'WA_TOKEN\': None}')
